@@ -14,12 +14,12 @@ resource "google_compute_subnetwork" "hcpoc" {
 
 resource "google_compute_firewall" "hcpoc_cluster" {
   project = var.project_id
-  name    = "default-allow-ssh-http"
+  name    = "default-allow-cluster"
   network = google_compute_network.hcpoc.self_link
 
   allow {
     protocol = "tcp"
-    ports    = ["22"]
+    ports    = ["22", "8200"]
   }
 
   // Allow traffic from everywhere to instances with an http-server tag
