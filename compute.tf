@@ -31,6 +31,8 @@ resource "google_compute_instance" "hcpoc_workers" {
   metadata = {
     ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
+  
+  metadata_startup_script = "${file("${path.module}/scripts/startup-script.sh")}"
 
   tags = [ "workers" ]
 
