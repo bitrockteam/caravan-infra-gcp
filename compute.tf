@@ -34,13 +34,13 @@ resource "google_compute_instance" "hcpoc_workers" {
   
   metadata_startup_script = "${file("${path.module}/scripts/startup-script.sh")}"
 
-  tags = [ "workers" ]
+  tags = ["workers"]
 
   depends_on = [google_compute_network.hcpoc]
 }
 
 resource "local_file" "ssh_key" {
-  content  = "${chomp(tls_private_key.ssh-key.private_key_pem)}"
+  content  = chomp(tls_private_key.ssh-key.private_key_pem)
   filename = "${path.module}/ssh-key"
 }
 

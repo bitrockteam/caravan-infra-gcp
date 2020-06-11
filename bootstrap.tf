@@ -1,5 +1,6 @@
 provider "google" {
-  region = var.region
+  region      = var.region
+  credentials = file(var.google_account_file)
 }
 
 module "packer_build" {
