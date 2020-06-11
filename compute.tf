@@ -10,7 +10,7 @@ resource "tls_private_key" "ssh-key" {
 resource "google_compute_instance" "hcpoc_workers" {
   project      = var.project_id
   count        = var.instance_count
-  zone         = data.google_compute_zones.available.names[0]
+  zone         = data.google_compute_zones.available.names[count.index]
   name         = "worker-node-${count.index + 1}"
   machine_type = "n1-standard-2"
 
