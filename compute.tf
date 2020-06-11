@@ -7,11 +7,11 @@ resource "tls_private_key" "ssh-key" {
   rsa_bits  = "4096"
 }
 
-resource "google_compute_instance" "hcpoc_workers" {
+resource "google_compute_instance" "hcpoc_cluster_nodes" {
   project      = var.project_id
   count        = var.instance_count
   zone         = data.google_compute_zones.available.names[count.index]
-  name         = "worker-node-${count.index + 1}"
+  name         = "cluster-node-${count.index + 1}"
   machine_type = "n1-standard-2"
 
   boot_disk {
@@ -31,10 +31,10 @@ resource "google_compute_instance" "hcpoc_workers" {
   metadata = {
     ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
-  
-  metadata_startup_script = "${file("${path.module}/scripts/startup-script.sh")}"
 
-  tags = ["workers"]
+  metadata_startup_script = file("${path.module}/scripts/startup-script.sh")
+
+  tags = ["cluster-node"]
 
   depends_on = [google_compute_network.hcpoc]
 }

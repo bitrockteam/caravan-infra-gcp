@@ -12,7 +12,7 @@ resource "google_compute_subnetwork" "hcpoc" {
   ip_cidr_range = var.subnet_prefix
 }
 
-resource "google_compute_firewall" "workers" {
+resource "google_compute_firewall" "hcpoc_cluster" {
   project = var.project_id
   name    = "default-allow-ssh-http"
   network = google_compute_network.hcpoc.self_link
@@ -24,5 +24,5 @@ resource "google_compute_firewall" "workers" {
 
   // Allow traffic from everywhere to instances with an http-server tag
   source_ranges = ["0.0.0.0/0"]
-  target_tags   = ["workers"]
+  target_tags   = ["cluster-node"]
 }
