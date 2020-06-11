@@ -17,8 +17,8 @@ resource "google_compute_instance" "hcpoc_workers" {
   boot_disk {
     initialize_params {
       image = "hc-centos-200611143610"
-      type = "pd-standard"
-      size = "100"
+      type  = "pd-standard"
+      size  = "100"
     }
   }
 
@@ -32,6 +32,13 @@ resource "google_compute_instance" "hcpoc_workers" {
     ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
+  tags = [ "workers" ]
+
   depends_on = [google_compute_network.hcpoc]
+}
+
+resource "local_file" "ssh_key" {
+  content  = "${chomp(tls_private_key.ssh-key.private_key_pem)}"
+  filename = "${path.module}/ssh-key"
 }
 
