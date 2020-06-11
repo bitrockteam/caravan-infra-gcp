@@ -1,11 +1,11 @@
 resource "google_compute_network" "hcpoc" {
-  project      = var.project_id
+  project                 = var.project_id
   name                    = "${var.prefix}-vpc"
   auto_create_subnetworks = false
 }
 
 resource "google_compute_subnetwork" "hcpoc" {
-  project      = var.project_id
+  project       = var.project_id
   name          = "${var.prefix}-subnet"
   region        = var.region
   network       = google_compute_network.hcpoc.self_link
@@ -13,7 +13,7 @@ resource "google_compute_subnetwork" "hcpoc" {
 }
 
 resource "google_compute_firewall" "workers" {
-  project      = var.project_id
+  project = var.project_id
   name    = "default-allow-ssh-http"
   network = google_compute_network.hcpoc.self_link
 
