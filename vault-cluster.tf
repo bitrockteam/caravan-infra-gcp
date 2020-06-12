@@ -5,5 +5,5 @@ module "vault_cluster" {
   cluster_nodes            = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.name }
   cluster_nodes_public_ips = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.access_config.0.nat_ip }
   ssh_private_key          = chomp(tls_private_key.ssh-key.private_key_pem)
-  project_id               = var.project_id
+  unseal_project_id        = var.project_id
 }
