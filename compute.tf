@@ -37,6 +37,11 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
   tags = ["cluster-node"]
 
   depends_on = [google_compute_network.hcpoc]
+
+  service_account {
+    email  = google_service_account.cluster_node_service_account.email
+    scopes = ["cloud-platform"]
+  }
 }
 
 resource "local_file" "ssh_key" {
