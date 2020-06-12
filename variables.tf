@@ -12,3 +12,11 @@ variable "subnet_prefix" {
   description = "The address prefix to use for the subnet."
   default     = "10.128.0.0/28"
 }
+variable "google_kms_key_ring" {
+  type    = string
+  default = ""
+}
+variable "google_kms_crypto_key" {
+  type    = string
+  default = ""
+}
