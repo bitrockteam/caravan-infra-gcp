@@ -42,6 +42,8 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
     email  = google_service_account.cluster_node_service_account.email
     scopes = ["cloud-platform"]
   }
+
+  allow_stopping_for_update = true
 }
 
 resource "local_file" "ssh_key" {
