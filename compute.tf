@@ -16,7 +16,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 
   scheduling {
     automatic_restart   = false
-    on_host_maintenance = "MIGRATE"
+    on_host_maintenance = "TERMINATE"
     preemptible         = true
   }
 
