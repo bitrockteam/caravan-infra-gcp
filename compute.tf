@@ -14,6 +14,12 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
   name         = "cluster-node-${count.index + 1}"
   machine_type = "n1-standard-2"
 
+  scheduling {
+    automatic_restart   = false
+    on_host_maintenance = "MIGRATE"
+    preemptible         = true
+  }
+
   boot_disk {
     initialize_params {
       image = "hc-centos-200611143610"
@@ -27,7 +33,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
     access_config {
     }
   }
-
+  
   metadata = {
     ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
