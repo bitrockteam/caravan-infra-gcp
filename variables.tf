@@ -29,3 +29,7 @@ variable "ssh_timeout" {
   type    = string
   default = "120s"
 }
+variable "compute_image_name" {
+  type    = string
+  default = "hcpoc-centos-image"
+}

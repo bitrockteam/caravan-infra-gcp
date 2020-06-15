@@ -22,7 +22,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 
   boot_disk {
     initialize_params {
-      image = "hc-centos-200611143610"
+      image = module.packer_build.image_id
       type  = "pd-standard"
       size  = "100"
     }
@@ -40,9 +40,12 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 
   metadata_startup_script = file("${path.module}/scripts/startup-script.sh")
 
-  tags = ["cluster-node"]
+  tags = ["cluster-node", "ssh-allowed-node"]
 
-  depends_on = [google_compute_network.hcpoc]
+  depends_on = [
+    google_compute_network.hcpoc,
+    module.packer_build
+  ]
 
   service_account {
     email  = google_service_account.cluster_node_service_account.email
@@ -64,7 +67,8 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 }
 
 resource "local_file" "ssh_key" {
-  content  = chomp(tls_private_key.ssh-key.private_key_pem)
-  filename = "${path.module}/ssh-key"
+  sensitive_content = chomp(tls_private_key.ssh-key.private_key_pem)
+  filename          = "${path.module}/ssh-key"
+  file_permission   = "0600"
 }
 

@@ -79,3 +79,5 @@ override.tf.json
 ssh-key.pub
 ssh-key
 *.tfvars
+backend.tf
+.*token*
