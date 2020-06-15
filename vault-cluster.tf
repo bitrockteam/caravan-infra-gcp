@@ -1,6 +1,5 @@
 module "vault_cluster" {
-  # source                   = "git::ssh://git@github.com/bitrockteam/hcpoc-base-vault-baseline//modules/cluster-raft?ref=master"
-  source                   = "../hcpoc-base-vault-baseline//modules/cluster-raft"
+  source                   = "git::ssh://git@github.com/bitrockteam/hcpoc-base-vault-baseline//modules/cluster-raft?ref=master"
   unseal_project_id        = var.project_id
   unseal_keyring           = google_kms_key_ring.vault_keyring.name
   unseal_key               = google_kms_crypto_key.vault_key.name
