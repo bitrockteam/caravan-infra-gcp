@@ -19,10 +19,23 @@ resource "google_compute_firewall" "hcpoc_cluster" {
 
   allow {
     protocol = "tcp"
-    ports    = ["22", "8200", "8201"]
+    ports    = ["22", "8200"]
   }
 
-  // Allow traffic from everywhere to instances with an http-server tag
   source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["cluster-node"]
+}
+
+resource "google_compute_firewall" "hcpoc_internal_ha" {
+  project = var.project_id
+  name    = "allow-ha-cluster"
+  network = google_compute_network.hcpoc.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8201"]
+  }
+
+  source_ranges = [var.subnet_prefix]
   target_tags   = ["cluster-node"]
 }
