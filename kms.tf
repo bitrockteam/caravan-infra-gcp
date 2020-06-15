@@ -24,7 +24,4 @@ resource "google_kms_crypto_key" "vault_key" {
   key_ring        = google_kms_key_ring.vault_keyring.self_link
   rotation_period = "1209660s"
 
-  lifecycle {
-    prevent_destroy = true
-  }
 }
