@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "hcpoc-gcp-storage"
+    bucket = "terraform-remote-backend"
     prefix = "terraform/state"
   }
 }
