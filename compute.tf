@@ -33,7 +33,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
     access_config {
     }
   }
-  
+
   metadata = {
     ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
@@ -50,6 +50,17 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
   }
 
   allow_stopping_for_update = true
+
+  provisioner "remote-exec" {
+    inline = ["echo 'Here come the sun'"]
+    connection {
+      type        = "ssh"
+      user        = var.ssh_user
+      timeout     = var.ssh_timeout
+      private_key = chomp(tls_private_key.ssh-key.private_key_pem)
+      host        = self.network_interface.0.access_config.0.nat_ip
+    }
+  }
 }
 
 resource "local_file" "ssh_key" {

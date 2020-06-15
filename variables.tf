@@ -20,3 +20,12 @@ variable "google_kms_crypto_key" {
   type    = string
   default = ""
 }
+
+variable "ssh_user" {
+  type    = string
+  default = "centos"
+}
+variable "ssh_timeout" {
+  type    = string
+  default = "120s"
+}
