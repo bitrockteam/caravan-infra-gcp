@@ -1,6 +1,10 @@
+resource "random_id" "keyring" {
+  byte_length = 4
+}
+
 resource "google_kms_key_ring" "vault_keyring" {
   project  = var.project_id
-  name     = "vault-keyring"
+  name     = "vault-keyring-${random_id.keyring.dec}"
   location = "global"
 }
 
@@ -18,6 +22,7 @@ resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
     "serviceAccount:${google_service_account.cluster_node_service_account.email}",
   ]
 }
+
 
 resource "google_kms_crypto_key" "vault_key" {
   name            = "vault-crypto-key"
