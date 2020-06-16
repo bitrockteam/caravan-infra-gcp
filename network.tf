@@ -54,3 +54,31 @@ resource "google_compute_firewall" "hcpoc_internal_ha" {
   target_tags   = ["cluster-node"]
 }
 
+resource "google_compute_firewall" "hcpoc_internal_consul_server" {
+  project = var.project_id
+  name    = "allow-server-cluster"
+  network = google_compute_network.hcpoc.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8300"]
+  }
+
+  source_ranges = [var.subnet_prefix]
+  target_tags   = ["cluster-node"]
+}
+
+resource "google_compute_firewall" "hcpoc_internal_consul_ha" {
+  project = var.project_id
+  name    = "allow-ha-cluster"
+  network = google_compute_network.hcpoc.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8301"]
+  }
+
+  source_ranges = [var.subnet_prefix]
+  target_tags   = ["cluster-node"]
+}
+
