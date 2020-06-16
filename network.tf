@@ -19,7 +19,7 @@ resource "google_compute_firewall" "hcpoc_cluster" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8200"]
+    ports    = ["8200","8300"]
   }
 
   source_ranges = ["0.0.0.0/0"]
@@ -48,20 +48,6 @@ resource "google_compute_firewall" "hcpoc_internal_ha" {
   allow {
     protocol = "tcp"
     ports    = ["8201"]
-  }
-
-  source_ranges = [var.subnet_prefix]
-  target_tags   = ["cluster-node"]
-}
-
-resource "google_compute_firewall" "hcpoc_internal_consul_server" {
-  project = var.project_id
-  name    = "allow-consul-server-cluster"
-  network = google_compute_network.hcpoc.self_link
-
-  allow {
-    protocol = "tcp"
-    ports    = ["8300"]
   }
 
   source_ranges = [var.subnet_prefix]
