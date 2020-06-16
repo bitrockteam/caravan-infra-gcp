@@ -56,7 +56,7 @@ resource "google_compute_firewall" "hcpoc_internal_ha" {
 
 resource "google_compute_firewall" "hcpoc_internal_consul_server" {
   project = var.project_id
-  name    = "allow-server-cluster"
+  name    = "allow-consul-server-cluster"
   network = google_compute_network.hcpoc.self_link
 
   allow {
@@ -70,7 +70,7 @@ resource "google_compute_firewall" "hcpoc_internal_consul_server" {
 
 resource "google_compute_firewall" "hcpoc_internal_consul_ha" {
   project = var.project_id
-  name    = "allow-ha-cluster"
+  name    = "allow-consul-ha-cluster"
   network = google_compute_network.hcpoc.self_link
 
   allow {
