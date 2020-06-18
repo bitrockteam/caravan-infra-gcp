@@ -8,6 +8,12 @@ resource "tls_private_key" "ssh-key" {
 }
 
 resource "google_compute_instance" "hcpoc_cluster_nodes" {
+
+  depends_on = [
+    google_compute_network.hcpoc,
+    module.packer_build
+  ]
+
   project      = var.project_id
   count        = var.instance_count
   zone         = data.google_compute_zones.available.names[count.index]
@@ -22,7 +28,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 
   boot_disk {
     initialize_params {
-      image = module.packer_build.image_id
+      image = var.compute_image_name
       type  = "pd-standard"
       size  = "100"
     }
@@ -40,12 +46,8 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 
   metadata_startup_script = file("${path.module}/scripts/startup-script.sh")
 
-  tags = ["cluster-node", "ssh-allowed-node"]
+  tags = ["cluster-node", "ssh-allowed-node", "packer-${module.packer_build.id}"]
 
-  depends_on = [
-    google_compute_network.hcpoc,
-    module.packer_build
-  ]
 
   service_account {
     email  = google_service_account.cluster_node_service_account.email
