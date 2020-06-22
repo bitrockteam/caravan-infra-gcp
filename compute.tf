@@ -17,7 +17,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
   project      = var.project_id
   count        = var.instance_count
   zone         = data.google_compute_zones.available.names[count.index]
-  name         = "cluster_node_${count.index + 1}"
+  name         = format("clustnode%.2d", count.index + 1)
   machine_type = "n1-standard-2"
 
   scheduling {
