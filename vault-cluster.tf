@@ -9,3 +9,8 @@ module "vault_cluster" {
   ssh_user                 = var.ssh_user
   ssh_timeout              = var.ssh_timeout
 }
+
+module "vault_consul_config" {
+  source = "git::ssh://git@github.com/bitrockteam/hcpoc-base-vault-baseline//modules/vault-consul-config?ref=master"
+  vault_endpoint = "${module.vault_cluster.cluster_node_1_public_ip}"
+}
