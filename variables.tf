@@ -33,3 +33,7 @@ variable "compute_image_name" {
   type    = string
   default = "hcpoc-centos-image"
 }
+variable "skip_packer_build" {
+  type    = bool
+  default = false
+}

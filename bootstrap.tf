@@ -13,4 +13,5 @@ module "packer_build" {
   google_subnetwork_name = google_compute_subnetwork.hcpoc.name
   google_firewall_name   = google_compute_firewall.hcpoc_allow_ssh.name
   build_image_name       = var.compute_image_name
+  skip_packer_build      = var.skip_packer_build
 }

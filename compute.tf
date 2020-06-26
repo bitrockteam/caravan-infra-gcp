@@ -46,7 +46,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 
   metadata_startup_script = file("${path.module}/scripts/startup-script.sh")
 
-  tags = ["cluster-node", "ssh-allowed-node", "packer-${module.packer_build.id}"]
+  tags = ["cluster-node", "ssh-allowed-node", "packer-${var.skip_packer_build ? "old" : module.packer_build.id}"]
 
 
   service_account {
