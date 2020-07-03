@@ -28,7 +28,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 
   boot_disk {
     initialize_params {
-      image = var.compute_image_name
+      image = "family/${var.compute_image_name}"
       type  = "pd-standard"
       size  = "100"
     }
