@@ -111,14 +111,15 @@ resource "google_compute_instance_template" "worker-instance-template" {
     scopes = ["cloud-platform"]
   }
 }
-resource "google_compute_instance_group_manager" "default-workers" {
+resource "google_compute_region_instance_group_manager" "default-workers" {
   for_each = var.workers_groups
 
-  name    = "grp-mgr-${each.key}"
-  project = var.project_id
+  name                      = "grp-mgr-${each.key}"
+  region                    = var.region
+  distribution_policy_zones = data.google_compute_zones.available.names
+  project                   = var.project_id
 
   base_instance_name = each.value.base_instance_name
-  zone               = each.value.zone
   target_size        = each.value.target_size
 
   version {
