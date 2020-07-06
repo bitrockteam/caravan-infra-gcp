@@ -8,6 +8,7 @@ resource "tls_private_key" "ssh-key" {
 }
 
 resource "google_compute_instance" "hcpoc_cluster_nodes" {
+  count = var.cluster_instance_count
 
   depends_on = [
     google_compute_network.hcpoc,
@@ -15,10 +16,9 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
   ]
 
   project      = var.project_id
-  count        = var.instance_count
   zone         = data.google_compute_zones.available.names[count.index]
   name         = format("clustnode%.2d", count.index + 1)
-  machine_type = "n1-standard-2"
+  machine_type = can(length(var.cluster_machine_type)) ? var.cluster_machine_type : var.default_machine_type
 
   scheduling {
     automatic_restart   = false
@@ -81,5 +81,48 @@ resource "local_file" "ssh_key" {
   sensitive_content = chomp(tls_private_key.ssh-key.private_key_pem)
   filename          = "${path.module}/ssh-key"
   file_permission   = "0600"
+}
+
+resource "google_compute_instance_template" "worker-instance-template" {
+  for_each = var.workers_instance_templates
+
+  name_prefix  = each.value.name_prefix
+  machine_type = can(length(each.value.machine_type)) ? each.value.machine_type : var.default_machine_type
+  project      = var.project_id
+
+  scheduling {
+    automatic_restart   = true
+    on_host_maintenance = "MIGRATE"
+  }
+
+  disk {
+    source_image = "family/${each.value.image_family_name}"
+    auto_delete  = true
+    boot         = true
+  }
+
+  network_interface {
+    network    = google_compute_network.hcpoc.self_link
+    subnetwork = google_compute_subnetwork.hcpoc.self_link
+  }
+
+  service_account {
+    email  = google_service_account.worker_node_account[each.key].email
+    scopes = ["cloud-platform"]
+  }
+}
+resource "google_compute_instance_group_manager" "default-workers" {
+  for_each = var.workers_groups
+
+  name    = "grp-mgr-${each.key}"
+  project = var.project_id
+
+  base_instance_name = each.value.base_instance_name
+  zone               = each.value.zone
+  target_size        = each.value.target_size
+
+  version {
+    instance_template = google_compute_instance_template.worker-instance-template[each.value.instance_template].id
+  }
 }
 

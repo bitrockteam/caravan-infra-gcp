@@ -1,8 +1,16 @@
 variable "region" {}
 variable "google_account_file" {}
 variable "project_id" {}
-variable "instance_count" {
+variable "default_machine_type" {
+  type    = string
+  default = "n1-standard-2"
+}
+variable "cluster_instance_count" {
   default = "3"
+}
+variable "cluster_machine_type" {
+  type    = string
+  default = null
 }
 variable "prefix" {
   description = "The prefix of the objects' names"
@@ -36,4 +44,25 @@ variable "compute_image_name" {
 variable "skip_packer_build" {
   type    = bool
   default = false
+}
+variable "workers_instance_templates" {
+  type = map(any)
+  default = {
+    def-wrkr-tpl = {
+      name_prefix       = "worker-template-default-"
+      machine_type      = "n1-standard-2"
+      image_family_name = "hcpoc-centos-image"
+    }
+  }
+}
+variable "workers_groups" {
+  type = map(any)
+  default = {
+    def-wrkr-grp = {
+      base_instance_name = "defwrkr"
+      zone               = "us-central1-a"
+      target_size        = 3
+      instance_template  = "def-wrkr-tpl"
+    }
+  }
 }
