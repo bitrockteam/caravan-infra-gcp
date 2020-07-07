@@ -134,4 +134,19 @@ resource "google_compute_region_instance_group_manager" "default-workers" {
     instance_template = google_compute_instance_template.worker-instance-template[each.value.instance_template].id
   }
 }
-
+resource "google_storage_bucket_object" "vault-agent-configs" {
+  name   = "vault-agents/agent.hcl"
+  bucket = google_storage_bucket.configs.name
+  content = <<-EOT
+      ${templatefile("${path.module}/files/agent.hcl.tpl",
+  {
+    vault_endpoint      = "http://${google_compute_instance.hcpoc_cluster_nodes[0].name}.c.${var.project_id}.internal:8200"
+    tcp_listener        = "127.0.0.1:8200"
+    tcp_listener_tls    = false
+    gcp_node_role       = "worker-node"
+    gcp_service_account = "worker-node@goole.com"
+    gcp_project_id      = var.project_id
+  }
+)}
+    EOT
+}

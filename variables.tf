@@ -1,4 +1,5 @@
 variable "region" {}
+variable "location" {}
 variable "google_account_file" {}
 variable "project_id" {}
 variable "default_machine_type" {

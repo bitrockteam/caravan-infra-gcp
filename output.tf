@@ -17,3 +17,6 @@ output "cluster-private-ips" {
     for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.network_ip
   }
 }
+output "configs-bucket-url" {
+  value = google_storage_bucket.configs.url
+}

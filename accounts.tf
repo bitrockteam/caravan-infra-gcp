@@ -1,3 +1,5 @@
+data "google_client_openid_userinfo" "myself" {
+}
 resource "google_service_account" "cluster_node_service_account" {
   account_id   = "cluster-node"
   display_name = "Cluster Node Service Account"
