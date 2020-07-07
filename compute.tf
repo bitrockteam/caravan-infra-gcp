@@ -90,9 +90,17 @@ resource "google_compute_instance_template" "worker-instance-template" {
   machine_type = can(length(each.value.machine_type)) ? each.value.machine_type : var.default_machine_type
   project      = var.project_id
 
+  lifecycle {
+    create_before_destroy = true
+  }
+
   scheduling {
-    automatic_restart   = true
-    on_host_maintenance = "MIGRATE"
+    # Error: Error creating instance template: googleapi: Error 400: Invalid value for field 'resource.properties.scheduling.preemptible': 'true'. 
+    # Scheduling must have preemptible be false when AutomaticRestart is true.
+    # Scheduling must have preemptible be false when OnHostMaintenance isn't TERMINATE.
+    automatic_restart   = ! each.value.preemptible
+    on_host_maintenance = each.value.preemptible ? "TERMINATE" : "MIGRATE"
+    preemptible         = each.value.preemptible
   }
 
   disk {

@@ -52,6 +52,7 @@ variable "workers_instance_templates" {
       name_prefix       = "worker-template-default-"
       machine_type      = "n1-standard-2"
       image_family_name = "hcpoc-centos-image"
+      preemptible       = true
     }
   }
 }
