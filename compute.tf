@@ -120,7 +120,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   metadata = {
-    vault-agent-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/vault-agent-${each.key}?alt=media"
+    vault-agent-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/vault-agent-${each.key}.hcl?alt=media"
     ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
