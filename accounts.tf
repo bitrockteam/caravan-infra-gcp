@@ -15,3 +15,35 @@ resource "google_service_account" "worker_node_account" {
   display_name = "Worker Node Service Account for ${each.key}"
   project      = var.project_id
 }
+
+resource "google_service_account_iam_binding" "key-account-iam" {
+  service_account_id = google_service_account.cluster_node_service_account.id
+  role               = "roles/iam.serviceAccountKeyAdmin"
+
+  members = ["serviceAccount:${google_service_account.cluster_node_service_account.email}"]
+}
+resource "google_service_account_iam_binding" "key-account-iam-cluster" {
+  service_account_id = google_service_account.cluster_node_service_account.id
+  role               = "roles/iam.serviceAccountTokenCreator"
+
+  members = ["serviceAccount:${google_service_account.cluster_node_service_account.email}"]
+}
+
+resource "google_service_account_iam_binding" "key-account-iam-workers" {
+  for_each           = { for k, v in google_service_account.worker_node_account : v.id => "serviceAccount:${v.email}" }
+  service_account_id = each.key
+  role               = "roles/iam.serviceAccountTokenCreator"
+  members            = [each.value, "serviceAccount:${google_service_account.cluster_node_service_account.email}"]
+}
+
+
+resource "google_storage_bucket_iam_binding" "configs_binding" {
+  bucket = google_storage_bucket.configs.name
+  role   = "roles/storage.objectViewer"
+  members = concat([
+    "serviceAccount:${google_service_account.cluster_node_service_account.email}",
+    "serviceAccount:${data.google_client_openid_userinfo.myself.email}"
+    ],
+    [for k, v in google_service_account.worker_node_account : "serviceAccount:${v.email}"]
+  )
+}

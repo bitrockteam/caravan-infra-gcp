@@ -68,15 +68,6 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
   }
 }
 
-resource "google_service_account_iam_binding" "key-account-iam" {
-  service_account_id = google_service_account.cluster_node_service_account.id
-  role               = "roles/iam.serviceAccountTokenCreator"
-
-  members = [
-    "serviceAccount:${google_service_account.cluster_node_service_account.email}",
-  ]
-}
-
 resource "local_file" "ssh_key" {
   sensitive_content = chomp(tls_private_key.ssh-key.private_key_pem)
   filename          = "${path.module}/ssh-key"
