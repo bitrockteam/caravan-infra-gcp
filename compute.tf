@@ -118,6 +118,14 @@ resource "google_compute_instance_template" "worker-instance-template" {
     email  = google_service_account.worker_node_account[each.key].email
     scopes = ["cloud-platform"]
   }
+
+  metadata = {
+    vault-agent-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/vault-agent-${each.key}?alt=media"
+    ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
+  }
+
+  metadata_startup_script = file("${path.module}/scripts/startup-script.sh")
+
   tags = ["ssh-allowed-node", "hcpoc-worker-node"]
 }
 resource "google_compute_region_instance_group_manager" "default-workers" {
@@ -136,8 +144,9 @@ resource "google_compute_region_instance_group_manager" "default-workers" {
   }
 }
 resource "google_storage_bucket_object" "vault-agent-configs" {
-  name   = "vault-agents/agent.hcl"
-  bucket = google_storage_bucket.configs.name
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "vault-agent-${each.key}.hcl"
+  bucket   = google_storage_bucket.configs.name
   content = <<-EOT
       ${templatefile("${path.module}/files/agent.hcl.tpl",
   {
@@ -145,7 +154,7 @@ resource "google_storage_bucket_object" "vault-agent-configs" {
     tcp_listener        = "127.0.0.1:8200"
     tcp_listener_tls    = false
     gcp_node_role       = "worker-node"
-    gcp_service_account = "worker-node@goole.com"
+    gcp_service_account = each.value.service_account[0].email
     gcp_project_id      = var.project_id
   }
 )}
