@@ -7,4 +7,5 @@ resource "google_storage_bucket" "configs" {
   versioning {
     enabled = true
   }
+  storage_class = "REGIONAL"
 }
