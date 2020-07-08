@@ -118,6 +118,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
     email  = google_service_account.worker_node_account[each.key].email
     scopes = ["cloud-platform"]
   }
+  tags = ["ssh-allowed-node", "hcpoc-worker-node"]
 }
 resource "google_compute_region_instance_group_manager" "default-workers" {
   for_each = var.workers_groups
