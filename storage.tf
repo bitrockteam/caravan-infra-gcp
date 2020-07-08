@@ -12,8 +12,10 @@ resource "google_storage_bucket" "configs" {
 resource "google_storage_bucket_iam_binding" "configs_binding" {
   bucket = google_storage_bucket.configs.name
   role   = "roles/storage.objectViewer"
-  members = [
+  members = concat([
     "serviceAccount:${google_service_account.cluster_node_service_account.email}",
     "serviceAccount:${data.google_client_openid_userinfo.myself.email}"
-  ]
+    ],
+    [for k, v in google_service_account.worker_node_account : "serviceAccount:${v.email}"]
+  )
 }
