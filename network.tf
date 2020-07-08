@@ -5,11 +5,12 @@ resource "google_compute_network" "hcpoc" {
 }
 
 resource "google_compute_subnetwork" "hcpoc" {
-  project       = var.project_id
-  name          = "${var.prefix}-subnet"
-  region        = var.region
-  network       = google_compute_network.hcpoc.self_link
-  ip_cidr_range = var.subnet_prefix
+  project                  = var.project_id
+  name                     = "${var.prefix}-subnet"
+  region                   = var.region
+  network                  = google_compute_network.hcpoc.self_link
+  ip_cidr_range            = var.subnet_prefix
+  private_ip_google_access = true
 }
 
 resource "google_compute_firewall" "hcpoc_cluster" {
@@ -19,7 +20,7 @@ resource "google_compute_firewall" "hcpoc_cluster" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8200","8300","8500"]
+    ports    = ["8200", "8300", "8500"]
   }
 
   source_ranges = ["0.0.0.0/0"]
