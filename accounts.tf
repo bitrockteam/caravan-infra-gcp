@@ -30,7 +30,7 @@ resource "google_service_account_iam_binding" "key-account-iam-cluster" {
 }
 
 resource "google_service_account_iam_binding" "key-account-iam-workers" {
-  for_each           = { for k, v in google_service_account.worker_node_account : v.id => "serviceAccount:${v.email}" }
+  for_each           = { for k, v in var.workers_instance_templates : "projects/${var.project_id}/serviceAccounts/wrknodeacc-${k}@${var.project_id}.iam.gserviceaccount.com" => "serviceAccount:wrknodeacc-${k}@${var.project_id}.iam.gserviceaccount.com" }
   service_account_id = each.key
   role               = "roles/iam.serviceAccountTokenCreator"
   members            = [each.value, "serviceAccount:${google_service_account.cluster_node_service_account.email}"]

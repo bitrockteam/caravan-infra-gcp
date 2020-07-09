@@ -49,7 +49,7 @@ variable "skip_packer_build" {
 variable "workers_instance_templates" {
   type = map(any)
   default = {
-    def-wrkr-tpl = {
+    def-wrkr = {
       name_prefix       = "worker-template-default-"
       machine_type      = "n1-standard-2"
       image_family_name = "hcpoc-centos-image"
@@ -64,7 +64,7 @@ variable "workers_groups" {
       base_instance_name = "defwrkr"
       zone               = "us-central1-a"
       target_size        = 3
-      instance_template  = "def-wrkr-tpl"
+      instance_template  = "def-wrkr"
     }
   }
 }
