@@ -74,6 +74,11 @@ resource "local_file" "ssh_key" {
   file_permission   = "0600"
 }
 
+data "google_compute_image" "hcpoc_last_image" {
+  family  = var.compute_image_name
+  project = var.project_id
+}
+
 resource "google_compute_instance_template" "worker-instance-template" {
   for_each = var.workers_instance_templates
 
@@ -95,7 +100,8 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   disk {
-    source_image = "family/${each.value.image_family_name}"
+    # source_image = "family/${each.value.image_family_name}"
+    source_image = data.google_compute_image.hcpoc_last_image.self_link
     auto_delete  = true
     boot         = true
   }
