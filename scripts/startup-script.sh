@@ -1,9 +1,5 @@
 #! /bin/bash
 
-curl -sSO https://dl.google.com/cloudagents/add-monitoring-agent-repo.sh
-bash add-monitoring-agent-repo.sh
-
-yum install -y stackdriver-agent
 service stackdriver-agent start
 
 if [[ `hostname` != clusternode* ]]; then
