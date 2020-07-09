@@ -119,6 +119,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
   tags = ["ssh-allowed-node", "hcpoc-worker-node"]
 }
+
 resource "google_compute_region_instance_group_manager" "default-workers" {
   for_each = var.workers_groups
 
@@ -134,6 +135,7 @@ resource "google_compute_region_instance_group_manager" "default-workers" {
     instance_template = google_compute_instance_template.worker-instance-template[each.value.instance_template].id
   }
 }
+
 resource "google_storage_bucket_object" "vault-agent-configs" {
   for_each = google_compute_instance_template.worker-instance-template
   name     = "vault-agent-${each.key}.hcl"
