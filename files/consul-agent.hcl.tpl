@@ -18,13 +18,13 @@ ui = true
 client_addr = "0.0.0.0"
 connect {
    enabled = true
-#   ca_provider = "vault"
-#   ca_config {
-#        address = "http://localhost:8200"
-#        token = "..."
-#        root_pki_path = "pki"
-#        intermediate_pki_path = "pki-connect"
-#    }
+   ca_provider = "vault"
+   ca_config {
+        address = "http://localhost:8200"
+        token = "/root/vault_token"
+        root_pki_path = "pki"
+        intermediate_pki_path = "pki-connect"
+    }
 }
 #verify_incoming = true
 #verify_outgoing = true
