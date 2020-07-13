@@ -14,8 +14,6 @@ acl {
    default_policy = "deny"
    enable_token_persistence = true
  }
-ui = true
-client_addr = "0.0.0.0"
 connect {
    enabled = true
    #ca_provider = "vault"
