@@ -118,6 +118,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
   metadata = {
     vault-agent-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/vault-agent-${each.key}.hcl?alt=media"
+    consul-agent-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/consul-agent-${each.key}.hcl?alt=media"
     ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
@@ -155,6 +156,19 @@ resource "google_storage_bucket_object" "vault-agent-configs" {
     gcp_node_role       = "worker-node"
     gcp_service_account = each.value.service_account[0].email
     gcp_project_id      = var.project_id
+  }
+)}
+    EOT
+}
+
+resource "google_storage_bucket_object" "consul-agent-configs" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "consul-agent-${each.key}.hcl"
+  bucket   = google_storage_bucket.configs.name
+  content = <<-EOT
+      ${templatefile("${path.module}/files/consul-agent.hcl.tpl",
+  {
+    cluster_nodes = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.network_ip }
   }
 )}
     EOT
