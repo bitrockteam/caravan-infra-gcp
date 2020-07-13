@@ -20,3 +20,6 @@ output "cluster-private-ips" {
 output "configs-bucket-url" {
   value = google_storage_bucket.configs.url
 }
+output "worker_nodes_service_accounts" {
+  value = [ for k,v in google_service_account.worker_node_account: v.email ]
+}
