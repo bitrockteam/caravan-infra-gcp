@@ -23,4 +23,10 @@ auto_auth {
        project="${gcp_project_id}"
     }
   }
+  sink {
+    type = "file"
+    config = {
+      path = "/root/vault_token"
+    }
+  }
 }
