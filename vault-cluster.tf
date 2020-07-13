@@ -9,6 +9,9 @@ module "vault_cluster" {
   ssh_private_key          = chomp(tls_private_key.ssh-key.private_key_pem)
   ssh_user                 = var.ssh_user
   ssh_timeout              = var.ssh_timeout
+  gcp_project_id      = var.project_id
+  gcp_node_role       = "cluster-node"
+  gcp_service_account = "cluster-node@${var.project_id}.iam.gserviceaccount.com"
 }
 module "vault_cluster_agents" {
   source              = "../hcpoc-base-vault-baseline/modules/agent"
