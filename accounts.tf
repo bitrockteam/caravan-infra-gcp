@@ -36,7 +36,6 @@ resource "google_service_account_iam_binding" "key-account-iam-workers" {
   members            = [each.value, "serviceAccount:${google_service_account.cluster_node_service_account.email}"]
 }
 
-
 resource "google_storage_bucket_iam_binding" "configs_binding" {
   bucket = google_storage_bucket.configs.name
   role   = "roles/storage.objectViewer"
