@@ -26,7 +26,7 @@ auto_auth {
   sink {
     type = "file"
     config = {
-      path = "/tmp/vault_token"
+      path = "/etc/consul.d/token"
     }
   }
 }
