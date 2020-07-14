@@ -13,5 +13,6 @@ else
     sleep 100s && \
     export VAULT_ADDR="http://127.0.0.1:8200" && \
     /usr/local/bin/vault login -method=gcp role="cluster-node" service_account="cluster-node@${project}.iam.gserviceaccount.com" project=${project} && \
-    /usr/local/bin/vault read consul/creds/consul-agent-role | awk '/token/{print $2}' > /etc/consul.d/token
+    /usr/local/bin/vault read consul/creds/consul-agent-role | awk '/token/{print $2}' > /etc/consul.d/token && \
+    /usr/local/bin/consul acl set-agent-token default -token-file=/etc/consul.d/token
 fi
