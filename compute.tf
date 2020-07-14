@@ -44,7 +44,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
     ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
-  metadata_startup_script = file("${path.module}/scripts/startup-script.sh")
+  metadata_startup_script = file("${path.module}/scripts/startup-script.sh ${var.project_id}")
 
   tags = ["cluster-node", "ssh-allowed-node", "packer-${var.skip_packer_build ? "old" : module.packer_build.id}"]
 
@@ -122,7 +122,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
     ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
-  metadata_startup_script = file("${path.module}/scripts/startup-script.sh")
+  metadata_startup_script = file("${path.module}/scripts/startup-script.sh ${var.project_id}")
 
   tags = ["ssh-allowed-node", "hcpoc-worker-node"]
 }
