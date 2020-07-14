@@ -1,5 +1,7 @@
 #! /bin/bash
 
+PROJECT=$1
+
 sudo service stackdriver-agent start
 
 if [[ `hostname` != clusternode* ]]; then
@@ -9,4 +11,8 @@ if [[ `hostname` != clusternode* ]]; then
         CONSUL_AGENT_CONFIG=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/consul-agent-config)
     curl -o /etc/vault.d/agent.hcl -s -L -H "Authorization: Bearer $TOKEN" $VAULT_AGENT_CONFIG && systemctl restart vault-agent
     curl -o /etc/consul.d/consul.hcl -s -L -H "Authorization: Bearer $TOKEN" $CONSUL_AGENT_CONFIG && systemctl restart consul
+else
+    sleep 100s && \
+    /usr/local/bin/vault login -method=gcp role="cluster-node" service_account="cluster-node@$PROJECT.iam.gserviceaccount.com" project=$PROJECT
+    /usr/local/bin/vault read consul/creds/consul-agent-role | awk '/token/{print $2}' > /etc/consul.d/token
 fi
