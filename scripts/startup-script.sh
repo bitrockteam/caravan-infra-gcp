@@ -11,6 +11,7 @@ if [[ `hostname` != clusternode* ]]; then
     curl -o /etc/consul.d/consul.hcl -s -L -H "Authorization: Bearer $TOKEN" $CONSUL_AGENT_CONFIG && systemctl restart consul
 else
     sleep 100s && \
-    /usr/local/bin/vault login -method=gcp role="cluster-node" service_account="cluster-node@${project}.iam.gserviceaccount.com" project=${project}
+    export VAULT_ADDR="http://127.0.0.1:8200" && \
+    /usr/local/bin/vault login -method=gcp role="cluster-node" service_account="cluster-node@${project}.iam.gserviceaccount.com" project=${project} && \
     /usr/local/bin/vault read consul/creds/consul-agent-role | awk '/token/{print $2}' > /etc/consul.d/token
 fi
