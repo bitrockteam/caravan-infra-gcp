@@ -23,10 +23,9 @@ auto_auth {
        project="${gcp_project_id}"
     }
   }
-  sink {
-    type = "file"
-    config = {
-      path = "/etc/consul.d/token"
-    }
-  }
+}
+
+template {
+  source      = "/etc/consul.d/consul-agent.hcl.tmpl"
+  destination = "/etc/consul.d/consul-agent.hcl"
 }
