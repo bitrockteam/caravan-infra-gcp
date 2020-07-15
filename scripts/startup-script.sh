@@ -8,5 +8,5 @@ if [[ `hostname` != clusternode* ]]; then
         VAULT_AGENT_CONFIG=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/vault-agent-config) \
         CONSUL_AGENT_CONFIG=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/consul-agent-config)
     curl -o /etc/vault.d/agent.hcl -s -L -H "Authorization: Bearer $TOKEN" $VAULT_AGENT_CONFIG && systemctl restart vault-agent
-    curl -o /etc/consul.d/consul-agent.hcl -s -L -H "Authorization: Bearer $TOKEN" $CONSUL_AGENT_CONFIG && systemctl restart consul
+    curl -o /etc/consul.d/consul.hcl.tmpl -s -L -H "Authorization: Bearer $TOKEN" $CONSUL_AGENT_CONFIG && systemctl restart consul
 fi

@@ -26,6 +26,6 @@ auto_auth {
 }
 
 template {
-  source      = "/etc/consul.d/consul-agent.hcl.tmpl"
-  destination = "/etc/consul.d/consul-agent.hcl"
+  source      = "/etc/consul.d/consul.hcl.tmpl"
+  destination = "/etc/consul.d/consul.hcl"
 }
