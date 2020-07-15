@@ -166,7 +166,7 @@ resource "google_storage_bucket_object" "consul-agent-configs" {
   name     = "consul-agent-${each.key}.hcl"
   bucket   = google_storage_bucket.configs.name
   content = <<-EOT
-      ${templatefile("${path.module}/files/consul-agent.hcl.tpl",
+      ${templatefile("${path.module}/files/consul-agent.hcl.tmpl",
   {
     cluster_nodes = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.network_ip }
   }
