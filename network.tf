@@ -66,6 +66,6 @@ resource "google_compute_firewall" "hcpoc_internal_consul_ha" {
   }
 
   source_ranges = [var.subnet_prefix]
-  target_tags   = ["cluster-node", "worker-node"]
+  target_tags   = ["cluster-node", "hcpoc-worker-node"]
 }
 
