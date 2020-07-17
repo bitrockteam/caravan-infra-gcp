@@ -119,6 +119,9 @@ resource "google_compute_instance_template" "worker-instance-template" {
   metadata = {
     vault-agent-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/vault-agent-${each.key}.hcl?alt=media"
     consul-agent-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/consul-agent-${each.key}.hcl?alt=media"
+    consul-agent-ca-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/ca.tmpl?alt=media"
+    consul-agent-cert-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/cert.tmpl?alt=media"
+    consul-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/keyfile.tmpl?alt=media"
     ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
@@ -128,6 +131,10 @@ resource "google_compute_instance_template" "worker-instance-template" {
 }
 
 resource "google_compute_region_instance_group_manager" "default-workers" {
+  depends_on = [
+    module.consul-cluster
+  ]
+
   for_each = var.workers_groups
 
   name                      = "grp-mgr-${each.key}"
@@ -193,26 +200,26 @@ resource "google_storage_bucket_object" "consul-agent-keyfile-file" {
   content = file("${path.module}/files/keyfile.tmpl")
 }
 
-resource "null_resource" "restart_vault_agent" {
-  for_each = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.access_config.0.nat_ip }
+# resource "null_resource" "restart_vault_agent" {
+#   for_each = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.access_config.0.nat_ip }
 
-  depends_on = [
-    google_compute_instance.hcpoc_cluster_nodes,
-    google_storage_bucket_object.consul-agent-configs,
-    google_compute_region_instance_group_manager.default-workers,
-  ]
+#   depends_on = [
+#     google_compute_instance.hcpoc_cluster_nodes,
+#     google_storage_bucket_object.consul-agent-configs,
+#     google_compute_region_instance_group_manager.default-workers,
+#   ]
 
-  connection {
-  type        = "ssh"
-  user        = var.ssh_user
-  private_key = chomp(tls_private_key.ssh-key.private_key_pem)
-  timeout     = var.ssh_timeout
-  host        = each.value
-}
+#   connection {
+#   type        = "ssh"
+#   user        = var.ssh_user
+#   private_key = chomp(tls_private_key.ssh-key.private_key_pem)
+#   timeout     = var.ssh_timeout
+#   host        = each.value
+# }
 
-  provisioner "remote-exec" {
-    inline = [
-      "sudo systemctl restart vault-agent",
-    ]
-  }
-}
+#   provisioner "remote-exec" {
+#     inline = [
+#       "sudo systemctl restart vault-agent",
+#     ]
+#   }
+# }

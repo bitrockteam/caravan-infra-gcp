@@ -1,3 +1,1 @@
-{{ with secret "pki_int/issue/consul" "common_name=consul" "ttl=24h" }}
-{{ .Data.private_key }}
-{{ end }}
+{{ with secret "pki_int/issue/consul" "common_name=consul" "ttl=24h" }}{{ .Data.private_key }}{{ end }}
