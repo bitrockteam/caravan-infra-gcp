@@ -200,6 +200,19 @@ resource "google_storage_bucket_object" "consul-agent-keyfile-file" {
   content = file("${path.module}/files/keyfile.tmpl")
 }
 
+resource "google_storage_bucket_object" "nomad-client-config" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "nomad-client.hcl"
+  bucket   = google_storage_bucket.configs.name
+  content = <<-EOT
+      ${templatefile("${path.module}/files/nomad-client.hcl.tmpl",
+  {
+    cluster_nodes = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.network_ip }
+  }
+)}
+    EOT
+}
+
 resource "null_resource" "restart_vault_agent" {
   for_each = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.access_config.0.nat_ip }
 
