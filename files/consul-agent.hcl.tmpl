@@ -17,14 +17,16 @@ acl {
 }
 connect {
    enabled = true
-   #ca_provider = "vault"
-   #ca_config {
-   #   address = "http://localhost:8200"
-   #   token = "/etc/consul.d/vault_token"
-   #   root_pki_path = "pki"
-   #   intermediate_pki_path = "pki-connect"
-   #}
+   ca_provider = "vault"
+   ca_config {
+      token = "/etc/consul.d/vault_token"
+      root_pki_path = "pki"
+      intermediate_pki_path = "pki-connect"
+   }
 }
-#verify_incoming = true
-#verify_outgoing = true
+ca_file ="/etc/consul.d/ca"
+cert_file = "/etc/consul.d/cert" 
+key_file = "/etc/consul.d/keyfile"
+verify_incoming = true
+verify_outgoing = true
 #verify_server_hostname = true
