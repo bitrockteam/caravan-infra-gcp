@@ -174,6 +174,25 @@ resource "google_storage_bucket_object" "consul-agent-configs" {
     EOT
 }
 
+resource "google_storage_bucket_object" "consul-agent-ca-file" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "ca.tmpl"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/ca.tmpl"
+}
+resource "google_storage_bucket_object" "consul-agent-cert-file" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "cert.tmpl"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/cert.tmpl"
+}
+resource "google_storage_bucket_object" "consul-agent-keyfile-file" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "keyfile.tmpl"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/keyfile.tmpl"
+}
+
 resource "null_resource" "restart_vault_agent" {
   for_each = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.access_config.0.nat_ip }
 
