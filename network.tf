@@ -20,7 +20,7 @@ resource "google_compute_firewall" "hcpoc_cluster" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8200", "8300", "8500"]
+    ports    = ["8200", "8300", "8500", "4646"]
   }
 
   source_ranges = ["0.0.0.0/0"]
@@ -63,6 +63,20 @@ resource "google_compute_firewall" "hcpoc_internal_consul_ha" {
   allow {
     protocol = "tcp"
     ports    = ["8301", "8302"]
+  }
+
+  source_ranges = [var.subnet_prefix]
+  target_tags   = ["cluster-node", "hcpoc-worker-node"]
+}
+
+resource "google_compute_firewall" "hcpoc_internal_nomad_ha" {
+  project = var.project_id
+  name    = "allow-nomad-ha-cluster"
+  network = google_compute_network.hcpoc.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["4647", "4648"]
   }
 
   source_ranges = [var.subnet_prefix]
