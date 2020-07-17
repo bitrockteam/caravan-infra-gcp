@@ -122,6 +122,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
     consul-agent-ca-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/ca.tmpl?alt=media"
     consul-agent-cert-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/cert.tmpl?alt=media"
     consul-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/keyfile.tmpl?alt=media"
+    nomad-client-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad.client.hcl?alt=media"
     ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
@@ -202,7 +203,7 @@ resource "google_storage_bucket_object" "consul-agent-keyfile-file" {
 
 resource "google_storage_bucket_object" "nomad-client-config" {
   for_each = google_compute_instance_template.worker-instance-template
-  name     = "nomad-client.hcl"
+  name     = "nomad.hcl"
   bucket   = google_storage_bucket.configs.name
   content = <<-EOT
       ${templatefile("${path.module}/files/nomad-client.hcl.tmpl",
