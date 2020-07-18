@@ -122,7 +122,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
     consul-agent-ca-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/ca.tmpl?alt=media"
     consul-agent-cert-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/cert.tmpl?alt=media"
     consul-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/keyfile.tmpl?alt=media"
-    nomad-client-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad.client.hcl?alt=media"
+    nomad-client-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad.hcl?alt=media"
     ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
@@ -233,7 +233,7 @@ resource "null_resource" "restart_vault_agent" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo systemctl restart vault-agent",
+      "sudo systemctl restart nomad",
     ]
   }
 }
