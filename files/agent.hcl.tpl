@@ -48,4 +48,6 @@ template {
 template {
   source      = "/etc/consul.d/consul.hcl.tmpl"
   destination = "/etc/consul.d/consul.hcl"
+  backup      = true
+  error_on_missing_key = true
 }
