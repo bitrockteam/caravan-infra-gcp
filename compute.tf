@@ -221,6 +221,48 @@ resource "google_storage_bucket_object" "java_springboot_artifact" {
   source = "${path.module}/files/spring-boot-0.0.1-SNAPSHOT.jar"
 }
 
+resource "google_compute_instance" "monitoring_instance" {
+  project      = var.project_id
+  zone         = "us-central1-a"
+  name         = "monitoringNode"
+  machine_type = "n1-standard-1"
+
+  scheduling {
+    automatic_restart   = false
+    on_host_maintenance = "TERMINATE"
+    preemptible         = true
+  }
+
+  boot_disk {
+    initialize_params {
+      image = "family/${var.compute_image_name}"
+      type  = "pd-standard"
+      size  = "100"
+    }
+  }
+
+  network_interface {
+    subnetwork = google_compute_subnetwork.hcpoc.self_link
+    access_config {
+    }
+  }
+
+  metadata = {
+    ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
+  }
+  
+  tags = ["cluster-node", "ssh-allowed-node"]
+
+   service_account {
+    email  = google_service_account.cluster_node_service_account.email
+    scopes = ["cloud-platform"]
+  }
+
+  allow_stopping_for_update = true
+
+}
+
+
 resource "null_resource" "restart_vault_agent" {
   for_each = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.access_config.0.nat_ip }
 
