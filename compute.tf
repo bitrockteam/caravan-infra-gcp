@@ -214,6 +214,13 @@ resource "google_storage_bucket_object" "nomad-client-config" {
     EOT
 }
 
+resource "google_storage_bucket_object" "java_springboot_artifact" {
+  # for_each = google_compute_instance_template.worker-instance-template
+  name     = "spring-boot-0.0.1-SNAPSHOT.jar"
+  bucket   = google_storage_bucket.configs.name
+  source = "${path.module}/files/spring-boot-0.0.1-SNAPSHOT.jar"
+}
+
 resource "null_resource" "restart_vault_agent" {
   for_each = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.access_config.0.nat_ip }
 
@@ -233,7 +240,7 @@ resource "null_resource" "restart_vault_agent" {
 
   provisioner "remote-exec" {
     inline = [
-      "sudo systemctl restart nomad",
+      "sudo systemctl restart vault-agent && sudo systemctl restart nomad",
     ]
   }
 }
