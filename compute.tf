@@ -224,7 +224,7 @@ resource "google_storage_bucket_object" "java_springboot_artifact" {
 resource "google_compute_instance" "monitoring_instance" {
   project      = var.project_id
   zone         = "us-central1-a"
-  name         = "monitoringNode"
+  name         = "monitoringnode"
   machine_type = "n1-standard-1"
 
   scheduling {
