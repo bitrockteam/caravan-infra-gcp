@@ -261,28 +261,3 @@ resource "google_compute_instance" "monitoring_instance" {
   allow_stopping_for_update = true
 
 }
-
-
-resource "null_resource" "restart_vault_agent" {
-  for_each = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.access_config.0.nat_ip }
-
-  depends_on = [
-    google_compute_instance.hcpoc_cluster_nodes,
-    google_storage_bucket_object.consul-agent-configs,
-    google_compute_region_instance_group_manager.default-workers,
-  ]
-
-  connection {
-  type        = "ssh"
-  user        = var.ssh_user
-  private_key = chomp(tls_private_key.ssh-key.private_key_pem)
-  timeout     = var.ssh_timeout
-  host        = each.value
-}
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo systemctl restart vault-agent && sudo systemctl restart nomad",
-    ]
-  }
-}
