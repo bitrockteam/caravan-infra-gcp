@@ -82,3 +82,4 @@ ssh-key
 backend.tf
 .*token*
 taint.sh
+files/spring-boot-0.0.1-SNAPSHOT.jar
