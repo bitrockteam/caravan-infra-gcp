@@ -216,9 +216,9 @@ resource "google_storage_bucket_object" "nomad-client-config" {
 
 resource "google_storage_bucket_object" "java_springboot_artifact" {
   # for_each = google_compute_instance_template.worker-instance-template
-  name     = "spring-boot-0.0.1-SNAPSHOT.jar"
+  name     = "spring-echo-example-1.0.0.jar"
   bucket   = google_storage_bucket.configs.name
-  source = "${path.module}/files/spring-boot-0.0.1-SNAPSHOT.jar"
+  source = "${path.module}/files/spring-echo-example-1.0.0.jar"
 }
 
 resource "google_compute_instance" "monitoring_instance" {
