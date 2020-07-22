@@ -1,7 +1,6 @@
 datacenter = "hcpoc"
 data_dir = "/var/lib/consul"
 log_level = "DEBUG"
-bind_addr = "{{ GetInterfaceIP \"eth0\" }}"
 retry_join = [
    %{ for n in keys("${cluster_nodes}") ~}
    "${cluster_nodes[n]}:8301",
