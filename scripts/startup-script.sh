@@ -2,7 +2,7 @@
 
 sudo service stackdriver-agent start
 
-if [[ `hostname` != clusternode* ]]; then
+if [[ `hostname` != clustnode* ]]; then
     sleep 60s && \
     export TOKEN=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token"  -H "Metadata-Flavor: Google" | grep -Po '(?<="access_token":")([^"]*)') \
         VAULT_AGENT_CONFIG=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/vault-agent-config)
