@@ -3,6 +3,9 @@ data_dir = "/var/lib/nomad"
 log_level = "DEBUG"
 client {
   enabled = true
+  meta = {
+    "connect.sidecar_image" = "envoyproxy/envoy:v1.14-latest"
+  }
 }
 
 server_join {
