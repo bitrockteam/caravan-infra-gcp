@@ -1,5 +1,6 @@
 datacenter = "hcpoc"
 data_dir = "/var/lib/nomad"
+log_level = "DEBUG"
 client {
   enabled = true
 }
@@ -10,6 +11,12 @@ server_join {
       "${cluster_nodes[n]}:4647",
       %{ endfor ~}
     ]
+}
+
+plugin "raw_exec" {
+  config {
+    enabled = true
+  }
 }
 
 consul {
