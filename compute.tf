@@ -122,6 +122,9 @@ resource "google_compute_instance_template" "worker-instance-template" {
     consul-agent-ca-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/ca.tmpl?alt=media"
     consul-agent-cert-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/cert.tmpl?alt=media"
     consul-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/keyfile.tmpl?alt=media"
+    nomad-agent-ca-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad-ca.tmpl?alt=media"
+    nomad-agent-cert-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad-cert.tmpl?alt=media"
+    nomad-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad-keyfile.tmpl?alt=media"
     nomad-client-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad.hcl?alt=media"
     ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
@@ -199,6 +202,25 @@ resource "google_storage_bucket_object" "consul-agent-keyfile-file" {
   name     = "keyfile.tmpl"
   bucket   = google_storage_bucket.configs.name
   content = file("${path.module}/files/keyfile.tmpl")
+}
+
+resource "google_storage_bucket_object" "nomad-agent-ca-file" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "nomad-ca.tmpl"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/nomad-ca.tmpl")
+}
+resource "google_storage_bucket_object" "nomad-agent-cert-file" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "nomad-cert.tmpl"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/nomad-cert.tmpl")
+}
+resource "google_storage_bucket_object" "nomad-agent-keyfile-file" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "nomad-keyfile.tmpl"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/nomad-keyfile.tmpl")
 }
 
 resource "google_storage_bucket_object" "nomad-client-config" {
