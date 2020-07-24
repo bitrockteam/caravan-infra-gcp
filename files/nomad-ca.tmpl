@@ -1,1 +1,0 @@
-{{ with secret "pki_int/issue/nomad" "common_name=client.hcpoc.nomad" "ttl=24h" }}{{ .Data.issuing_ca }}{{ end }}

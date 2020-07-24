@@ -46,19 +46,6 @@ template {
 }
 
 template {
-  source      = "/etc/nomad.d/cert.tmpl"
-  destination = "/etc/nomad.d/cert"
-}
-template {
-  source      = "/etc/nomad.d/keyfile.tmpl"
-  destination = "/etc/nomad.d/keyfile"
-}
-template {
-  source      = "/etc/nomad.d/ca.tmpl"
-  destination = "/etc/nomad.d/ca"
-}
-
-template {
   source      = "/etc/consul.d/consul.hcl.tmpl"
   destination = "/etc/consul.d/consul.hcl"
   backup      = true
