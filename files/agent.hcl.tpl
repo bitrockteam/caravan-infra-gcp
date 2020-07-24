@@ -51,3 +51,10 @@ template {
   backup      = true
   error_on_missing_key = true
 }
+
+template {
+  source      = "/etc/nomad.d/nomad.hcl.tmpl"
+  destination = "/etc/nomad.d/nomad.hcl"
+  backup      = true
+  error_on_missing_key = true
+}

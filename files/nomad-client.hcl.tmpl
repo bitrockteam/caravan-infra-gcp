@@ -37,7 +37,7 @@ consul {
   ssl        = true
   verify_ssl = true
 
-  token = "/etc/consul.d/vault_token"
+  tokens = "{{ with secret "secret/consul/nomad_client_token" }}{{ .Data.token }}{{ end }}"
 }
 
 tls {

@@ -16,7 +16,7 @@ if [[ `hostname` != clustnode* ]]; then
     curl -o /etc/consul.d/ca.tmpl -s -L -H "Authorization: Bearer $TOKEN" $CONSUL_CA && \
     curl -o /etc/consul.d/cert.tmpl -s -L -H "Authorization: Bearer $TOKEN" $CONSUL_CERT && \
     curl -o /etc/consul.d/keyfile.tmpl -s -L -H "Authorization: Bearer $TOKEN" $CONSUL_KEYFILE && \
-    curl -o /etc/nomad.d/nomad.hcl -s -L -H "Authorization: Bearer $TOKEN" $NOMAD_CLIENT_CONFIG && \
+    curl -o /etc/nomad.d/nomad.hcl.tmpl -s -L -H "Authorization: Bearer $TOKEN" $NOMAD_CLIENT_CONFIG && \
     systemctl restart vault-agent && \
     systemctl restart consul && \
     systemctl restart nomad
