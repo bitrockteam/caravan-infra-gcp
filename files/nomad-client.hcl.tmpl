@@ -44,12 +44,12 @@ tls {
     http = true
     rpc  = true
 
-    ca_file    = "/etc/consul.d/ca"
-    cert_file  = "/etc/consul.d/cert"
-    key_file   = "/etc/consul.d/keyfile"
+    ca_file    = "/etc/nomad.d/nomad_ca"
+    cert_file  = "/etc/nomad.d/nomad_cert"
+    key_file   = "/etc/nomad.d/nomad_keyfile"
 
     verify_https_client    = false
-    # verify_server_hostname = true
+    verify_server_hostname = true
 }
 
 
