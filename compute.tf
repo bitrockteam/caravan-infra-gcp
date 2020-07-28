@@ -277,6 +277,8 @@ resource "google_compute_instance" "monitoring_instance" {
   metadata = {
     ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
+
+  metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh", {project = var.project_id})
   
   tags = ["cluster-node", "ssh-allowed-node"]
 
