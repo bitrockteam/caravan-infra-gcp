@@ -8,5 +8,5 @@ sudo systemctl enable prometheus
 sudo systemctl start prometheus
 sudo systemctl enable elasticsearch
 sudo systemctl start elasticsearch
-sudo systemctl enable grafana
-sudo systemctl start grafana
+sudo systemctl enable grafana-server
+sudo systemctl start grafana-server
