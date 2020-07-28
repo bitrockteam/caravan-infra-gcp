@@ -84,4 +84,5 @@ backend.tf
 taint.sh
 files/spring-boot-0.0.1-SNAPSHOT.jar
 files/spring-echo-example-1.0.0.jar
+files/microservizio-1.0.0-SNAPSHOT.jar
 files/echo-server

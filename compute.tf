@@ -248,6 +248,12 @@ resource "google_storage_bucket_object" "echo_server_artifact" {
   source = "${path.module}/files/echo-server"
 }
 
+resource "google_storage_bucket_object" "java_bmed_artifact" {
+  name     = "microservizio-1.0.0-SNAPSHOT.jar"
+  bucket   = google_storage_bucket.configs.name
+  source = "${path.module}/files/microservizio-1.0.0-SNAPSHOT.jar"
+}
+
 resource "google_compute_instance" "monitoring_instance" {
   project      = var.project_id
   zone         = "us-central1-a"
