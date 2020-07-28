@@ -26,8 +26,8 @@ connect {
    ca_provider = "vault"
    ca_config {
       token = "{{ file "/etc/consul.d/vault_token" }}"
-      root_pki_path = "pki"
-      intermediate_pki_path = "pki_int"
+      root_pki_path = "connect_pki"
+      intermediate_pki_path = "connect_pki_int"
    }
 }
 ca_file ="/etc/consul.d/ca"
