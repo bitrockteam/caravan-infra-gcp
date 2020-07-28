@@ -1,1 +1,2 @@
-{{ with secret "tls_pki_int/issue/nomad" "common_name=client.global.nomad" "alt_names=localhost" "ip_sans=127.0.0.1" "ttl=24h"}}{{ .Data.issuing_ca }}{{ end }}
+{{ with secret "tls_pki/cert/ca" }}{{ .Data.certificate }}{{ end }}
+{{ with secret "tls_pki_int/cert/ca" }}{{ .Data.certificate }}{{ end }}
