@@ -255,9 +255,9 @@ resource "google_storage_bucket_object" "java_bmed_artifact" {
 }
 
 resource "google_storage_bucket_object" "java_opntrc_artifact" {
-  name     = "OpenTracing-AppA-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+  name     = "OpenTracing-AppA-0.0.1-SNAPSHOT.jar"
   bucket   = google_storage_bucket.configs.name
-  source = "${path.module}/files/OpenTracing-AppA-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+  source = "${path.module}/files/OpenTracing-AppA-0.0.1-SNAPSHOT.jar"
 }
 
 resource "google_compute_instance" "monitoring_instance" {
