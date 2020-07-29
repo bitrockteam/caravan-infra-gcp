@@ -6,6 +6,9 @@ client {
   meta = {
     "connect.sidecar_image" = "envoyproxy/envoy:v1.14.2"
   }
+  options {
+    "docker.cleanup.image" = "false"
+  }
 }
 
 server_join {
