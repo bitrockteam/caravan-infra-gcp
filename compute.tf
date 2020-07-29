@@ -254,6 +254,12 @@ resource "google_storage_bucket_object" "java_bmed_artifact" {
   source = "${path.module}/files/microservizio-1.0.0-SNAPSHOT.jar"
 }
 
+resource "google_storage_bucket_object" "java_opntrc_artifact" {
+  name     = "OpenTracing-AppA-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+  bucket   = google_storage_bucket.configs.name
+  source = "${path.module}/files/OpenTracing-AppA-0.0.1-SNAPSHOT-jar-with-dependencies.jar"
+}
+
 resource "google_compute_instance" "monitoring_instance" {
   project      = var.project_id
   zone         = "us-central1-a"
