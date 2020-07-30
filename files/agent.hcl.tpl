@@ -31,49 +31,44 @@ auto_auth {
   }
 }
 
+template {
+  source      = "/etc/consul.d/keyfile.tmpl"
+  destination = "/etc/consul.d/keyfile"
+}
+
+template {
+  source      = "/etc/consul.d/ca.tmpl"
+  destination = "/etc/consul.d/ca"
+}
 
 template {
   source      = "/etc/consul.d/cert.tmpl"
   destination = "/etc/consul.d/cert"
-  command     = "sh -c 'sudo systemctl reload consul && sudo systemctl reload nomad'"
-}
-template {
-  source      = "/etc/consul.d/keyfile.tmpl"
-  destination = "/etc/consul.d/keyfile"
-  command     = "sh -c 'sudo systemctl reload consul && sudo systemctl reload nomad'"
-}
-template {
-  source      = "/etc/consul.d/ca.tmpl"
-  destination = "/etc/consul.d/ca"
-  command     = "sh -c 'sudo systemctl reload consul && sudo systemctl reload nomad'"
+  command     = "sh -c 'sudo systemctl start consul && sudo systemctl reload consul'"
 }
 
 template {
   source      = "/etc/consul.d/consul.hcl.tmpl"
   destination = "/etc/consul.d/consul.hcl"
-  backup      = true
-  error_on_missing_key = true
+}
+
+template {
+  source      = "/etc/nomad.d/nomad_keyfile.tmpl"
+  destination = "/etc/nomad.d/nomad_keyfile"
+}
+
+template {
+  source      = "/etc/nomad.d/nomad_ca.tmpl"
+  destination = "/etc/nomad.d/nomad_ca"
 }
 
 template {
   source      = "/etc/nomad.d/nomad_cert.tmpl"
   destination = "/etc/nomad.d/nomad_cert"
-  command     = "systemctl reload nomad"
-}
-template {
-  source      = "/etc/nomad.d/nomad_keyfile.tmpl"
-  destination = "/etc/nomad.d/nomad_keyfile"
-  command     = "systemctl reload nomad"
-}
-template {
-  source      = "/etc/nomad.d/nomad_ca.tmpl"
-  destination = "/etc/nomad.d/nomad_ca"
-  command     = "systemctl reload nomad"
+  command     = "sudo systemctl start nomad sudo systemctl reload nomad"
 }
 
 template {
   source      = "/etc/nomad.d/nomad.hcl.tmpl"
   destination = "/etc/nomad.d/nomad.hcl"
-  backup      = true
-  error_on_missing_key = true
 }
