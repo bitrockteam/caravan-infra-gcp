@@ -65,7 +65,7 @@ template {
 template {
   source      = "/etc/nomad.d/nomad_cert.tmpl"
   destination = "/etc/nomad.d/nomad_cert"
-  command     = "sudo systemctl start nomad sudo systemctl reload nomad"
+  command     = "sh -c 'sudo systemctl start nomad && sudo systemctl reload nomad'"
 }
 
 template {
