@@ -35,17 +35,17 @@ auto_auth {
 template {
   source      = "/etc/consul.d/cert.tmpl"
   destination = "/etc/consul.d/cert"
-  command     = "sh -c 'systemctl reload consul && systemctl reload nomad'"
+  command     = "sh -c 'sudo systemctl reload consul && sudo systemctl reload nomad'"
 }
 template {
   source      = "/etc/consul.d/keyfile.tmpl"
   destination = "/etc/consul.d/keyfile"
-  command     = "sh -c 'systemctl reload consul && systemctl reload nomad'"
+  command     = "sh -c 'sudo systemctl reload consul && sudo systemctl reload nomad'"
 }
 template {
   source      = "/etc/consul.d/ca.tmpl"
   destination = "/etc/consul.d/ca"
-  command     = "sh -c 'systemctl reload consul && systemctl reload nomad'"
+  command     = "sh -c 'sudo systemctl reload consul && sudo systemctl reload nomad'"
 }
 
 template {
