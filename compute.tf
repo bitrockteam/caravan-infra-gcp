@@ -23,7 +23,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
   scheduling {
     automatic_restart   = false
     on_host_maintenance = "TERMINATE"
-    preemptible         = true
+    preemptible         = false
   }
 
   boot_disk {
@@ -42,6 +42,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 
   metadata = {
     ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
+    serial-port-logging-enable = "TRUE"
   }
 
   metadata_startup_script = templatefile("${path.module}/scripts/startup-script.sh", {project = var.project_id})
@@ -266,10 +267,15 @@ resource "google_compute_instance" "monitoring_instance" {
   name         = "monitoringnode"
   machine_type = "n1-standard-1"
 
+  depends_on = [
+    google_compute_network.hcpoc,
+    module.packer_build
+  ]
+
   scheduling {
     automatic_restart   = false
     on_host_maintenance = "TERMINATE"
-    preemptible         = true
+    preemptible         = false
   }
 
   boot_disk {
