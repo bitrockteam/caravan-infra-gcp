@@ -1,4 +1,5 @@
 variable "region" {}
+variable "zone" {}
 variable "google_account_file" {}
 variable "project_id" {}
 variable "default_machine_type" {
@@ -35,7 +36,7 @@ variable "ssh_user" {
 }
 variable "ssh_timeout" {
   type    = string
-  default = "120s"
+  default = "240s"
 }
 variable "compute_image_name" {
   type    = string
@@ -61,7 +62,7 @@ variable "workers_groups" {
   default = {
     def-wrkr-grp = {
       base_instance_name = "defwrkr"
-      zone               = "us-central1-a"
+      zone               = "europe-west6-a"
       target_size        = 3
       instance_template  = "def-wrkr"
     }

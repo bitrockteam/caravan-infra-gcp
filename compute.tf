@@ -262,7 +262,7 @@ resource "google_storage_bucket_object" "java_opntrc_artifact" {
 
 resource "google_compute_instance" "monitoring_instance" {
   project      = var.project_id
-  zone         = "us-central1-a"
+  zone         = "europe-west6-a"
   name         = "monitoringnode"
   machine_type = "n1-standard-1"
 
