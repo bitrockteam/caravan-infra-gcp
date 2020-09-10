@@ -62,7 +62,7 @@ variable "workers_groups" {
   default = {
     def-wrkr-grp = {
       base_instance_name = "defwrkr"
-      zone               = "europe-west6-a"
+      zone               = "us-central1-a"
       target_size        = 3
       instance_template  = "def-wrkr"
     }
