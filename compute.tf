@@ -23,7 +23,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
   scheduling {
     automatic_restart   = false
     on_host_maintenance = "TERMINATE"
-    preemptible         = false
+    preemptible         = true
   }
 
   boot_disk {
@@ -82,6 +82,11 @@ resource "local_file" "ssh_key" {
 
 resource "google_compute_instance_template" "worker-instance-template" {
   for_each = var.workers_instance_templates
+
+  depends_on = [
+    google_compute_network.hcpoc,
+    module.packer_build
+  ]
 
   name_prefix  = each.value.name_prefix
   machine_type = can(length(each.value.machine_type)) ? each.value.machine_type : var.default_machine_type
@@ -275,7 +280,7 @@ resource "google_compute_instance" "monitoring_instance" {
   scheduling {
     automatic_restart   = false
     on_host_maintenance = "TERMINATE"
-    preemptible         = false
+    preemptible         = true
   }
 
   boot_disk {
