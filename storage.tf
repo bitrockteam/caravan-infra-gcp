@@ -3,7 +3,7 @@ resource "google_storage_bucket" "configs" {
   location           = var.region
   project            = var.project_id
   force_destroy      = true
-  bucket_policy_only = true
+  uniform_bucket_level_access = true
   versioning {
     enabled = true
   }
