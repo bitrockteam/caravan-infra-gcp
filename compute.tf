@@ -12,7 +12,6 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
 
   depends_on = [
     google_compute_network.hcpoc,
-    module.packer_build
   ]
 
   project      = var.project_id
@@ -85,7 +84,6 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
   depends_on = [
     google_compute_network.hcpoc,
-    module.packer_build
   ]
 
   name_prefix  = each.value.name_prefix
@@ -274,7 +272,6 @@ resource "google_compute_instance" "monitoring_instance" {
 
   depends_on = [
     google_compute_network.hcpoc,
-    module.packer_build
   ]
 
   scheduling {
