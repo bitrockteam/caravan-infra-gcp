@@ -44,6 +44,11 @@ consul {
   token = "{{ with secret "secret/data/consul/nomad_client_token" }}{{ .Data.data.token }}{{ end }}"
 }
 
+vault {
+  enabled          = true
+  address          = "http://127.0.0.1:8200"
+}
+
 tls {
     http = true
     rpc  = true
