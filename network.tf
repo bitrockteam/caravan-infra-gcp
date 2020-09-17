@@ -62,7 +62,7 @@ resource "google_compute_firewall" "hcpoc_internal_consul_ha" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8301", "8302", "8502", "20000-32000", "9200"]
+    ports    = ["8301", "8302", "8502", "20000-32000", "9200", "3000"]
   }
 
   source_ranges = [var.subnet_prefix]
