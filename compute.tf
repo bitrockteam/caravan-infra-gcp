@@ -158,6 +158,63 @@ resource "google_compute_region_instance_group_manager" "default-workers" {
   }
 }
 
+
+resource "google_compute_instance" "monitoring_instance" {
+  project      = var.project_id
+  zone         = "us-central1-a"
+  name         = "monitoring"
+  machine_type = "n1-standard-1"
+
+  depends_on = [
+    google_compute_network.hcpoc,
+  ]
+
+  scheduling {
+    automatic_restart   = false
+    on_host_maintenance = "TERMINATE"
+    preemptible         = true
+  }
+
+  boot_disk {
+    initialize_params {
+      image = "family/${var.compute_image_name}"
+      type  = "pd-standard"
+      size  = "100"
+    }
+  }
+
+  network_interface {
+    subnetwork = google_compute_subnetwork.hcpoc.self_link
+    access_config {
+    }
+  }
+
+  metadata = {
+    vault-agent-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/vault-agent-def-wrkr.hcl?alt=media"
+    consul-agent-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/consul-agent-def-wrkr.hcl?alt=media"
+    consul-agent-ca-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/ca.tmpl?alt=media"
+    consul-agent-cert-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/cert.tmpl?alt=media"
+    consul-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/keyfile.tmpl?alt=media"
+    nomad-agent-ca-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_ca.tmpl?alt=media"
+    nomad-agent-cert-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_cert.tmpl?alt=media"
+    nomad-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_keyfile.tmpl?alt=media"
+    nomad-client-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad.hcl.tmpl?alt=media"
+    ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
+  }
+
+  metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh", {project = var.project_id})
+  
+  tags = ["ssh-allowed-node", "hcpoc-worker-node"]
+
+   service_account {
+    email  = google_service_account.cluster_node_service_account.email
+    scopes = ["cloud-platform"]
+  }
+
+  allow_stopping_for_update = true
+
+}
+
 resource "google_storage_bucket_object" "vault-agent-configs" {
   for_each = google_compute_instance_template.worker-instance-template
   name     = "vault-agent-${each.key}.hcl"
@@ -264,49 +321,3 @@ resource "google_storage_bucket_object" "java_opntrc_artifact" {
   source = "${path.module}/files/OpenTracing-AppA-0.0.1-SNAPSHOT.jar"
 }
 
-resource "google_compute_instance" "monitoring_instance" {
-  project      = var.project_id
-  zone         = "us-central1-a"
-  name         = "monitoringnode"
-  machine_type = "n1-standard-1"
-
-  depends_on = [
-    google_compute_network.hcpoc,
-  ]
-
-  scheduling {
-    automatic_restart   = false
-    on_host_maintenance = "TERMINATE"
-    preemptible         = true
-  }
-
-  boot_disk {
-    initialize_params {
-      image = "family/${var.compute_image_name}"
-      type  = "pd-standard"
-      size  = "100"
-    }
-  }
-
-  network_interface {
-    subnetwork = google_compute_subnetwork.hcpoc.self_link
-    access_config {
-    }
-  }
-
-  metadata = {
-    ssh-keys = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
-  }
-
-  metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh", {project = var.project_id})
-  
-  tags = ["cluster-node", "ssh-allowed-node"]
-
-   service_account {
-    email  = google_service_account.cluster_node_service_account.email
-    scopes = ["cloud-platform"]
-  }
-
-  allow_stopping_for_update = true
-
-}
