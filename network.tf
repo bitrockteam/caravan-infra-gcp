@@ -23,7 +23,7 @@ resource "google_compute_firewall" "hcpoc_cluster" {
     ports    = ["8200", "8300", "8500", "4646"]
   }
 
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
   target_tags   = ["cluster-node"]
 }
 
@@ -62,7 +62,7 @@ resource "google_compute_firewall" "hcpoc_internal_consul_ha" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8301", "8302", "8502", "20000-32000", "9200", "3000", "8080"]
+    ports    = ["8301", "8302", "8502", "20000-32000", "9200", "3000", "16686"]
   }
 
   source_ranges = [var.subnet_prefix]
@@ -81,5 +81,19 @@ resource "google_compute_firewall" "hcpoc_internal_nomad_ha" {
 
   source_ranges = [var.subnet_prefix]
   target_tags   = ["cluster-node", "hcpoc-worker-node"]
+}
+
+resource "google_compute_firewall" "hcpoc_ingress" {
+  project = var.project_id
+  name    = "allow-ingress-ha-cluster"
+  network = google_compute_network.hcpoc.self_link
+
+  allow {
+    protocol = "tcp"
+    ports    = ["8080"]
+  }
+
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16", var.subnet_prefix]
+  target_tags   = ["hcpoc-worker-node"]
 }
 
