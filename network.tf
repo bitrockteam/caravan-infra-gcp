@@ -20,7 +20,7 @@ resource "google_compute_firewall" "hcpoc_cluster" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8200", "8300", "8500", "4646", "9090", "3000", "8888", "8080", "8081"]
+    ports    = ["8200", "8300", "8500", "4646"]
   }
 
   source_ranges = ["0.0.0.0/0"]
@@ -62,7 +62,7 @@ resource "google_compute_firewall" "hcpoc_internal_consul_ha" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8301", "8302", "8502", "20000-32000", "9200", "3000"]
+    ports    = ["8301", "8302", "8502", "20000-32000", "9200", "3000", "8080"]
   }
 
   source_ranges = [var.subnet_prefix]
