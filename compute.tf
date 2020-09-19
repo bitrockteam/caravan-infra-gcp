@@ -74,10 +74,39 @@ resource "local_file" "ssh_key" {
   file_permission   = "0600"
 }
 
-# data "google_compute_image" "hcpoc_last_image" {
-#   family  = var.compute_image_name
-#   project = var.project_id
-# }
+resource "google_compute_instance_group" "hcpoc_cluster_nodes" {
+  count = var.cluster_instance_count
+
+  name        = format("unmanaged-hcpoc-clustnode%.2d", count.index + 1)
+
+  instances = [ google_compute_instance.hcpoc_cluster_nodes[count.index].id ]
+
+  named_port {
+    name = "http-ingress"
+    port = "8080"
+  }
+
+  named_port {
+    name = "https-ingress"
+    port = "8443"
+  }
+
+  named_port {
+    name = "vault"
+    port = "8200"
+  }
+  named_port {
+    name = "consul"
+    port = "8500"
+  }
+  named_port {
+    name = "nomad"
+    port = "4646"
+  }
+
+
+  zone = google_compute_instance.hcpoc_cluster_nodes[count.index].zone
+}
 
 resource "google_compute_instance_template" "worker-instance-template" {
   for_each = var.workers_instance_templates
@@ -155,6 +184,11 @@ resource "google_compute_region_instance_group_manager" "default-workers" {
 
   version {
     instance_template = google_compute_instance_template.worker-instance-template[each.value.instance_template].id
+  }
+
+  named_port {
+    name = "http-ingress"
+    port = "8080"
   }
 }
 
