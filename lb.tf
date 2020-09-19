@@ -158,7 +158,7 @@ resource "google_compute_backend_service" "backend_service_workload" {
     protocol = "HTTP"
 
     health_checks = [ 
-        google_compute_health_check.healthcheck_http_ingress.self_link
+        google_compute_health_check.healthcheck_tcp_ingress.self_link
     ]
 
     backend {
@@ -174,7 +174,7 @@ resource "google_compute_health_check" "healthcheck_vault" {
 
     name = "${var.prefix}-healthcheck-vault"
     timeout_sec = 2
-    check_interval_sec = 5
+    check_interval_sec = 30
 
     http_health_check {
         port_name          = "vault"
@@ -188,7 +188,7 @@ resource "google_compute_health_check" "healthcheck_consul" {
 
     name = "${var.prefix}-healthcheck-consul"
     timeout_sec = 2
-    check_interval_sec = 5
+    check_interval_sec = 30
 
     http_health_check {
         port_name          = "consul"
@@ -202,7 +202,7 @@ resource "google_compute_health_check" "healthcheck_nomad" {
 
     name = "${var.prefix}-healthcheck-nomad"
     timeout_sec = 2
-    check_interval_sec = 5
+    check_interval_sec = 30
 
     http_health_check {
         port_name          = "consul"
@@ -212,16 +212,16 @@ resource "google_compute_health_check" "healthcheck_nomad" {
 }
 
 # determine whether instances are responsive and able to do work
-resource "google_compute_health_check" "healthcheck_http_ingress" {
+resource "google_compute_health_check" "healthcheck_tcp_ingress" {
 
-    name = "${var.prefix}-healthcheck-http-ingress"
+    name = "${var.prefix}-healthcheck-tcp-ingress"
     timeout_sec = 2
-    check_interval_sec = 5
+    check_interval_sec = 30
 
-    http_health_check {
+    tcp_health_check {
         port_name          = "http-ingress"
         port_specification = "USE_NAMED_PORT"
-        # request_path       = "/v1/status/leader"
+        
     }
 }
 
