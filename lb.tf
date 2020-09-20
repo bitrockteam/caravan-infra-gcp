@@ -24,7 +24,7 @@ resource "google_compute_url_map" "url_map" {
     default_service = google_compute_backend_service.backend_service_vault.self_link
 
     host_rule {
-        hosts        = ["gcp.hcpoc.bitrock.it", "vault.hcpoc.bitrock.it"]
+        hosts        = ["vault.hcpoc.bitrock.it"]
         path_matcher = "vault"
     }
     host_rule {
@@ -36,7 +36,11 @@ resource "google_compute_url_map" "url_map" {
         path_matcher = "nomad"
     }
     host_rule {
-        hosts        = ["jaeger.hcpoc.bitrock.it"]
+        hosts        = [
+            "jaeger.hcpoc.bitrock.it",
+            "grafana-internal.hcpoc.bitrock.it",
+            "elastic-internal.hcpoc.bitrock.it"
+        ]
         path_matcher = "http-ingress"
     }
 
