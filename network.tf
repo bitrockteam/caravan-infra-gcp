@@ -23,7 +23,7 @@ resource "google_compute_firewall" "hcpoc_cluster" {
     ports    = ["8200", "8300", "8500", "4646"]
   }
 
-  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16", var.subnet_prefix]
   target_tags   = ["cluster-node"]
 }
 
