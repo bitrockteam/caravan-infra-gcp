@@ -1,5 +1,3 @@
-# Load balancer with unmanaged instance group
-# used to forward traffic to the correct load balancer for HTTP load balancing
 resource "google_compute_global_forwarding_rule" "global_forwarding_rule" {
     
     name = "${var.prefix}-global-forwarding-rule"
@@ -20,7 +18,6 @@ resource "google_compute_ssl_certificate" "lb_certificate" {
     }
 }
 
-# used by one or more global forwarding rule to route incoming HTTP requests to a URL map
 resource "google_compute_target_https_proxy" "target_https_proxy" {
 
     name             = "${var.prefix}-proxy"
@@ -48,7 +45,6 @@ locals {
     }
 }
 
-# used to route requests to a backend service based on rules that you define for the host and path of an incoming URL
 resource "google_compute_url_map" "url_map" {
 
     name = "${var.prefix}-load-balancer"
@@ -71,7 +67,6 @@ resource "google_compute_url_map" "url_map" {
     }
 }
 
-# defines a group of virtual machines that will serve traffic for load balancing
 resource "google_compute_backend_service" "backend_service_vault" {
     
     name = "${var.prefix}-backend-service-vault"
@@ -95,7 +90,6 @@ resource "google_compute_backend_service" "backend_service_vault" {
     
 }
 
-# defines a group of virtual machines that will serve traffic for load balancing
 resource "google_compute_backend_service" "backend_service_consul" {
     
     name = "${var.prefix}-backend-service-consul"
@@ -119,7 +113,6 @@ resource "google_compute_backend_service" "backend_service_consul" {
     
 }
 
-# defines a group of virtual machines that will serve traffic for load balancing
 resource "google_compute_backend_service" "backend_service_nomad" {
     
     name = "${var.prefix}-backend-service-nomad"
@@ -143,7 +136,6 @@ resource "google_compute_backend_service" "backend_service_nomad" {
     
 }
 
-# defines a group of virtual machines that will serve traffic for load balancing
 resource "google_compute_backend_service" "backend_service_workload" {
     
     name = "${var.prefix}-backend-service-workload"
@@ -163,7 +155,6 @@ resource "google_compute_backend_service" "backend_service_workload" {
     
 }
 
-# determine whether instances are responsive and able to do work
 resource "google_compute_health_check" "healthcheck_vault" {
 
     name = "${var.prefix}-healthcheck-vault"
@@ -177,7 +168,6 @@ resource "google_compute_health_check" "healthcheck_vault" {
     }
 }
 
-# determine whether instances are responsive and able to do work
 resource "google_compute_health_check" "healthcheck_consul" {
 
     name = "${var.prefix}-healthcheck-consul"
@@ -191,7 +181,6 @@ resource "google_compute_health_check" "healthcheck_consul" {
     }
 }
 
-# determine whether instances are responsive and able to do work
 resource "google_compute_health_check" "healthcheck_nomad" {
 
     name = "${var.prefix}-healthcheck-nomad"
@@ -205,7 +194,6 @@ resource "google_compute_health_check" "healthcheck_nomad" {
     }
 }
 
-# determine whether instances are responsive and able to do work
 resource "google_compute_health_check" "healthcheck_tcp_ingress" {
 
     name = "${var.prefix}-healthcheck-tcp-ingress"
@@ -217,9 +205,4 @@ resource "google_compute_health_check" "healthcheck_tcp_ingress" {
         port_specification = "USE_NAMED_PORT"
         
     }
-}
-
-# show external ip address of load balancer
-output "load-balancer-ip-address" {
-    value = google_compute_global_forwarding_rule.global_forwarding_rule.ip_address
 }

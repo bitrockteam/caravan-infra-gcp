@@ -23,3 +23,6 @@ output "configs-bucket-url" {
 output "worker_nodes_service_accounts" {
   value = [ for k,v in google_service_account.worker_node_account: v.email ]
 }
+output "load-balancer-ip-address" {
+    value = google_compute_global_forwarding_rule.global_forwarding_rule.ip_address
+}
