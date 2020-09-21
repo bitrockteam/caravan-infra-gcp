@@ -1,4 +1,4 @@
-# Load balancer with unmanaged instance group | lb-unmanaged.tf
+# Load balancer with unmanaged instance group
 # used to forward traffic to the correct load balancer for HTTP load balancing
 resource "google_compute_global_forwarding_rule" "global_forwarding_rule" {
     
@@ -16,49 +16,45 @@ resource "google_compute_target_http_proxy" "target_http_proxy" {
     url_map = google_compute_url_map.url_map.self_link
 }
 
+locals {
+    host_rules = {
+        vault = ["vault.hcpoc.bitrock.it"]
+        consul = ["consul.hcpoc.bitrock.it"]
+        nomad = ["nomad.hcpoc.bitrock.it"]
+        http-ingress = [
+            "jaeger.hcpoc.bitrock.it",
+            "grafana-internal.hcpoc.bitrock.it",
+            "elastic-internal.hcpoc.bitrock.it"
+        ]
+    }
+    path_matchers = {
+        vault = google_compute_backend_service.backend_service_vault.self_link
+        consul = google_compute_backend_service.backend_service_consul.self_link
+        nomad = google_compute_backend_service.backend_service_nomad.self_link
+        http-ingress = google_compute_backend_service.backend_service_workload.self_link
+    }
+}
+
 # used to route requests to a backend service based on rules that you define for the host and path of an incoming URL
 resource "google_compute_url_map" "url_map" {
 
     name = "${var.prefix}-load-balancer"
     project = var.project_id
     default_service = google_compute_backend_service.backend_service_vault.self_link
-
-    host_rule {
-        hosts        = ["vault.hcpoc.bitrock.it"]
-        path_matcher = "vault"
+    
+    dynamic "host_rule" {
+        for_each = local.host_rules
+        content {
+            hosts        = host_rule.value
+            path_matcher = host_rule.key
+        }
     }
-    host_rule {
-        hosts        = ["consul.hcpoc.bitrock.it"]
-        path_matcher = "consul"
-    }
-    host_rule {
-        hosts        = ["nomad.hcpoc.bitrock.it"]
-        path_matcher = "nomad"
-    }
-    host_rule {
-        hosts        = [
-            "jaeger.hcpoc.bitrock.it",
-            "grafana-internal.hcpoc.bitrock.it",
-            "elastic-internal.hcpoc.bitrock.it"
-        ]
-        path_matcher = "http-ingress"
-    }
-
-    path_matcher {
-        name            = "vault"
-        default_service = google_compute_backend_service.backend_service_vault.id
-    }
-    path_matcher {
-        name            = "consul"
-        default_service = google_compute_backend_service.backend_service_consul.id
-    }
-    path_matcher {
-        name            = "nomad"
-        default_service = google_compute_backend_service.backend_service_nomad.id
-    }
-    path_matcher {
-        name            = "http-ingress"
-        default_service = google_compute_backend_service.backend_service_workload.id
+    dynamic "path_matcher" {
+        for_each = local.path_matchers
+        content {
+            name            = path_matcher.key
+            default_service = path_matcher.value
+        }
     }
 }
 
@@ -73,21 +69,15 @@ resource "google_compute_backend_service" "backend_service_vault" {
     health_checks = [ 
         google_compute_health_check.healthcheck_vault.self_link
     ]
+    
+    dynamic "backend" {
+        for_each = google_compute_instance_group.hcpoc_cluster_nodes
 
-    backend {
-        group = google_compute_instance_group.hcpoc_cluster_nodes[0].self_link
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
-    }
-    backend {
-        group = google_compute_instance_group.hcpoc_cluster_nodes[1].self_link
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
-    }
-    backend {
-        group = google_compute_instance_group.hcpoc_cluster_nodes[2].self_link
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
+        content {
+            group = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
+            balancing_mode = "RATE"
+            max_rate_per_instance = 100
+        }
     }
     
 }
@@ -104,20 +94,14 @@ resource "google_compute_backend_service" "backend_service_consul" {
         google_compute_health_check.healthcheck_consul.self_link
     ]
 
-    backend {
-        group = google_compute_instance_group.hcpoc_cluster_nodes[0].self_link
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
-    }
-    backend {
-        group = google_compute_instance_group.hcpoc_cluster_nodes[1].self_link
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
-    }
-    backend {
-        group = google_compute_instance_group.hcpoc_cluster_nodes[2].self_link
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
+    dynamic "backend" {
+        for_each = google_compute_instance_group.hcpoc_cluster_nodes
+
+        content {
+            group = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
+            balancing_mode = "RATE"
+            max_rate_per_instance = 100
+        }
     }
     
 }
@@ -134,27 +118,20 @@ resource "google_compute_backend_service" "backend_service_nomad" {
         google_compute_health_check.healthcheck_nomad.self_link
     ]
 
-    backend {
-        group = google_compute_instance_group.hcpoc_cluster_nodes[0].self_link
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
-    }
-    backend {
-        group = google_compute_instance_group.hcpoc_cluster_nodes[1].self_link
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
-    }
-    backend {
-        group = google_compute_instance_group.hcpoc_cluster_nodes[2].self_link
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
+    dynamic "backend" {
+        for_each = google_compute_instance_group.hcpoc_cluster_nodes
+
+        content {
+            group = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
+            balancing_mode = "RATE"
+            max_rate_per_instance = 100
+        }
     }
     
 }
 
 # defines a group of virtual machines that will serve traffic for load balancing
 resource "google_compute_backend_service" "backend_service_workload" {
-    # count = length(var.workers_groups)
     
     name = "${var.prefix}-backend-service-workload"
     project = var.project_id
