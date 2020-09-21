@@ -8,22 +8,12 @@ resource "google_compute_global_forwarding_rule" "global_forwarding_rule" {
     target = google_compute_target_https_proxy.target_https_proxy.self_link
 }
 
-data "external" "lb_certificate_getter" {
-    depends_on = [
-        module.vault_cluster
-    ]
-    program    = ["cat", ".lb-cert.json"]
-}
-
 resource "google_compute_ssl_certificate" "lb_certificate" {
-    depends_on  = [
-      data.external.lb_certificate_getter
-    ]
     project     = var.project_id
     name_prefix = "${var.prefix}-certificate-"
    
-    private_key = data.external.lb_certificate_getter.result.private_key
-    certificate = data.external.lb_certificate_getter.result.certificate
+    private_key = chomp(file(".lb-key.pem"))
+    certificate = chomp(file(".lb-cert.pem"))
 
     lifecycle {
         create_before_destroy = true
