@@ -1,0 +1,13 @@
+{
+  "service": {
+    "name": "elastic-internal",
+    "tags": [
+      "monitoring"
+    ],
+    "port": 9200,
+    "check": {
+      "http": "http://monitoring.node.hcpoc.consul:9200",
+      "interval": "30s"
+    }
+  }
+}

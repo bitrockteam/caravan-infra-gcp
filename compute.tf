@@ -233,6 +233,8 @@ resource "google_compute_instance" "monitoring_instance" {
     nomad-agent-cert-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_cert.tmpl?alt=media"
     nomad-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_keyfile.tmpl?alt=media"
     nomad-client-config = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad.hcl.tmpl?alt=media"
+    elastic-service = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/elastic-service.json?alt=media"
+    grafana-service = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/grafana-service.json?alt=media"
     ssh-keys           = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
@@ -316,6 +318,16 @@ resource "google_storage_bucket_object" "nomad-agent-keyfile-file" {
   name     = "nomad_keyfile.tmpl"
   bucket   = google_storage_bucket.configs.name
   content = file("${path.module}/files/nomad_keyfile.tmpl")
+}
+resource "google_storage_bucket_object" "elastic-service-file" {
+  name     = "elastic-service.json"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/elastic-service.json")
+}
+resource "google_storage_bucket_object" "grafana-service-file" {
+  name     = "grafana-service.json"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/grafana-service.json")
 }
 
 resource "google_storage_bucket_object" "nomad-client-config" {
