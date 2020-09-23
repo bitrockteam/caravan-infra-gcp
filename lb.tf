@@ -7,6 +7,10 @@ resource "google_compute_global_forwarding_rule" "global_forwarding_rule" {
 }
 
 resource "google_compute_ssl_certificate" "lb_certificate" {
+    depends_on = [
+        module.vault_cluster
+    ]
+
     project     = var.project_id
     name_prefix = "${var.prefix}-certificate-"
    
