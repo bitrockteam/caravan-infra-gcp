@@ -68,3 +68,7 @@ variable "workers_groups" {
     }
   }
 }
+variable "external_domain" {
+  type = string
+  default = ""
+}
