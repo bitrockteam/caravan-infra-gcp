@@ -32,13 +32,13 @@ resource "google_compute_target_https_proxy" "target_https_proxy" {
 
 locals {
     host_rules = {
-        vault = ["vault.hcpoc.bitrock.it"]
-        consul = ["consul.hcpoc.bitrock.it"]
-        nomad = ["nomad.hcpoc.bitrock.it"]
+        vault = ["vault.${var.external_domain}"]
+        consul = ["consul.${var.external_domain}"]
+        nomad = ["nomad.${var.external_domain}"]
         http-ingress = [
-            "jaeger.hcpoc.bitrock.it",
-            "grafana-internal.hcpoc.bitrock.it",
-            "elastic-internal.hcpoc.bitrock.it"
+            "jaeger.${var.external_domain}",
+            "grafana-internal.${var.external_domain}",
+            "elastic-internal.${var.external_domain}"
         ]
     }
     path_matchers = {
