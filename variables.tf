@@ -15,7 +15,7 @@ variable "cluster_machine_type" {
 }
 variable "prefix" {
   description = "The prefix of the objects' names"
-  default     = "hcpoc-gcp"
+  default     = "hashicorp"
 }
 variable "subnet_prefix" {
   description = "The address prefix to use for the subnet."
@@ -40,7 +40,7 @@ variable "ssh_timeout" {
 }
 variable "compute_image_name" {
   type    = string
-  default = "hcpoc-centos-image"
+  default = "hashicorp-centos-image"
 }
 variable "skip_packer_build" {
   type    = bool
@@ -52,7 +52,7 @@ variable "workers_instance_templates" {
     def-wrkr = {
       name_prefix       = "worker-template-default-"
       machine_type      = "n1-standard-2"
-      image_family_name = "hcpoc-centos-image"
+      image_family_name = "hashicorp-centos-image"
       preemptible       = true
     }
   }
