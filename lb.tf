@@ -38,7 +38,7 @@ locals {
         http-ingress = [
             "jaeger.${var.external_domain}",
             "grafana-internal.${var.external_domain}",
-            "elastic-internal.${var.external_domain}",
+            "prometheus.${var.external_domain}",
             "kibana.${var.external_domain}",
         ]
     }
