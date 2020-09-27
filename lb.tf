@@ -40,6 +40,7 @@ locals {
             "grafana-internal.${var.external_domain}",
             "prometheus.${var.external_domain}",
             "kibana.${var.external_domain}",
+            "echo.${var.external_domain}",
         ]
     }
     path_matchers = {
