@@ -15,7 +15,7 @@ module "vault_cluster" {
   external_domain          = var.external_domain
 }
 module "vault_cluster_agents" {
-  source              = "../hcpoc-base-vault-baseline/modules/agent"
+  source              = "git::ssh://git@github.com/bitrockteam/hcpoc-base-vault-baseline//modules/agent?ref=master"
   vault_endpoint      = "http://127.0.0.1:8200"
   tcp_listener_tls    = false
   gcp_project_id      = var.project_id
