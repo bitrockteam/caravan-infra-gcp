@@ -1,21 +1,26 @@
 resource "google_compute_global_forwarding_rule" "global_forwarding_rule" {
     
-    name = "${var.prefix}-global-forwarding-rule"
-    project = var.project_id
-    port_range = "443"
-    target = google_compute_target_https_proxy.target_https_proxy.self_link
+    name        = "${var.prefix}-global-forwarding-rule"
+    project     = var.project_id
+    port_range  = "443"
+    target      = google_compute_target_https_proxy.target_https_proxy.self_link
+}
+
+resource "tls_private_key" "cert_private_key" {
+  algorithm = "RSA"
 }
 
 resource "google_compute_ssl_certificate" "lb_certificate" {
     depends_on = [
-        module.vault_cluster
+        module.vault_cluster,
+        module.terraform-acme-le
     ]
 
     project     = var.project_id
     name_prefix = "${var.prefix}-certificate-"
    
-    private_key = chomp(file(".lb-key.pem"))
-    certificate = chomp(file(".lb-cert.pem"))
+    private_key = tls_private_key.cert_private_key.private_key_pem
+    certificate = module.terraform-acme-le.certificate_pem
 
     lifecycle {
         create_before_destroy = true
@@ -44,10 +49,10 @@ locals {
         ]
     }
     path_matchers = {
-        vault = google_compute_backend_service.backend_service_vault.self_link
-        consul = google_compute_backend_service.backend_service_consul.self_link
-        nomad = google_compute_backend_service.backend_service_nomad.self_link
-        http-ingress = google_compute_backend_service.backend_service_workload.self_link
+        vault           = google_compute_backend_service.backend_service_vault.self_link
+        consul          = google_compute_backend_service.backend_service_consul.self_link
+        nomad           = google_compute_backend_service.backend_service_nomad.self_link
+        http-ingress    = google_compute_backend_service.backend_service_workload.self_link
     }
 }
 
@@ -75,10 +80,10 @@ resource "google_compute_url_map" "url_map" {
 
 resource "google_compute_backend_service" "backend_service_vault" {
     
-    name = "${var.prefix}-backend-service-vault"
-    project = var.project_id
-    port_name = "vault"
-    protocol = "HTTP"
+    name        = "${var.prefix}-backend-service-vault"
+    project     = var.project_id
+    port_name   = "vault"
+    protocol    = "HTTP"
 
     health_checks = [ 
         google_compute_health_check.healthcheck_vault.self_link
@@ -88,9 +93,9 @@ resource "google_compute_backend_service" "backend_service_vault" {
         for_each = google_compute_instance_group.hcpoc_cluster_nodes
 
         content {
-            group = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
-            balancing_mode = "RATE"
-            max_rate_per_instance = 100
+            group                   = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
+            balancing_mode          = "RATE"
+            max_rate_per_instance   = 100
         }
     }
     
@@ -98,10 +103,10 @@ resource "google_compute_backend_service" "backend_service_vault" {
 
 resource "google_compute_backend_service" "backend_service_consul" {
     
-    name = "${var.prefix}-backend-service-consul"
-    project = var.project_id
-    port_name = "consul"
-    protocol = "HTTP"
+    name        = "${var.prefix}-backend-service-consul"
+    project     = var.project_id
+    port_name   = "consul"
+    protocol    = "HTTP"
 
     health_checks = [ 
         google_compute_health_check.healthcheck_consul.self_link
@@ -111,9 +116,9 @@ resource "google_compute_backend_service" "backend_service_consul" {
         for_each = google_compute_instance_group.hcpoc_cluster_nodes
 
         content {
-            group = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
-            balancing_mode = "RATE"
-            max_rate_per_instance = 100
+            group                   = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
+            balancing_mode          = "RATE"
+            max_rate_per_instance   = 100
         }
     }
     
@@ -121,10 +126,10 @@ resource "google_compute_backend_service" "backend_service_consul" {
 
 resource "google_compute_backend_service" "backend_service_nomad" {
     
-    name = "${var.prefix}-backend-service-nomad"
-    project = var.project_id
-    port_name = "nomad"
-    protocol = "HTTP"
+    name        = "${var.prefix}-backend-service-nomad"
+    project     = var.project_id
+    port_name   = "nomad"
+    protocol    = "HTTP"
 
     health_checks = [ 
         google_compute_health_check.healthcheck_nomad.self_link
@@ -134,9 +139,9 @@ resource "google_compute_backend_service" "backend_service_nomad" {
         for_each = google_compute_instance_group.hcpoc_cluster_nodes
 
         content {
-            group = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
-            balancing_mode = "RATE"
-            max_rate_per_instance = 100
+            group                   = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
+            balancing_mode          = "RATE"
+            max_rate_per_instance   = 100
         }
     }
     
@@ -144,28 +149,28 @@ resource "google_compute_backend_service" "backend_service_nomad" {
 
 resource "google_compute_backend_service" "backend_service_workload" {
     
-    name = "${var.prefix}-backend-service-workload"
-    project = var.project_id
-    port_name = "http-ingress"
-    protocol = "HTTP"
+    name        = "${var.prefix}-backend-service-workload"
+    project     = var.project_id
+    port_name   = "http-ingress"
+    protocol    = "HTTP"
 
     health_checks = [ 
         google_compute_health_check.healthcheck_tcp_ingress.self_link
     ]
 
     backend {
-        group = google_compute_region_instance_group_manager.default-workers["def-wrkr-grp"].instance_group
-        balancing_mode = "RATE"
-        max_rate_per_instance = 100
+        group                   = google_compute_region_instance_group_manager.default-workers["def-wrkr-grp"].instance_group
+        balancing_mode          = "RATE"
+        max_rate_per_instance   = 100
     }
     
 }
 
 resource "google_compute_health_check" "healthcheck_vault" {
 
-    name = "${var.prefix}-healthcheck-vault"
-    timeout_sec = 2
-    check_interval_sec = 30
+    name                = "${var.prefix}-healthcheck-vault"
+    timeout_sec         = 2
+    check_interval_sec  = 30
 
     http_health_check {
         port_name          = "vault"
@@ -176,9 +181,9 @@ resource "google_compute_health_check" "healthcheck_vault" {
 
 resource "google_compute_health_check" "healthcheck_consul" {
 
-    name = "${var.prefix}-healthcheck-consul"
-    timeout_sec = 2
-    check_interval_sec = 30
+    name                = "${var.prefix}-healthcheck-consul"
+    timeout_sec         = 2
+    check_interval_sec  = 30
 
     http_health_check {
         port_name          = "consul"
@@ -189,9 +194,9 @@ resource "google_compute_health_check" "healthcheck_consul" {
 
 resource "google_compute_health_check" "healthcheck_nomad" {
 
-    name = "${var.prefix}-healthcheck-nomad"
-    timeout_sec = 2
-    check_interval_sec = 30
+    name                = "${var.prefix}-healthcheck-nomad"
+    timeout_sec         = 2
+    check_interval_sec  = 30
 
     http_health_check {
         port_name          = "consul"
@@ -202,9 +207,9 @@ resource "google_compute_health_check" "healthcheck_nomad" {
 
 resource "google_compute_health_check" "healthcheck_tcp_ingress" {
 
-    name = "${var.prefix}-healthcheck-tcp-ingress"
-    timeout_sec = 2
-    check_interval_sec = 30
+    name                = "${var.prefix}-healthcheck-tcp-ingress"
+    timeout_sec         = 2
+    check_interval_sec  = 30
 
     tcp_health_check {
         port_name          = "http-ingress"
