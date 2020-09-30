@@ -289,46 +289,19 @@ resource "google_storage_bucket_object" "consul-agent-ca-file" {
   bucket   = google_storage_bucket.configs.name
   content = file("${path.module}/files/ca.tmpl")
 }
+
 resource "google_storage_bucket_object" "consul-agent-cert-file" {
   for_each = google_compute_instance_template.worker-instance-template
   name     = "cert.tmpl"
   bucket   = google_storage_bucket.configs.name
   content = file("${path.module}/files/cert.tmpl")
 }
+
 resource "google_storage_bucket_object" "consul-agent-keyfile-file" {
   for_each = google_compute_instance_template.worker-instance-template
   name     = "keyfile.tmpl"
   bucket   = google_storage_bucket.configs.name
   content = file("${path.module}/files/keyfile.tmpl")
-}
-
-resource "google_storage_bucket_object" "nomad-agent-ca-file" {
-  for_each = google_compute_instance_template.worker-instance-template
-  name     = "nomad_ca.tmpl"
-  bucket   = google_storage_bucket.configs.name
-  content = file("${path.module}/files/nomad_ca.tmpl")
-}
-resource "google_storage_bucket_object" "nomad-agent-cert-file" {
-  for_each = google_compute_instance_template.worker-instance-template
-  name     = "nomad_cert.tmpl"
-  bucket   = google_storage_bucket.configs.name
-  content = file("${path.module}/files/nomad_cert.tmpl")
-}
-resource "google_storage_bucket_object" "nomad-agent-keyfile-file" {
-  for_each = google_compute_instance_template.worker-instance-template
-  name     = "nomad_keyfile.tmpl"
-  bucket   = google_storage_bucket.configs.name
-  content = file("${path.module}/files/nomad_keyfile.tmpl")
-}
-resource "google_storage_bucket_object" "elastic-service-file" {
-  name     = "elastic-service.json"
-  bucket   = google_storage_bucket.configs.name
-  content = file("${path.module}/files/elastic-service.json")
-}
-resource "google_storage_bucket_object" "grafana-service-file" {
-  name     = "grafana-service.json"
-  bucket   = google_storage_bucket.configs.name
-  content = file("${path.module}/files/grafana-service.json")
 }
 
 resource "google_storage_bucket_object" "nomad-client-config" {
@@ -343,6 +316,41 @@ resource "google_storage_bucket_object" "nomad-client-config" {
   }
 )}
     EOT
+}
+
+resource "google_storage_bucket_object" "nomad-agent-ca-file" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "nomad_ca.tmpl"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/nomad_ca.tmpl")
+}
+
+resource "google_storage_bucket_object" "nomad-agent-cert-file" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "nomad_cert.tmpl"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/nomad_cert.tmpl")
+}
+
+resource "google_storage_bucket_object" "nomad-agent-keyfile-file" {
+  for_each = google_compute_instance_template.worker-instance-template
+  name     = "nomad_keyfile.tmpl"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/nomad_keyfile.tmpl")
+}
+
+### monitoring
+
+resource "google_storage_bucket_object" "elastic-service-file" {
+  name     = "elastic-service.json"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/elastic-service.json")
+}
+
+resource "google_storage_bucket_object" "grafana-service-file" {
+  name     = "grafana-service.json"
+  bucket   = google_storage_bucket.configs.name
+  content = file("${path.module}/files/grafana-service.json")
 }
 
 resource "google_storage_bucket_object" "java_springboot_artifact" {
