@@ -1,5 +1,5 @@
 module "nomad-cluster" {
-  source                   = "git::ssh://git@github.com/bitrockteam/hashicorp-base-nomad-baseline//modules/nomad-cluster?ref=master"
+  source                   = "git::ssh://git@github.com/bitrockteam/hashicorp-nomad-baseline//modules/nomad-cluster?ref=master"
   ssh_private_key          = chomp(tls_private_key.ssh-key.private_key_pem)
   cluster_nodes_ids        = google_compute_instance.hashicorp_cluster_nodes[*].instance_id
   cluster_nodes            = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip }

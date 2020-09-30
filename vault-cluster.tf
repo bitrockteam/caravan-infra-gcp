@@ -1,5 +1,5 @@
 module "vault_cluster" {
-  source                   = "git::ssh://git@github.com/bitrockteam/hashicorp-base-vault-baseline//modules/cluster-raft?ref=master"
+  source                   = "git::ssh://git@github.com/bitrockteam/hashicorp-vault-baseline//modules/cluster-raft?ref=master"
   unseal_project_id        = var.project_id
   unseal_keyring           = google_kms_key_ring.vault_keyring.name
   unseal_key               = google_kms_crypto_key.vault_key.name
@@ -15,7 +15,7 @@ module "vault_cluster" {
   external_domain          = var.external_domain
 }
 module "vault_cluster_agents" {
-  source              = "git::ssh://git@github.com/bitrockteam/hashicorp-base-vault-baseline//modules/agent?ref=master"
+  source              = "git::ssh://git@github.com/bitrockteam/hashicorp-vault-baseline//modules/agent?ref=master"
   vault_endpoint      = "http://127.0.0.1:8200"
   tcp_listener_tls    = false
   gcp_project_id      = var.project_id
