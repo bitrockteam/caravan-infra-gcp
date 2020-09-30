@@ -276,7 +276,8 @@ resource "google_storage_bucket_object" "consul-agent-configs" {
   content = <<-EOT
       ${templatefile("${path.module}/files/consul-agent.hcl.tmpl",
   {
-    cluster_nodes = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip }
+    cluster_nodes = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip },
+    dc_name = var.dc_name
   }
 )}
     EOT
@@ -337,7 +338,8 @@ resource "google_storage_bucket_object" "nomad-client-config" {
   content = <<-EOT
       ${templatefile("${path.module}/files/nomad-client.hcl.tmpl",
   {
-    cluster_nodes = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip }
+    cluster_nodes = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip },
+    dc_name = var.dc_name
   }
 )}
     EOT

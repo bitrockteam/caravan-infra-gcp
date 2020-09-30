@@ -5,4 +5,5 @@ module "consul-cluster" {
   cluster_nodes            = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip }
   cluster_nodes_public_ips = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.access_config.0.nat_ip }
   vault_address            = module.vault_cluster.vault_address
+  dc_name                  = var.dc_name
 }
