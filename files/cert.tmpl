@@ -1,1 +1,1 @@
-{{ $host := printf "common_name=%s.node.${var.dc_name}.consul" (env "HOSTNAME") }}{{ with secret "tls_pki_int/issue/consul" $host "alt_names=client.${var.dc_name}.consul,localhost" "ip_sans=127.0.0.1" "ttl=720h"}}{{ .Data.certificate }}{{ end }}
+{{ $host := printf "common_name=%s.node.${dc_name}.consul" (env "HOSTNAME") }}{{ with secret "tls_pki_int/issue/consul" $host "alt_names=client.${dc_name}.consul,localhost" "ip_sans=127.0.0.1" "ttl=720h"}}{{ .Data.certificate }}{{ end }}
