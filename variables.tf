@@ -13,6 +13,10 @@ variable "cluster_machine_type" {
   type    = string
   default = null
 }
+variable "monitoring_machine_type" {
+  type    = string
+  default = "n2-standard-2"
+}
 variable "prefix" {
   description = "The prefix of the objects' names"
   default     = "hashicorp"

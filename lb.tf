@@ -90,10 +90,10 @@ resource "google_compute_backend_service" "backend_service_vault" {
     ]
     
     dynamic "backend" {
-        for_each = google_compute_instance_group.hcpoc_cluster_nodes
+        for_each = google_compute_instance_group.hashicorp_cluster_nodes
 
         content {
-            group                   = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
+            group                   = google_compute_instance_group.hashicorp_cluster_nodes[backend.key].self_link
             balancing_mode          = "RATE"
             max_rate_per_instance   = 100
         }
@@ -113,10 +113,10 @@ resource "google_compute_backend_service" "backend_service_consul" {
     ]
 
     dynamic "backend" {
-        for_each = google_compute_instance_group.hcpoc_cluster_nodes
+        for_each = google_compute_instance_group.hashicorp_cluster_nodes
 
         content {
-            group                   = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
+            group                   = google_compute_instance_group.hashicorp_cluster_nodes[backend.key].self_link
             balancing_mode          = "RATE"
             max_rate_per_instance   = 100
         }
@@ -136,10 +136,10 @@ resource "google_compute_backend_service" "backend_service_nomad" {
     ]
 
     dynamic "backend" {
-        for_each = google_compute_instance_group.hcpoc_cluster_nodes
+        for_each = google_compute_instance_group.hashicorp_cluster_nodes
 
         content {
-            group                   = google_compute_instance_group.hcpoc_cluster_nodes[backend.key].self_link
+            group                   = google_compute_instance_group.hashicorp_cluster_nodes[backend.key].self_link
             balancing_mode          = "RATE"
             max_rate_per_instance   = 100
         }

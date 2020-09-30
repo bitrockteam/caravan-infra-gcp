@@ -7,11 +7,11 @@ resource "tls_private_key" "ssh-key" {
   rsa_bits  = "4096"
 }
 
-resource "google_compute_instance" "hcpoc_cluster_nodes" {
+resource "google_compute_instance" "hashicorp_cluster_nodes" {
   count = var.cluster_instance_count
 
   depends_on = [
-    google_compute_network.hcpoc,
+    google_compute_network.hashicorp,
   ]
 
   project      = var.project_id
@@ -34,7 +34,7 @@ resource "google_compute_instance" "hcpoc_cluster_nodes" {
   }
 
   network_interface {
-    subnetwork = google_compute_subnetwork.hcpoc.self_link
+    subnetwork = google_compute_subnetwork.hashicorp.self_link
     access_config {
     }
   }
@@ -74,12 +74,12 @@ resource "local_file" "ssh_key" {
   file_permission   = "0600"
 }
 
-resource "google_compute_instance_group" "hcpoc_cluster_nodes" {
+resource "google_compute_instance_group" "hashicorp_cluster_nodes" {
   count = var.cluster_instance_count
 
-  name        = format("unmanaged-hcpoc-clustnode%.2d", count.index + 1)
+  name        = format("unmanaged-hashicorp-clustnode%.2d", count.index + 1)
 
-  instances = [ google_compute_instance.hcpoc_cluster_nodes[count.index].id ]
+  instances = [ google_compute_instance.hashicorp_cluster_nodes[count.index].id ]
 
   named_port {
     name = "http-ingress"
@@ -105,14 +105,14 @@ resource "google_compute_instance_group" "hcpoc_cluster_nodes" {
   }
 
 
-  zone = google_compute_instance.hcpoc_cluster_nodes[count.index].zone
+  zone = google_compute_instance.hashicorp_cluster_nodes[count.index].zone
 }
 
 resource "google_compute_instance_template" "worker-instance-template" {
   for_each = var.workers_instance_templates
 
   depends_on = [
-    google_compute_network.hcpoc,
+    google_compute_network.hashicorp,
   ]
 
   name_prefix  = each.value.name_prefix
@@ -134,14 +134,14 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
   disk {
     source_image = "family/${each.value.image_family_name}"
-    # source_image = data.google_compute_image.hcpoc_last_image.self_link
+    # source_image = data.google_compute_image.hashicorp_last_image.self_link
     auto_delete  = true
     boot         = true
   }
 
   network_interface {
-    network    = google_compute_network.hcpoc.self_link
-    subnetwork = google_compute_subnetwork.hcpoc.self_link
+    network    = google_compute_network.hashicorp.self_link
+    subnetwork = google_compute_subnetwork.hashicorp.self_link
   }
 
   service_account {
@@ -164,7 +164,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
   metadata_startup_script = templatefile("${path.module}/scripts/startup-script.sh", {project = var.project_id})
 
-  tags = ["ssh-allowed-node", "hcpoc-worker-node"]
+  tags = ["ssh-allowed-node", "hashicorp-worker-node"]
 }
 
 resource "google_compute_region_instance_group_manager" "default-workers" {
@@ -197,10 +197,10 @@ resource "google_compute_instance" "monitoring_instance" {
   project      = var.project_id
   zone         = "us-central1-a"
   name         = "monitoring"
-  machine_type = "n1-standard-1"
+  machine_type = can(length(var.monitoring_machine_type)) ? var.monitoring_machine_type : var.default_machine_type
 
   depends_on = [
-    google_compute_network.hcpoc,
+    google_compute_network.hashicorp,
   ]
 
   scheduling {
@@ -218,7 +218,7 @@ resource "google_compute_instance" "monitoring_instance" {
   }
 
   network_interface {
-    subnetwork = google_compute_subnetwork.hcpoc.self_link
+    subnetwork = google_compute_subnetwork.hashicorp.self_link
     access_config {
     }
   }
@@ -240,7 +240,7 @@ resource "google_compute_instance" "monitoring_instance" {
 
   metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh", {project = var.project_id})
   
-  tags = ["ssh-allowed-node", "hcpoc-worker-node"]
+  tags = ["ssh-allowed-node", "hashicorp-worker-node"]
 
    service_account {
     email  = google_service_account.cluster_node_service_account.email
@@ -258,7 +258,7 @@ resource "google_storage_bucket_object" "vault-agent-configs" {
   content = <<-EOT
       ${templatefile("${path.module}/files/agent.hcl.tpl",
   {
-    vault_endpoint      = "http://${google_compute_instance.hcpoc_cluster_nodes[0].name}.c.${var.project_id}.internal:8200"
+    vault_endpoint      = "http://${google_compute_instance.hashicorp_cluster_nodes[0].name}.c.${var.project_id}.internal:8200"
     tcp_listener        = "127.0.0.1:8200"
     tcp_listener_tls    = false
     gcp_node_role       = "worker-node"
@@ -276,7 +276,7 @@ resource "google_storage_bucket_object" "consul-agent-configs" {
   content = <<-EOT
       ${templatefile("${path.module}/files/consul-agent.hcl.tmpl",
   {
-    cluster_nodes = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.network_ip }
+    cluster_nodes = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip }
   }
 )}
     EOT
@@ -337,7 +337,7 @@ resource "google_storage_bucket_object" "nomad-client-config" {
   content = <<-EOT
       ${templatefile("${path.module}/files/nomad-client.hcl.tmpl",
   {
-    cluster_nodes = { for n in google_compute_instance.hcpoc_cluster_nodes : n.name => n.network_interface.0.network_ip }
+    cluster_nodes = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip }
   }
 )}
     EOT
