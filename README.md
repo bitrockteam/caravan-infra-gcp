@@ -1,1 +1,1 @@
-# hcpoc-base-terraform-bootstrap-gcp
+# hashicorp-terraform-bootstrap-gcp
