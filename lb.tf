@@ -1,5 +1,8 @@
 resource "google_compute_global_forwarding_rule" "global_forwarding_rule" {
-    
+    depends_on  = [
+        google_compute_target_https_proxy.target_https_proxy
+    ]
+
     name        = "${var.prefix}-global-forwarding-rule"
     project     = var.project_id
     port_range  = "443"
@@ -28,6 +31,9 @@ resource "google_compute_ssl_certificate" "lb_certificate" {
 }
 
 resource "google_compute_target_https_proxy" "target_https_proxy" {
+    depends_on  = [
+        google_compute_url_map.url_map
+    ]
 
     name             = "${var.prefix}-proxy"
     project          = var.project_id
@@ -57,6 +63,9 @@ locals {
 }
 
 resource "google_compute_url_map" "url_map" {
+    depends_on  = [
+        google_compute_backend_service.backend_service_vault
+    ]
 
     name = "${var.prefix}-load-balancer"
     project = var.project_id
@@ -79,7 +88,10 @@ resource "google_compute_url_map" "url_map" {
 }
 
 resource "google_compute_backend_service" "backend_service_vault" {
-    
+    depends_on  = [
+        google_compute_instance_group.hashicorp_cluster_nodes
+    ]
+
     name        = "${var.prefix}-backend-service-vault"
     project     = var.project_id
     port_name   = "vault"
@@ -102,6 +114,9 @@ resource "google_compute_backend_service" "backend_service_vault" {
 }
 
 resource "google_compute_backend_service" "backend_service_consul" {
+    depends_on  = [
+        google_compute_instance_group.hashicorp_cluster_nodes
+    ]
     
     name        = "${var.prefix}-backend-service-consul"
     project     = var.project_id
@@ -125,6 +140,9 @@ resource "google_compute_backend_service" "backend_service_consul" {
 }
 
 resource "google_compute_backend_service" "backend_service_nomad" {
+    depends_on  = [
+        google_compute_instance_group.hashicorp_cluster_nodes
+    ]
     
     name        = "${var.prefix}-backend-service-nomad"
     project     = var.project_id
@@ -148,6 +166,10 @@ resource "google_compute_backend_service" "backend_service_nomad" {
 }
 
 resource "google_compute_backend_service" "backend_service_workload" {
+
+    depends_on  = [
+        google_compute_region_instance_group_manager.default-workers
+    ]
     
     name        = "${var.prefix}-backend-service-workload"
     project     = var.project_id
