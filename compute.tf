@@ -298,14 +298,26 @@ resource "google_storage_bucket_object" "consul-agent-cert-file" {
   for_each = google_compute_instance_template.worker-instance-template
   name     = "cert.tmpl"
   bucket   = google_storage_bucket.configs.name
-  content = file("${path.module}/files/cert.tmpl")
+  content = <<-EOT
+      ${templatefile("${path.module}/files/cert.tmpl",
+  {
+    dc_name = var.dc_name
+  }
+)}
+    EOT
 }
 
 resource "google_storage_bucket_object" "consul-agent-keyfile-file" {
   for_each = google_compute_instance_template.worker-instance-template
   name     = "keyfile.tmpl"
   bucket   = google_storage_bucket.configs.name
-  content = file("${path.module}/files/keyfile.tmpl")
+  content = <<-EOT
+      ${templatefile("${path.module}/files/keyfile.tmpl",
+  {
+    dc_name = var.dc_name
+  }
+)}
+    EOT
 }
 
 resource "google_storage_bucket_object" "nomad-client-config" {
