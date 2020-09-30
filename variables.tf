@@ -1,3 +1,4 @@
+# GCP params
 variable "region" {}
 variable "zone" {}
 variable "google_account_file" {}
@@ -17,10 +18,6 @@ variable "monitoring_machine_type" {
   type    = string
   default = "n2-standard-2"
 }
-variable "prefix" {
-  description = "The prefix of the objects' names"
-  default     = "hashicorp"
-}
 variable "subnet_prefix" {
   description = "The address prefix to use for the subnet."
   default     = "10.128.0.0/28"
@@ -34,6 +31,24 @@ variable "google_kms_crypto_key" {
   default = ""
 }
 
+# Hashicorp params
+variable "dc_name" {
+  type = string
+}
+variable "prefix" {
+  description = "The prefix of the objects' names"
+  default     = "hashicorp"
+}
+variable "external_domain" {
+  type    = string
+  default = ""
+}
+variable "le_endpoint" {
+  type    = string
+  default = "https://acme-staging-v02.api.letsencrypt.org/directory"
+}
+
+# internal params
 variable "ssh_user" {
   type    = string
   default = "centos"
@@ -71,15 +86,4 @@ variable "workers_groups" {
       instance_template  = "def-wrkr"
     }
   }
-}
-variable "external_domain" {
-  type = string
-  default = ""
-}
-variable "le_endpoint" {
-  type = string
-  default = "https://acme-staging-v02.api.letsencrypt.org/directory"
-}
-variable "dc_name" {
-  type = string
 }
