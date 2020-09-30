@@ -75,6 +75,10 @@ resource "local_file" "ssh_key" {
 }
 
 resource "google_compute_instance_group" "hashicorp_cluster_nodes" {
+  depends_on = [
+    google_compute_instance.hashicorp_cluster_nodes
+  ]
+
   count = var.cluster_instance_count
 
   name        = format("unmanaged-hashicorp-clustnode%.2d", count.index + 1)
@@ -363,12 +367,6 @@ resource "google_storage_bucket_object" "echo_server_artifact" {
   name     = "echo-server"
   bucket   = google_storage_bucket.configs.name
   source = "${path.module}/files/echo-server"
-}
-
-resource "google_storage_bucket_object" "java_bmed_artifact" {
-  name     = "microservizio-1.0.0-SNAPSHOT.jar"
-  bucket   = google_storage_bucket.configs.name
-  source = "${path.module}/files/microservizio-1.0.0-SNAPSHOT.jar"
 }
 
 resource "google_storage_bucket_object" "java_opntrc_artifact" {
