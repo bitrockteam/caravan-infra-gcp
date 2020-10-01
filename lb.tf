@@ -30,15 +30,23 @@ resource "google_compute_ssl_certificate" "lb_certificate" {
     }
 }
 
+resource "google_compute_ssl_policy" "modern_tls_1_2_ssl_policy" {
+  name            = "modern-tls-1-2-ssl-policy"
+  profile         = "MODERN"
+  min_tls_version = "TLS_1_2"
+}
+
 resource "google_compute_target_https_proxy" "target_https_proxy" {
     depends_on  = [
-        google_compute_url_map.url_map
+        google_compute_url_map.url_map,
+        google_compute_ssl_policy.modern_tls_1_2_ssl_policy
     ]
 
     name             = "${var.prefix}-proxy"
     project          = var.project_id
     url_map          = google_compute_url_map.url_map.self_link
     ssl_certificates = concat(google_compute_ssl_certificate.lb_certificate.*.self_link)
+    ssl_policy       = google_compute_ssl_policy.modern_tls_1_2_ssl_policy.self_link
 }
 
 locals {
