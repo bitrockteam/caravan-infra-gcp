@@ -23,7 +23,7 @@ resource "google_compute_ssl_certificate" "lb_certificate" {
     name_prefix = "${var.prefix}-certificate-"
    
     private_key = tls_private_key.cert_private_key.private_key_pem
-    certificate = module.terraform-acme-le.certificate_pem
+    certificate = "${module.terraform-acme-le.certificate_pem}${module.terraform-acme-le.issuer_pem}"
 
     lifecycle {
         create_before_destroy = true
@@ -47,11 +47,7 @@ locals {
         consul = ["consul.${var.external_domain}"]
         nomad = ["nomad.${var.external_domain}"]
         http-ingress = [
-            "jaeger.${var.external_domain}",
-            "grafana-internal.${var.external_domain}",
-            "prometheus.${var.external_domain}",
-            "kibana.${var.external_domain}",
-            "echo.${var.external_domain}",
+            "*.${var.external_domain}"
         ]
     }
     path_matchers = {
