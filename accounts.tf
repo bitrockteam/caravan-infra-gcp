@@ -61,15 +61,8 @@ resource "google_project_iam_custom_role" "gcp_compute_persistent_disk_csi_drive
   permissions = ["compute.instances.get", "compute.instances.attachDisk", "compute.instances.detachDisk", "compute.disks.get"]
 }
 
-resource "google_service_account_iam_binding" "pd_csi_service_account_iam_binding" {
-  service_account_id = google_service_account.pd_csi_service_account.id
-  role               = "projects/${var.project_id}/roles/gcp_compute_persistent_disk_csi_driver_custom_role"
-
-  members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
-}
-
-resource "google_service_account_iam_binding" "pd_csi_service_account_storage_admin_iam_binding" {
-  service_account_id = google_service_account.pd_csi_service_account.id
+resource "google_project_iam_binding" "pd_csi_service_account_storage_admin_iam_binding" {
+  project = var.project_id
   role               = "roles/compute.storageAdmin"
 
   members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
@@ -77,7 +70,16 @@ resource "google_service_account_iam_binding" "pd_csi_service_account_storage_ad
 
 resource "google_service_account_iam_binding" "pd_csi_service_account_user_iam_binding" {
   service_account_id = google_service_account.pd_csi_service_account.id
-  role               = " roles/iam.serviceAccountUser"
+  role               = "roles/iam.serviceAccountUser"
+
+  members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
+}
+
+resource "google_service_account_iam_binding" "pd_csi_service_account_iam_binding" {
+  depends_on = [google_project_iam_custom_role.gcp_compute_persistent_disk_csi_driver]
+
+  service_account_id = google_service_account.pd_csi_service_account.id
+  role               = "projects/${var.project_id}/roles/gcp_compute_persistent_disk_csi_driver_custom_role"
 
   members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
 }
