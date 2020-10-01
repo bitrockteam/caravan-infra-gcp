@@ -1,6 +1,5 @@
 module "terraform-acme-le" {
-    source                   = "../hashicorp-terraform-acme-le"
-    # source                   = "git::ssh://git@github.com/bitrockteam/hashicorp-terraform-acme-le?ref=master"
+    source                   = "git::ssh://git@github.com/bitrockteam/hashicorp-terraform-acme-le?ref=master"
     project_id               = var.project_id
     google_account_file      = var.google_account_file
     common_name              = var.external_domain
