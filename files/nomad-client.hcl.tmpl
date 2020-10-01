@@ -7,8 +7,9 @@ client {
     "connect.sidecar_image" = "envoyproxy/envoy:v1.14.2"
   }
   options {
-    "docker.cleanup.image" = "false"
-    "user.blacklist"       = "ubuntu"
+    "docker.cleanup.image"      = "false"
+    "docker.privileged.enabled" = "true"
+    "user.blacklist"            = "ubuntu"
   }
 }
 
