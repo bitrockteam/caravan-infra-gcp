@@ -63,7 +63,7 @@ resource "google_project_iam_custom_role" "gcp_compute_persistent_disk_csi_drive
 
 resource "google_project_iam_binding" "pd_csi_service_account_storage_admin_iam_binding" {
   project = var.project_id
-  role               = "roles/compute.storageAdmin"
+  role    = "roles/compute.storageAdmin"
 
   members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
 }
