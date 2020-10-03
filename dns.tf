@@ -29,3 +29,10 @@ resource "google_dns_record_set" "cname-nomad" {
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
 }
+resource "google_dns_record_set" "cname-wild" {
+  name         = "*.${var.prefix}.${var.external_domain}."
+  managed_zone = "${var.prefix}-zone"
+  type         = "CNAME"
+  ttl          = 30
+  rrdatas      = ["${google_dns_record_set.a-hc.name}"]
+}
