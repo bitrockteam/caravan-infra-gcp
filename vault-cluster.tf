@@ -12,8 +12,8 @@ module "vault_cluster" {
   gcp_project_id           = var.project_id
   gcp_node_role            = "cluster-node"
   gcp_service_account      = "cluster-node@${var.project_id}.iam.gserviceaccount.com"
-  external_domain          = var.external_domain
 }
+
 module "vault_cluster_agents" {
   source              = "git::ssh://git@github.com/bitrockteam/hashicorp-vault-baseline//modules/agent?ref=master"
   vault_endpoint      = "http://127.0.0.1:8200"
