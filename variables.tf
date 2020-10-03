@@ -37,7 +37,7 @@ variable "dc_name" {
 }
 variable "prefix" {
   description = "The prefix of the objects' names"
-  default     = "hashicorp"
+  default     = ""
 }
 variable "external_domain" {
   type    = string
@@ -59,7 +59,7 @@ variable "ssh_timeout" {
 }
 variable "compute_image_name" {
   type    = string
-  default = "hashicorp-centos-image"
+  default = "centos-image"
 }
 variable "skip_packer_build" {
   type    = bool
@@ -71,7 +71,7 @@ variable "workers_instance_templates" {
     def-wrkr = {
       name_prefix       = "worker-template-default-"
       machine_type      = "n1-standard-2"
-      image_family_name = "hashicorp-centos-image"
+      image_family_name = "centos-image"
       preemptible       = true
     }
   }

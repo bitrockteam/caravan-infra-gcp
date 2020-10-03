@@ -1,5 +1,5 @@
 resource "google_dns_record_set" "a-hc" {
-  name         = "gcp.${var.external_domain}."
+  name         = "gcp.${var.prefix}.${var.external_domain}."
   managed_zone = "${var.prefix}-zone"
   type         = "A"
   ttl          = 300
@@ -8,7 +8,7 @@ resource "google_dns_record_set" "a-hc" {
 }
 
 resource "google_dns_record_set" "cname-vault" {
-  name         = "vault.${var.external_domain}."
+  name         = "vault.${var.prefix}.${var.external_domain}."
   managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
@@ -16,14 +16,14 @@ resource "google_dns_record_set" "cname-vault" {
 }
 
 resource "google_dns_record_set" "cname-consul" {
-  name         = "consul.${var.external_domain}."
+  name         = "consul.${var.prefix}.${var.external_domain}."
   managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
 }
 resource "google_dns_record_set" "cname-nomad" {
-  name         = "nomad.${var.external_domain}."
+  name         = "nomad.${var.prefix}.${var.external_domain}."
   managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30

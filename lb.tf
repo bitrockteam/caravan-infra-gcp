@@ -51,11 +51,11 @@ resource "google_compute_target_https_proxy" "target_https_proxy" {
 
 locals {
   host_rules = {
-    vault  = ["vault.${var.external_domain}"]
-    consul = ["consul.${var.external_domain}"]
-    nomad  = ["nomad.${var.external_domain}"]
+    vault  = ["vault.${var.prefix}.${var.external_domain}"]
+    consul = ["consul.${var.prefix}.${var.external_domain}"]
+    nomad  = ["nomad.${var.prefix}.${var.external_domain}"]
     http-ingress = [
-      "*.${var.external_domain}"
+      "*.${var.prefix}.${var.external_domain}"
     ]
   }
   path_matchers = {

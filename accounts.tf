@@ -47,16 +47,19 @@ resource "google_storage_bucket_iam_binding" "configs_binding" {
   )
 }
 
+resource "random_id" "random" {
+  byte_length = 4
+}
 
 resource "google_service_account" "pd_csi_service_account" {
-  account_id   = "pd-csi-sa"
-  display_name = "Persistent Disk CSI Service Account"
+  account_id   = "pd-csi-sa-${random_id.random.dec}"
+  display_name = "Persistent Disk CSI Service Account for ${var.project_id}"
   project      = var.project_id
 }
 
 resource "google_project_iam_custom_role" "gcp_compute_persistent_disk_csi_driver" {
-  role_id     = "gcp_compute_persistent_disk_csi_driver_custom_role"
-  title       = "Google Compute Engine Persistent Disk CSI Driver Custom Roles"
+  role_id     = "pd_csi_custom_role_${google_service_account.pd_csi_service_account.unique_id}"
+  title       = "Google Compute Engine Persistent Disk CSI Driver Custom Roles for ${var.project_id}"
   description = "Custom roles required for functions of the gcp-compute-persistent-disk-csi-driver"
   permissions = ["compute.instances.get", "compute.instances.attachDisk", "compute.instances.detachDisk", "compute.disks.get"]
 }
@@ -79,7 +82,7 @@ resource "google_service_account_iam_binding" "pd_csi_service_account_iam_bindin
   depends_on = [google_project_iam_custom_role.gcp_compute_persistent_disk_csi_driver]
 
   service_account_id = google_service_account.pd_csi_service_account.id
-  role               = "projects/${var.project_id}/roles/gcp_compute_persistent_disk_csi_driver_custom_role"
+  role               = "projects/${var.project_id}/roles/pd_csi_custom_role_${google_service_account.pd_csi_service_account.unique_id}"
 
   members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
 }
