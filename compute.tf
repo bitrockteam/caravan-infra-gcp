@@ -394,7 +394,7 @@ resource "google_storage_bucket_object" "java_opntrc_artifact_b" {
 }
 
 resource "google_storage_bucket_object" "jaeger-spark" {
-  name   = "OpenTracing-AppB-0.0.1-SNAPSHOT.jar"
+  name   = "jaeger-spark-dependencies-0.0.1-SNAPSHOT.jar"
   bucket = google_storage_bucket.configs.name
   source = "${path.module}/files/jaeger-spark-dependencies-0.0.1-SNAPSHOT.jar"
 }
