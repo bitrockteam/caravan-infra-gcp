@@ -83,9 +83,5 @@ backend.tf
 .*token*
 taint.sh
 .lb-*
-files/spring-boot-0.0.1-SNAPSHOT.jar
-files/spring-echo-example-1.0.0.jar
-files/microservizio-1.0.0-SNAPSHOT.jar
-files/OpenTracing-AppA-0.0.1-SNAPSHOT-jar-with-dependencies.jar
-files/OpenTracing-AppA-0.0.1-SNAPSHOT.jar
+files/*.jar
 files/echo-server
