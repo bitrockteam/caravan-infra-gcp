@@ -52,7 +52,7 @@ resource "random_id" "random" {
 }
 
 resource "google_service_account" "pd_csi_service_account" {
-  account_id   = "pd-csi-sa-${random_id.random.dec}"
+  account_id   = "pd-csi-sa-${replace(var.project_id, "/(-[0-9]+)/", "")}"
   display_name = "Persistent Disk CSI Service Account for ${var.project_id}"
   project      = var.project_id
 }
