@@ -15,7 +15,6 @@ resource "tls_private_key" "cert_private_key" {
 
 resource "google_compute_ssl_certificate" "lb_certificate" {
   depends_on = [
-    module.vault_cluster,
     module.terraform-acme-le
   ]
 
