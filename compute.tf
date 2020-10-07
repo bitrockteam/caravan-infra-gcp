@@ -172,7 +172,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
 resource "google_compute_region_instance_group_manager" "default-workers" {
   depends_on = [
-    module.consul-cluster
+    module.hashicorp-bootstrap
   ]
 
   for_each = var.workers_groups
