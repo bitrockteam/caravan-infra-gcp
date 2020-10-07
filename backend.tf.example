@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
     bucket = "Can't have the vars in backend. Put your bucket name here."
-    prefix = "terraform/state"
+    prefix = "infraboot/terraform/state"
   }
 }
