@@ -238,6 +238,7 @@ resource "google_compute_instance" "monitoring_instance" {
     nomad-client-config       = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad.hcl.tmpl?alt=media"
     elastic-service           = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/elastic-service.json?alt=media"
     grafana-service           = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/grafana-service.json?alt=media"
+    prometheus-service        = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/prometheus-service.json?alt=media"
     ssh-keys                  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
@@ -366,6 +367,12 @@ resource "google_storage_bucket_object" "grafana-service-file" {
   name    = "grafana-service.json"
   bucket  = google_storage_bucket.configs.name
   content = file("${path.module}/files/grafana-service.json")
+}
+
+resource "google_storage_bucket_object" "prometheus-service-file" {
+  name    = "prometheus-service.json"
+  bucket  = google_storage_bucket.configs.name
+  content = file("${path.module}/files/prometheus-service.json")
 }
 
 resource "google_storage_bucket_object" "java_springboot_artifact" {

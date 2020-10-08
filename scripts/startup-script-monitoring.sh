@@ -16,6 +16,7 @@ if [[ `hostname` != clustnode* ]]; then
         NOMAD_CLIENT_CONFIG=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/nomad-client-config)
         ELASTIC_SERVICE=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/elastic-service)
         GRAFANA_SERVICE=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/grafana-service)
+        PROMETHEUS_SERVICE=$(curl -s -H 'Metadata-Flavor: Google' http://metadata.google.internal/computeMetadata/v1/instance/attributes/prometheus-service)
     curl -o /etc/vault.d/agent.hcl -s -L -H "Authorization: Bearer $TOKEN" $VAULT_AGENT_CONFIG && \
     curl -o /etc/consul.d/consul.hcl.tmpl -s -L -H "Authorization: Bearer $TOKEN" $CONSUL_AGENT_CONFIG && \
     curl -o /etc/consul.d/ca.tmpl -s -L -H "Authorization: Bearer $TOKEN" $CONSUL_CA && \
@@ -27,6 +28,7 @@ if [[ `hostname` != clustnode* ]]; then
     curl -o /etc/nomad.d/nomad.hcl.tmpl -s -L -H "Authorization: Bearer $TOKEN" $NOMAD_CLIENT_CONFIG && \
     curl -o /etc/consul.d/elastic-service.json -s -L -H "Authorization: Bearer $TOKEN" $ELASTIC_SERVICE && \
     curl -o /etc/consul.d/grafana-service.json -s -L -H "Authorization: Bearer $TOKEN" $GRAFANA_SERVICE && \
+    curl -o /etc/consul.d/prometheus-service.json -s -L -H "Authorization: Bearer $TOKEN" $PROMETHEUS_SERVICE && \
     systemctl restart vault-agent && \
     systemctl restart consul && \
     systemctl restart nomad
