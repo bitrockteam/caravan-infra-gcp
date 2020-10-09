@@ -138,8 +138,8 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
   disk {
     source_image = "projects/hcpoc-terraform-admin/global/images/family/${var.prefix}-${var.compute_image_name}"
-    auto_delete = true
-    boot        = true
+    auto_delete  = true
+    boot         = true
   }
 
   network_interface {
