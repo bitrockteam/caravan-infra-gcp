@@ -1,6 +1,5 @@
 # GCP params
 variable "region" {}
-variable "zone" {}
 variable "google_account_file" {}
 variable "project_id" {}
 variable "default_machine_type" {
