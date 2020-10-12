@@ -27,3 +27,5 @@ if [[ `hostname` != clustnode* ]]; then
     systemctl restart consul && \
     systemctl restart nomad
 fi
+
+sudo docker login -u oauth2accesstoken -p $(echo $TOKEN) https://us.gcr.io

@@ -42,3 +42,4 @@ sudo systemctl enable elasticsearch
 sudo systemctl start elasticsearch
 sudo systemctl enable grafana-server
 sudo systemctl start grafana-server
+sudo docker login -u oauth2accesstoken -p $(echo $TOKEN) https://us.gcr.io
