@@ -1,6 +1,16 @@
+resource "google_dns_managed_zone" "project-zone" {
+  project     = var.project_id
+  name        = "${var.prefix}-custom-zone"
+  dns_name    = "${var.prefix}.${var.external_domain}."
+  description = "Custom DNS zone"
+}
+
 resource "google_dns_record_set" "a-hc" {
+  depends_on = [
+    google_dns_managed_zone.project-zone
+  ]
   name         = "gcp.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-zone"
+  managed_zone = "${var.prefix}-custom-zone"
   type         = "A"
   ttl          = 300
 
@@ -8,30 +18,42 @@ resource "google_dns_record_set" "a-hc" {
 }
 
 resource "google_dns_record_set" "cname-vault" {
+  depends_on = [
+    google_dns_record_set.a-hc
+  ]
   name         = "vault.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-zone"
+  managed_zone = "${var.prefix}-custom-zone"
   type         = "CNAME"
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
 }
 
 resource "google_dns_record_set" "cname-consul" {
+  depends_on = [
+    google_dns_record_set.a-hc
+  ]
   name         = "consul.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-zone"
+  managed_zone = "${var.prefix}-custom-zone"
   type         = "CNAME"
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
 }
 resource "google_dns_record_set" "cname-nomad" {
+  depends_on = [
+    google_dns_record_set.a-hc
+  ]
   name         = "nomad.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-zone"
+  managed_zone = "${var.prefix}-custom-zone"
   type         = "CNAME"
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
 }
 resource "google_dns_record_set" "cname-wild" {
+  depends_on = [
+    google_dns_record_set.a-hc
+  ]
   name         = "*.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-zone"
+  managed_zone = "${var.prefix}-custom-zone"
   type         = "CNAME"
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
