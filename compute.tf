@@ -198,7 +198,7 @@ resource "google_compute_region_instance_group_manager" "default-workers" {
 
 resource "google_compute_instance" "monitoring_instance" {
   project      = var.project_id
-  zone         = "us-central1-a"
+  zone         = var.zone
   name         = "monitoring"
   machine_type = can(length(var.monitoring_machine_type)) ? var.monitoring_machine_type : var.default_machine_type
 
