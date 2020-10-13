@@ -1,16 +1,6 @@
-resource "google_dns_managed_zone" "project-zone" {
-  project     = var.project_id
-  name        = "${var.prefix}-custom-zone"
-  dns_name    = "${var.prefix}.${var.external_domain}."
-  description = "Custom DNS zone"
-}
-
 resource "google_dns_record_set" "a-hc" {
-  depends_on = [
-    google_dns_managed_zone.project-zone
-  ]
   name         = "gcp.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-custom-zone"
+  managed_zone = "${var.prefix}-zone"
   type         = "A"
   ttl          = 300
 
@@ -22,7 +12,7 @@ resource "google_dns_record_set" "cname-vault" {
     google_dns_record_set.a-hc
   ]
   name         = "vault.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-custom-zone"
+  managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
@@ -33,7 +23,7 @@ resource "google_dns_record_set" "cname-consul" {
     google_dns_record_set.a-hc
   ]
   name         = "consul.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-custom-zone"
+  managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
@@ -43,7 +33,7 @@ resource "google_dns_record_set" "cname-nomad" {
     google_dns_record_set.a-hc
   ]
   name         = "nomad.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-custom-zone"
+  managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
@@ -53,7 +43,7 @@ resource "google_dns_record_set" "cname-wild" {
     google_dns_record_set.a-hc
   ]
   name         = "*.${var.prefix}.${var.external_domain}."
-  managed_zone = "${var.prefix}-custom-zone"
+  managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
   rrdatas      = ["${google_dns_record_set.a-hc.name}"]
