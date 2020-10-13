@@ -26,3 +26,6 @@ output "worker_nodes_service_accounts" {
 output "load-balancer-ip-address" {
   value = google_compute_global_forwarding_rule.global_forwarding_rule.ip_address
 }
+output "pd_ssd_jenkins_master_id" {
+  value = var.gcp_csi ? google_compute_region_disk.jenkins_master[0].id : null
+}
