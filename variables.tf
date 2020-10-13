@@ -30,7 +30,6 @@ variable "google_kms_crypto_key" {
   type    = string
   default = ""
 }
-
 # Hashicorp params
 variable "dc_name" {
   type = string
@@ -86,4 +85,8 @@ variable "workers_groups" {
       instance_template  = "def-wrkr"
     }
   }
+}
+
+variable "gcp_csi" {
+  type = bool
 }
