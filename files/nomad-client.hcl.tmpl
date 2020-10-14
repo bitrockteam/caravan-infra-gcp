@@ -4,11 +4,9 @@ log_level = "DEBUG"
 client {
   enabled = true
   meta = {
-    "connect.sidecar_image" = "envoyproxy/envoy:v1.14.2"
+    "connect.sidecar_image" = "us.gcr.io/hcpoc-terraform-admin/envoyproxy/envoy:v1.14.2"
   }
   options {
-    "docker.cleanup.image"      = "false"
-    "docker.privileged.enabled" = "true"
     "user.blacklist"            = "ubuntu"
   }
 }
@@ -24,6 +22,28 @@ server_join {
 plugin "raw_exec" {
   config {
     enabled = true
+  }
+}
+
+plugin "docker" {
+  config {
+    endpoint = "unix:///var/run/docker.sock"
+
+    auth {
+      config = "/root/.docker/config.json"
+      helper = "gcloud"
+    }
+
+    gc {
+      image  = false
+      dangling_containers {
+        enabled        = true
+        dry_run        = false
+        period         = "5m"
+        creation_grace = "5m"
+      }
+    }
+    allow_privileged = true
   }
 }
 
