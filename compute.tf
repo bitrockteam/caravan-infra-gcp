@@ -165,7 +165,11 @@ resource "google_compute_instance_template" "worker-instance-template" {
     ssh-keys                  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
-  metadata_startup_script = templatefile("${path.module}/scripts/startup-script.sh", { project = var.project_id })
+  metadata_startup_script = templatefile("${path.module}/scripts/startup-script-worker.sh",
+  { 
+    project = var.project_id
+    token = google_service_account.worker_node_account[each.key].email
+  })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]
 }
@@ -242,7 +246,11 @@ resource "google_compute_instance" "monitoring_instance" {
     ssh-keys                  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
-  metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh", { project = var.project_id })
+  metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh",
+  { 
+    project = var.project_id
+    token = google_service_account.cluster_node_service_account.email
+  })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]
 
