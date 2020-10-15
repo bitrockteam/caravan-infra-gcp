@@ -27,7 +27,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
   boot_disk {
     initialize_params {
-      image = "projects/hcpoc-terraform-admin/global/images/family/${var.prefix}-${var.compute_image_name}"
+      image = "${var.project_image_path}family/${var.prefix}-${var.compute_image_name}"
       type  = "pd-standard"
       size  = "100"
     }
@@ -137,7 +137,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   disk {
-    source_image = "projects/hcpoc-terraform-admin/global/images/family/${var.prefix}-${var.compute_image_name}"
+    source_image = "${var.project_image_path}family/${var.prefix}-${var.compute_image_name}"
     auto_delete  = true
     boot         = true
   }
@@ -218,7 +218,7 @@ resource "google_compute_instance" "monitoring_instance" {
 
   boot_disk {
     initialize_params {
-      image = "projects/hcpoc-terraform-admin/global/images/family/${var.prefix}-${var.compute_image_name}"
+      image = "${var.project_image_path}family/${var.prefix}-${var.compute_image_name}"
       type  = "pd-standard"
       size  = "100"
     }

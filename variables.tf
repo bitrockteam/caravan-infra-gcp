@@ -90,3 +90,8 @@ variable "workers_groups" {
 variable "gcp_csi" {
   type = bool
 }
+
+variable "project_image_path" {
+  type = string
+  default = ""
+}
