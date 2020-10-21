@@ -5,7 +5,7 @@ variable "google_account_file" {}
 variable "project_id" {}
 variable "default_machine_type" {
   type    = string
-  default = "n1-standard-2"
+  default = "n2-standard-2"
 }
 variable "cluster_instance_count" {
   default = "3"
@@ -16,7 +16,7 @@ variable "cluster_machine_type" {
 }
 variable "monitoring_machine_type" {
   type    = string
-  default = "n2-standard-2"
+  default = "n2-standard-4"
 }
 variable "subnet_prefix" {
   description = "The address prefix to use for the subnet."
