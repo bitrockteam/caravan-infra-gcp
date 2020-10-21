@@ -50,7 +50,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
 
   service_account {
-    email  = google_service_account.cluster_node_service_account.email
+    email  = data.google_service_account.cluster_node_service_account.email
     scopes = ["cloud-platform"]
   }
 
@@ -148,7 +148,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   service_account {
-    email  = google_service_account.worker_node_account[each.key].email
+    email  = data.google_service_account.worker_node_service_account[each.key].email
     scopes = ["cloud-platform"]
   }
 
@@ -168,7 +168,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   metadata_startup_script = templatefile("${path.module}/scripts/startup-script-worker.sh",
   { 
     project = var.project_id
-    token = google_service_account.worker_node_account[each.key].email
+    token = data.google_service_account.worker_node_service_account[each.key].email
   })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]
@@ -247,13 +247,13 @@ resource "google_compute_instance" "monitoring_instance" {
   metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh",
   { 
     project = var.project_id
-    token = google_service_account.cluster_node_service_account.email
+    token = data.google_service_account.cluster_node_service_account.email
   })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]
 
   service_account {
-    email  = google_service_account.cluster_node_service_account.email
+    email  = data.google_service_account.cluster_node_service_account.email
     scopes = ["cloud-platform"]
   }
 

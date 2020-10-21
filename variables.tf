@@ -97,6 +97,14 @@ variable "preemptible_monitoring_node" {
   default = true
 }
 
+variable "cluster_node_sa" {
+  type = string
+}
+
+variable "worker_node_sa" {
+  type = string
+}
+
 variable "gcp_csi" {
   type = bool
 }
