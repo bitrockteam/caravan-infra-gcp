@@ -20,9 +20,9 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
   machine_type = can(length(var.cluster_machine_type)) ? var.cluster_machine_type : var.default_machine_type
 
   scheduling {
-    automatic_restart   = false
-    on_host_maintenance = "TERMINATE"
-    preemptible         = true
+    automatic_restart   = ! var.preemptible_cluster_node
+    on_host_maintenance = var.preemptible_cluster_node ? "TERMINATE" : "MIGRATE"
+    preemptible         = var.preemptible_cluster_node
   }
 
   boot_disk {
@@ -211,9 +211,9 @@ resource "google_compute_instance" "monitoring_instance" {
   ]
 
   scheduling {
-    automatic_restart   = false
-    on_host_maintenance = "TERMINATE"
-    preemptible         = true
+    automatic_restart   = ! var.preemptible_monitoring_node
+    on_host_maintenance = var.preemptible_monitoring_node ? "TERMINATE" : "MIGRATE"
+    preemptible         = var.preemptible_monitoring_node
   }
 
   boot_disk {
