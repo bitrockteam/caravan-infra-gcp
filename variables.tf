@@ -16,7 +16,7 @@ variable "cluster_machine_type" {
 }
 variable "monitoring_machine_type" {
   type    = string
-  default = "n2-standard-4"
+  default = "n2-standard-2"
 }
 variable "subnet_prefix" {
   description = "The address prefix to use for the subnet."
@@ -85,6 +85,16 @@ variable "workers_groups" {
       instance_template  = "def-wrkr"
     }
   }
+}
+
+variable "preemptible_cluster_node" {
+  type = bool
+  default = true
+}
+
+variable "preemptible_monitoring_node" {
+  type = bool
+  default = true
 }
 
 variable "gcp_csi" {
