@@ -226,8 +226,6 @@ resource "google_compute_instance" "monitoring_instance" {
 
   network_interface {
     subnetwork = google_compute_subnetwork.hashicorp.self_link
-    access_config {
-    }
   }
 
   metadata = {
