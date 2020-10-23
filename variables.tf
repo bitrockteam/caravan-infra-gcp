@@ -56,6 +56,10 @@ variable "ssh_timeout" {
   type    = string
   default = "240s"
 }
+variable "compute_image_prefix" {
+  description = "Override the default var.prefix before the var.compute_image_name"
+  default     = null
+}
 variable "compute_image_name" {
   type    = string
   default = "centos-image"
@@ -88,12 +92,12 @@ variable "workers_groups" {
 }
 
 variable "preemptible_cluster_node" {
-  type = bool
+  type    = bool
   default = true
 }
 
 variable "preemptible_monitoring_node" {
-  type = bool
+  type    = bool
   default = true
 }
 
@@ -110,6 +114,6 @@ variable "gcp_csi" {
 }
 
 variable "project_image_path" {
-  type = string
+  type    = string
   default = ""
 }

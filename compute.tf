@@ -6,7 +6,9 @@ resource "tls_private_key" "ssh-key" {
   algorithm = "RSA"
   rsa_bits  = "4096"
 }
-
+locals {
+  full_compute_image_name = "${var.compute_image_prefix != null ? var.compute_image_prefix : var.prefix}-${var.compute_image_name}"
+}
 resource "google_compute_instance" "hashicorp_cluster_nodes" {
   count = var.cluster_instance_count
 
@@ -27,7 +29,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
   boot_disk {
     initialize_params {
-      image = "${var.project_image_path}family/${var.prefix}-${var.compute_image_name}"
+      image = "${var.project_image_path}family/${local.full_compute_image_name}"
       type  = "pd-standard"
       size  = "100"
     }
@@ -137,7 +139,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   disk {
-    source_image = "${var.project_image_path}family/${var.prefix}-${var.compute_image_name}"
+    source_image = "${var.project_image_path}family/${local.full_compute_image_name}"
     auto_delete  = true
     boot         = true
   }
@@ -166,9 +168,9 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   metadata_startup_script = templatefile("${path.module}/scripts/startup-script-worker.sh",
-  { 
-    project = var.project_id
-    token = data.google_service_account.worker_node_service_account[each.key].email
+    {
+      project = var.project_id
+      token   = data.google_service_account.worker_node_service_account[each.key].email
   })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]
@@ -218,7 +220,7 @@ resource "google_compute_instance" "monitoring_instance" {
 
   boot_disk {
     initialize_params {
-      image = "${var.project_image_path}family/${var.prefix}-${var.compute_image_name}"
+      image = "${var.project_image_path}family/${local.full_compute_image_name}"
       type  = "pd-standard"
       size  = "100"
     }
@@ -245,9 +247,9 @@ resource "google_compute_instance" "monitoring_instance" {
   }
 
   metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh",
-  { 
-    project = var.project_id
-    token = data.google_service_account.cluster_node_service_account.email
+    {
+      project = var.project_id
+      token   = data.google_service_account.cluster_node_service_account.email
   })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]
