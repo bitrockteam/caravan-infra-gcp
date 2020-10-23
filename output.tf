@@ -29,3 +29,10 @@ output "load-balancer-ip-address" {
 output "pd_ssd_jenkins_master_id" {
   value = var.gcp_csi ? google_compute_region_disk.jenkins_master[0].id : null
 }
+output "hashicorp_endpoints" {
+  value = {
+    vault  = "https://vault.${var.prefix}.${var.external_domain}"
+    consul = "https://consul.${var.prefix}.${var.external_domain}"
+    nomad  = "https://nomad.${var.prefix}.${var.external_domain}"
+  }
+}
