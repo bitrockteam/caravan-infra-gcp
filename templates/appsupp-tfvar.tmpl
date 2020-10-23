@@ -1,0 +1,15 @@
+#############
+## project.tfvars for "${project_id}" in "hashicorp-application-support" 
+
+vault_endpoint = "https://vault.${prefix}.${external_domain}"
+consul_endpoint = "https://consul.${prefix}.${external_domain}"
+nomad_endpoint = "https://nomad.${prefix}.${external_domain}"
+domain = "${prefix}.${external_domain}"
+artifacts_source_prefix = "gcs::https://www.googleapis.com/storage/v1/cfgs-${project_id}"
+vault_skip_tls_verify = false
+services_domain = "service.consul"
+dc_names = ["gcp-dc"]
+cloud = "gcp"
+gcp_project_id = "${project_id}"
+gcp_region = "${region}"
+#############

@@ -16,8 +16,19 @@ output "hashicorp_endpoints" {
     nomad  = "https://nomad.${var.prefix}.${var.external_domain}"
   }
 }
+
 output "PROJECT_PLATFORM_TFVAR" {
-  value = templatefile("${path.module}/templates/tfvar.tmpl",
+  value = templatefile("${path.module}/templates/platform-tfvar.tmpl",
+  { 
+    project_id = var.project_id,
+    prefix = var.prefix,
+    external_domain = var.external_domain,
+    region = var.region
+  })
+}
+
+output "PROJECT_APPSUPP_TFVAR" {
+  value = templatefile("${path.module}/templates/appsupp-tfvar.tmpl",
   { 
     project_id = var.project_id,
     prefix = var.prefix,
