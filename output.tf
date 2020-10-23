@@ -23,7 +23,8 @@ output "PROJECT_PLATFORM_TFVAR" {
     project_id = var.project_id,
     prefix = var.prefix,
     external_domain = var.external_domain,
-    region = var.region
+    region = var.region,
+    dc_name = var.dc_name
   })
 }
 
@@ -34,5 +35,17 @@ output "PROJECT_APPSUPP_TFVAR" {
     prefix = var.prefix,
     external_domain = var.external_domain,
     region = var.region
+    dc_name = var.dc_name
+  })
+}
+
+output "PROJECT_WORKLOAD_TFVAR" {
+  value = templatefile("${path.module}/templates/workload-tfvar.tmpl",
+  { 
+    project_id = var.project_id,
+    prefix = var.prefix,
+    external_domain = var.external_domain,
+    region = var.region
+    dc_name = var.dc_name
   })
 }
