@@ -16,6 +16,9 @@ output "hashicorp_endpoints" {
     nomad  = "https://nomad.${var.prefix}.${var.external_domain}"
   }
 }
+output "worker_node_service_account" {
+  value = [ for k,v in data.google_service_account.worker_node_service_account: v.email ]
+}
 
 output "PROJECT_PLATFORM_TFVAR" {
   value = templatefile("${path.module}/templates/platform-tfvar.tmpl",
