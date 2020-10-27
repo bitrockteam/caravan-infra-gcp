@@ -46,6 +46,22 @@ variable "le_endpoint" {
   type    = string
   default = "https://acme-staging-v02.api.letsencrypt.org/directory"
 }
+variable "ca_certs" {
+  type = map(object({
+    filename = string
+    pemurl   = string
+  }))
+  default = {
+    fakeleintermediatex1 = {
+      filename = "fakeleintermediatex1.pem"
+      pemurl   = "https://letsencrypt.org/certs/fakeleintermediatex1.pem"
+    },
+    fakelerootx1 = {
+      filename = "fakelerootx1.pem"
+      pemurl   = "https://letsencrypt.org/certs/fakelerootx1.pem"
+    }
+  }
+}
 
 # internal params
 variable "ssh_user" {
@@ -117,3 +133,4 @@ variable "project_image_path" {
   type    = string
   default = ""
 }
+

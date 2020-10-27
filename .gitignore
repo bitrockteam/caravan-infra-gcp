@@ -85,3 +85,4 @@ taint.sh
 .lb-*
 files/*.jar
 files/echo-server
+*.pem
