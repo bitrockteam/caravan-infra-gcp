@@ -150,7 +150,7 @@ resource "google_compute_backend_service" "backend_service_nomad" {
   name      = "${var.prefix}-backend-service-nomad"
   project   = var.project_id
   port_name = "nomad"
-  protocol  = "HTTPS"
+  protocol  = "HTTP"
 
   health_checks = [
     google_compute_health_check.healthcheck_nomad.self_link
@@ -223,7 +223,7 @@ resource "google_compute_health_check" "healthcheck_nomad" {
   timeout_sec        = 2
   check_interval_sec = 30
 
-  https_health_check {
+  http_health_check {
     port_name          = "nomad"
     port_specification = "USE_NAMED_PORT"
     request_path       = "/v1/status/leader"
