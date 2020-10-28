@@ -224,7 +224,7 @@ resource "google_compute_health_check" "healthcheck_nomad" {
   check_interval_sec = 30
 
   http_health_check {
-    port_name          = "consul"
+    port_name          = "nomad"
     port_specification = "USE_NAMED_PORT"
     request_path       = "/v1/status/leader"
   }

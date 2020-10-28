@@ -170,7 +170,6 @@ resource "google_compute_instance_template" "worker-instance-template" {
   metadata_startup_script = templatefile("${path.module}/scripts/startup-script-worker.sh",
     {
       project = var.project_id
-      token   = data.google_service_account.worker_node_service_account[each.key].email
   })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]
@@ -249,7 +248,6 @@ resource "google_compute_instance" "monitoring_instance" {
   metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh",
     {
       project = var.project_id
-      token   = data.google_service_account.cluster_node_service_account.email
   })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]

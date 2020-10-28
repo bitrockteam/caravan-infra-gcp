@@ -70,8 +70,12 @@ vault {
   address          = "http://127.0.0.1:8200"
 }
 
+acl {
+  enabled = true
+}
+
 tls {
-    http = true
+    http = false
     rpc  = true
 
     ca_file    = "/etc/nomad.d/nomad_ca"
