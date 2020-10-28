@@ -42,6 +42,3 @@ sudo systemctl enable elasticsearch
 sudo systemctl start elasticsearch
 sudo systemctl enable grafana-server
 sudo systemctl start grafana-server
-export TOKEN_SA=$(curl -s "http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/${token}/token"  -H "Metadata-Flavor: Google" | grep -Po '(?<="access_token":")([^"]*)')
-sudo docker login -u oauth2accesstoken -p $(echo $TOKEN_SA) https://us.gcr.io
-echo TOKEN_SA=$TOKEN_SA | sudo tee /etc/sysconfig/docker-login
