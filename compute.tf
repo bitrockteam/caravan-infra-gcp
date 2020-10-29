@@ -202,14 +202,15 @@ resource "google_compute_region_instance_group_manager" "default-workers" {
 
 
 resource "google_compute_instance" "monitoring_instance" {
+
+  depends_on = [
+    google_compute_region_instance_group_manager.default-workers
+  ]
+
   project      = var.project_id
   zone         = var.zone
   name         = "monitoring"
   machine_type = can(length(var.monitoring_machine_type)) ? var.monitoring_machine_type : var.default_machine_type
-
-  depends_on = [
-    google_compute_network.hashicorp,
-  ]
 
   scheduling {
     automatic_restart   = ! var.preemptible_monitoring_node
