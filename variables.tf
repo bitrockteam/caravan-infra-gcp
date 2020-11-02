@@ -134,3 +134,7 @@ variable "project_image_path" {
   default = ""
 }
 
+variable "envoy_proxy_image" {
+  type = string
+  default = "envoyproxy/envoy:v1.14.2"
+}
