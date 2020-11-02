@@ -8,6 +8,7 @@ resource "tls_private_key" "ssh-key" {
 }
 locals {
   full_compute_image_name = "${var.compute_image_prefix != null ? var.compute_image_prefix : var.prefix}-${var.compute_image_name}"
+  envoy_proxy_image = var.envoy_proxy_image
 }
 resource "google_compute_instance" "hashicorp_cluster_nodes" {
   count = var.cluster_instance_count
@@ -53,7 +54,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
   service_account {
     email  = data.google_service_account.cluster_node_service_account.email
-    scopes = ["cloud-platform"]
+    scopes = ["cloud-platform", "logging-write", "monitoring-write"]
   }
 
   allow_stopping_for_update = true
@@ -151,7 +152,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
   service_account {
     email  = data.google_service_account.worker_node_service_account[each.key].email
-    scopes = ["cloud-platform"]
+    scopes = ["cloud-platform", "logging-write", "monitoring-write"]
   }
 
   metadata = {
@@ -167,10 +168,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
     ssh-keys                  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
-  metadata_startup_script = templatefile("${path.module}/scripts/startup-script-worker.sh",
-    {
-      project = var.project_id
-  })
+  metadata_startup_script = templatefile("${path.module}/scripts/startup-script.sh", { project = var.project_id })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]
 }
@@ -246,16 +244,13 @@ resource "google_compute_instance" "monitoring_instance" {
     ssh-keys                  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
   }
 
-  metadata_startup_script = templatefile("${path.module}/scripts/startup-script-monitoring.sh",
-    {
-      project = var.project_id
-  })
+  metadata_startup_script = templatefile("${path.module}/scripts/startup-script.sh", { project = var.project_id })
 
   tags = ["ssh-allowed-node", "hashicorp-worker-node"]
 
   service_account {
     email  = data.google_service_account.cluster_node_service_account.email
-    scopes = ["cloud-platform"]
+    scopes = ["cloud-platform", "logging-write", "monitoring-write"]
   }
 
   allow_stopping_for_update = true
@@ -336,6 +331,7 @@ resource "google_storage_bucket_object" "nomad-client-config" {
   {
     cluster_nodes = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip },
     dc_name       = var.dc_name
+    envoy_proxy_image = local.envoy_proxy_image
   }
 )}
     EOT
