@@ -4,7 +4,7 @@ log_level = "DEBUG"
 client {
   enabled = true
   meta = {
-    "connect.sidecar_image" = "us.gcr.io/hcpoc-terraform-admin/envoyproxy/envoy:v1.14.2"
+    "connect.sidecar_image" = "${envoy_proxy_image}"
   }
   options {
     "user.blacklist"            = "ubuntu"
