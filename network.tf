@@ -62,7 +62,7 @@ resource "google_compute_firewall" "hashicorp_internal_consul_ha" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8301", "8302", "8502", "20000-32000", "9200", "3000", "16686", "14250", "9090"]
+    ports    = ["8301", "8302", "8502", "20000-32000", "9200", "3000", "16686", "14250", "9090","8080","50000"]
   }
 
   allow {
