@@ -16,7 +16,7 @@ variable "cluster_machine_type" {
 }
 variable "monitoring_machine_type" {
   type    = string
-  default = "n2-standard-2"
+  default = "custom-2-10240-ext"
 }
 variable "subnet_prefix" {
   description = "The address prefix to use for the subnet."
