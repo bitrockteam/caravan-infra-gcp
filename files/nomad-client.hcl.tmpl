@@ -5,6 +5,7 @@ client {
   enabled = true
   meta = {
     "connect.sidecar_image" = "${envoy_proxy_image}"
+    "connect.gateway_image" = "${envoy_proxy_image}"
   }
   options {
     "user.blacklist"            = "ubuntu"
