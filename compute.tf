@@ -54,7 +54,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
   service_account {
     email  = data.google_service_account.cluster_node_service_account.email
-    scopes = ["cloud-platform", "logging-write", "monitoring-write"]
+    scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
   }
 
   allow_stopping_for_update = true
@@ -152,7 +152,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
   service_account {
     email  = data.google_service_account.worker_node_service_account[each.key].email
-    scopes = ["cloud-platform", "logging-write", "monitoring-write"]
+    scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
   }
 
   metadata = {
@@ -250,7 +250,7 @@ resource "google_compute_instance" "monitoring_instance" {
 
   service_account {
     email  = data.google_service_account.cluster_node_service_account.email
-    scopes = ["cloud-platform", "logging-write", "monitoring-write"]
+    scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
   }
 
   allow_stopping_for_update = true
