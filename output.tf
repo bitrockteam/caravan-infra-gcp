@@ -16,8 +16,8 @@ output "hashicorp_endpoints" {
     nomad  = "https://nomad.${var.prefix}.${var.external_domain}"
   }
 }
-output "worker_node_service_account" {
-  value = [ for k,v in data.google_service_account.worker_node_service_account: v.email ]
+output "worker_plane_service_account" {
+  value = [data.google_service_account.worker_plane_service_account.email]
 }
 
 output "PROJECT_PLATFORM_TFVAR" {
@@ -55,4 +55,21 @@ output "PROJECT_WORKLOAD_TFVAR" {
 
 output "ca_certs" {
   value = "${abspath(path.module)}/ca_certs.pem"
+}
+
+output "control_plane_role_name" {
+  value = local.control_plane_role_name
+}
+output "worker_plane_role_name" {
+  value = local.worker_plane_role_name
+}
+output "control_plane_service_accounts" {
+  value = [data.google_service_account.control_plane_service_account.email]
+}
+output "worker_plane_service_accounts" {
+  value = [data.google_service_account.worker_plane_service_account.email]
+}
+
+output "project_id" {
+  value = var.project_id
 }

@@ -1,18 +1,31 @@
 # GCP params
-variable "region" {}
-variable "zone" {}
-variable "google_account_file" {}
-variable "project_id" {}
-variable "default_machine_type" {
-  type    = string
-  default = "n2-standard-2"
+variable "region" {
+  type = string
+}
+variable "zone" {
+  type = string
+}
+variable "project_id" {
+  type = string
+}
+variable "google_account_file" {
+  type = string
+}
+variable "personal_ip_list" {
+  type    = list(string)
+  default = []
 }
 variable "cluster_instance_count" {
+  type    = string
   default = "3"
 }
 variable "cluster_machine_type" {
   type    = string
   default = null
+}
+variable "default_machine_type" {
+  type    = string
+  default = "n2-standard-2"
 }
 variable "monitoring_machine_type" {
   type    = string
@@ -30,9 +43,22 @@ variable "google_kms_crypto_key" {
   type    = string
   default = ""
 }
+variable "base64" {
+  type = bool
+  default = false
+}
+variable "gzip" {
+  type = bool
+  default = false
+}
 # Hashicorp params
 variable "dc_name" {
-  type = string
+  type    = string
+  default = "gcp-dc"
+  validation {
+    condition     = can(regex("^([a-z0-9]+(-[a-z0-9]+)*)+$", var.dc_name))
+    error_message = "Invalid dc_name. Must contain letters, numbers and hyphen."
+  }
 }
 variable "prefix" {
   description = "The prefix of the objects' names"
@@ -117,11 +143,11 @@ variable "preemptible_monitoring_node" {
   default = true
 }
 
-variable "cluster_node_sa" {
+variable "control_plane_sa_name" {
   type = string
 }
 
-variable "worker_node_sa" {
+variable "worker_plane_sa_name" {
   type = string
 }
 
@@ -135,6 +161,6 @@ variable "project_image_path" {
 }
 
 variable "envoy_proxy_image" {
-  type = string
+  type    = string
   default = "envoyproxy/envoy:v1.14.2"
 }

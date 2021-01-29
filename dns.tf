@@ -15,7 +15,7 @@ resource "google_dns_record_set" "cname-vault" {
   managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
-  rrdatas      = ["${google_dns_record_set.a-hc.name}"]
+  rrdatas      = [google_dns_record_set.a-hc.name]
 }
 
 resource "google_dns_record_set" "cname-consul" {
@@ -26,7 +26,7 @@ resource "google_dns_record_set" "cname-consul" {
   managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
-  rrdatas      = ["${google_dns_record_set.a-hc.name}"]
+  rrdatas      = [google_dns_record_set.a-hc.name]
 }
 resource "google_dns_record_set" "cname-nomad" {
   depends_on = [
@@ -36,7 +36,7 @@ resource "google_dns_record_set" "cname-nomad" {
   managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
-  rrdatas      = ["${google_dns_record_set.a-hc.name}"]
+  rrdatas      = [google_dns_record_set.a-hc.name]
 }
 resource "google_dns_record_set" "cname-wild" {
   depends_on = [
@@ -46,5 +46,5 @@ resource "google_dns_record_set" "cname-wild" {
   managed_zone = "${var.prefix}-zone"
   type         = "CNAME"
   ttl          = 30
-  rrdatas      = ["${google_dns_record_set.a-hc.name}"]
+  rrdatas      = [google_dns_record_set.a-hc.name]
 }

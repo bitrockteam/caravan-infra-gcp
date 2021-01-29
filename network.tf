@@ -24,7 +24,7 @@ resource "google_compute_firewall" "hashicorp_cluster" {
   }
 
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16", var.subnet_prefix]
-  target_tags   = ["cluster-node"]
+  target_tags   = [local.control_plane_role_name]
 }
 
 resource "google_compute_firewall" "hashicorp_allow_ssh" {
@@ -52,7 +52,7 @@ resource "google_compute_firewall" "hashicorp_internal_ha" {
   }
 
   source_ranges = [var.subnet_prefix]
-  target_tags   = ["cluster-node"]
+  target_tags   = [local.control_plane_role_name]
 }
 
 resource "google_compute_firewall" "hashicorp_internal_consul_ha" {
@@ -71,7 +71,7 @@ resource "google_compute_firewall" "hashicorp_internal_consul_ha" {
   }
 
   source_ranges = [var.subnet_prefix]
-  target_tags   = ["cluster-node", "hashicorp-worker-node"]
+  target_tags   = [local.control_plane_role_name, local.worker_plane_role_name]
 }
 
 resource "google_compute_firewall" "hashicorp_internal_nomad_ha" {
@@ -85,7 +85,7 @@ resource "google_compute_firewall" "hashicorp_internal_nomad_ha" {
   }
 
   source_ranges = [var.subnet_prefix]
-  target_tags   = ["cluster-node", "hashicorp-worker-node"]
+  target_tags   = [local.control_plane_role_name, local.worker_plane_role_name]
 }
 
 resource "google_compute_firewall" "hashicorp_ingress" {
@@ -99,6 +99,6 @@ resource "google_compute_firewall" "hashicorp_ingress" {
   }
 
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16", var.subnet_prefix]
-  target_tags   = ["hashicorp-worker-node"]
+  target_tags   = [local.worker_plane_role_name]
 }
 
