@@ -44,11 +44,11 @@ variable "google_kms_crypto_key" {
   default = ""
 }
 variable "base64" {
-  type = bool
+  type    = bool
   default = false
 }
 variable "gzip" {
-  type = bool
+  type    = bool
   default = false
 }
 # Hashicorp params
