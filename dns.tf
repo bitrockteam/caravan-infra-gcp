@@ -1,3 +1,10 @@
+resource "google_dns_managed_zone" "project-zone" {
+  project     = var.project_id
+  name        = "${var.prefix}-zone"
+  dns_name    = "${var.prefix}.${var.external_domain}."
+  description = "DNS zone for cloud projects"
+}
+
 resource "google_dns_record_set" "a-hc" {
   name         = "gcp.${var.prefix}.${var.external_domain}."
   managed_zone = "${var.prefix}-zone"
