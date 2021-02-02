@@ -17,7 +17,7 @@ output "hashicorp_endpoints" {
   }
 }
 output "worker_plane_service_account" {
-  value = [data.google_service_account.worker_plane_service_account.email]
+  value = [google_service_account.worker_plane_service_account.email]
 }
 
 output "PROJECT_PLATFORM_TFVAR" {
@@ -64,10 +64,10 @@ output "worker_plane_role_name" {
   value = local.worker_plane_role_name
 }
 output "control_plane_service_accounts" {
-  value = [data.google_service_account.control_plane_service_account.email]
+  value = [google_service_account.control_plane_service_account.email]
 }
 output "worker_plane_service_accounts" {
-  value = [data.google_service_account.worker_plane_service_account.email]
+  value = [google_service_account.worker_plane_service_account.email]
 }
 
 output "project_id" {
