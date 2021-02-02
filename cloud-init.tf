@@ -11,7 +11,7 @@ module "cloud_init_control_plane" {
   auto_auth_type      = "gcp"
   gcp_node_role       = local.control_plane_role_name
   gcp_project_id      = var.project_id
-  gcp_service_account = data.google_service_account.control_plane_service_account.email
+  gcp_service_account = google_service_account.control_plane_service_account.email
   base64              = var.base64
   gzip                = var.gzip
 }
@@ -24,7 +24,7 @@ module "cloud_init_worker_plane" {
   auto_auth_type      = "gcp"
   gcp_node_role       = local.worker_plane_role_name
   gcp_project_id      = var.project_id
-  gcp_service_account = data.google_service_account.worker_plane_service_account.email
+  gcp_service_account = google_service_account.worker_plane_service_account.email
   base64              = var.base64
   gzip                = var.gzip
 }
