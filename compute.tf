@@ -54,7 +54,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
 
   service_account {
-    email  = data.google_service_account.control_plane_service_account.email
+    email  = google_service_account.control_plane_service_account.email
     scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
   }
 
@@ -152,7 +152,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   service_account {
-    email  = data.google_service_account.worker_plane_service_account.email
+    email  = google_service_account.worker_plane_service_account.email
     scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
   }
 
@@ -252,7 +252,7 @@ resource "google_compute_instance" "monitoring_instance" {
   tags = ["ssh-allowed-node", local.worker_plane_role_name]
 
   service_account {
-    email  = data.google_service_account.control_plane_service_account.email
+    email  = google_service_account.control_plane_service_account.email
     scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
   }
 
