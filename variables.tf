@@ -72,6 +72,9 @@ variable "le_endpoint" {
   type    = string
   default = "https://acme-staging-v02.api.letsencrypt.org/directory"
 }
+variable "use_le_staging" {
+  type = bool
+}
 variable "ca_certs" {
   type = map(object({
     filename = string
@@ -163,4 +166,13 @@ variable "project_image_path" {
 variable "envoy_proxy_image" {
   type    = string
   default = "envoyproxy/envoy:v1.14.2"
+}
+
+variable "admins" {
+  default = [
+    "user:michael.tabolsky@bitrock.it",
+    "user:francesco.bartolini@bitrock.it",
+    "user:matteo.gazzetta@bitrock.it",
+    "user:simone.ripamonti@bitrock.it"
+  ]
 }
