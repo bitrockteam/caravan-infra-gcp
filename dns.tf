@@ -5,6 +5,26 @@ resource "google_dns_managed_zone" "project-zone" {
   description = "DNS zone for cloud projects"
 }
 
+data "google_dns_managed_zone" "parent-zone" {
+  project = "hcpoc-terraform-admin"
+  name    = "cloud-bitrock"
+}
+
+resource "google_dns_record_set" "projects-ns" {
+  depends_on = [
+    google_dns_managed_zone.project-zone
+  ]
+
+  project = "hcpoc-terraform-admin"
+
+  name         = "${var.prefix}.${var.external_domain}."
+  managed_zone = data.google_dns_managed_zone.parent-zone.name
+  type         = "NS"
+  ttl          = 300
+
+  rrdatas = google_dns_managed_zone.project-zone.name_servers
+}
+
 resource "google_dns_record_set" "a-hc" {
   name         = "gcp.${var.prefix}.${var.external_domain}."
   managed_zone = "${var.prefix}-zone"
