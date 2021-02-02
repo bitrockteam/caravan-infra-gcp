@@ -10,7 +10,7 @@ module "hashicorp-bootstrap" {
   dc_name                  = var.dc_name
   prefix                   = var.prefix
   gcp_project_id           = var.project_id
-  gcp_service_account      = data.google_service_account.control_plane_service_account.email
+  gcp_service_account      = google_service_account.control_plane_service_account.email
   gcp_node_role            = local.control_plane_role_name
   gcp_auto_auth            = true
   unseal_type              = "gcp"
