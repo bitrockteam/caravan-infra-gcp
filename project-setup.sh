@@ -4,7 +4,7 @@ set -ex
 
 BILLING_ACCOUNT_ID=$1
 ORG_ID=$2
-PARENT_PROJECT=$3
+PARENT_PROJECT_ID=$3
 PROJECT_ID=$4
 PROJECT_NAME=$5
 REGION=$6
@@ -33,12 +33,12 @@ gcloud iam service-accounts create terraform
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=user:$(gcloud config list --format=json | jq -r ".core.account") --role=roles/owner
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/owner
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/storage.admin
-gcloud projects add-iam-policy-binding ${PARENT_PROJECT} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/compute.imageUser
-gcloud projects add-iam-policy-binding ${PARENT_PROJECT} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/dns.admin
-gcloud projects add-iam-policy-binding ${PARENT_PROJECT} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/compute.networkAdmin
-gcloud projects add-iam-policy-binding ${PARENT_PROJECT} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/iam.serviceAccountUser
+gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/compute.imageUser
+gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/dns.admin
+gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/compute.networkAdmin
+gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/iam.serviceAccountUser
 
-gcloud projects add-iam-policy-binding ${PARENT_PROJECT} --member=serviceAccount:$(gcloud projects describe ${PROJECT_ID} --format=json | jq -r '.projectNumber')@cloudservices.gserviceaccount.com --role=roles/compute.imageUser
+gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAccount:$(gcloud projects describe ${PROJECT_ID} --format=json | jq -r '.projectNumber')@cloudservices.gserviceaccount.com --role=roles/compute.imageUser
 
 gcloud iam service-accounts keys create .${PROJECT_NAME}-key.json  --iam-account terraform@${PROJECT_ID}.iam.gserviceaccount.com
 
@@ -55,7 +55,9 @@ use_le_staging        = true
 dc_name               = "gcp-dc"
 control_plane_sa_name = "control-plane"
 worker_plane_sa_name  = "worker-plane"
-image                 = "projects/${PARENT_PROJECT}/global/images/family/hashicorp-centos-image"
+image                 = "projects/${PARENT_PROJECT_ID}/global/images/family/hashicorp-centos-image"
+parent_dns_project_id = "${PARENT_PROJECT_ID}"
+parent_dns_zone_name  = "dns-example-zone"
 EOT
 
 cat <<EOT > backend.tf

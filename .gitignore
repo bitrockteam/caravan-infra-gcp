@@ -87,4 +87,4 @@ files/*.jar
 files/echo-server
 *.pem
 .idea
-.hashicorp-key.json
+*-key.json

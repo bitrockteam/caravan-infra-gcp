@@ -171,3 +171,13 @@ variable "admins" {
     "user:matteo.gazzetta@bitrock.it",
   ]
 }
+
+variable "parent_dns_zone_name" {
+  type    = string
+  default = ""
+}
+
+variable "parent_dns_project_id" {
+  type    = string
+  default = ""
+}

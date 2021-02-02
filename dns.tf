@@ -6,8 +6,8 @@ resource "google_dns_managed_zone" "project-zone" {
 }
 
 data "google_dns_managed_zone" "parent-zone" {
-  project = "hcpoc-terraform-admin"
-  name    = "cloud-bitrock"
+  project = var.parent_dns_project_id
+  name    = var.parent_dns_zone_name
 }
 
 resource "google_dns_record_set" "projects-ns" {
@@ -15,7 +15,7 @@ resource "google_dns_record_set" "projects-ns" {
     google_dns_managed_zone.project-zone
   ]
 
-  project = "hcpoc-terraform-admin"
+  project = var.parent_dns_project_id
 
   name         = "${var.prefix}.${var.external_domain}."
   managed_zone = data.google_dns_managed_zone.parent-zone.name
