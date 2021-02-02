@@ -101,13 +101,9 @@ variable "ssh_timeout" {
   type    = string
   default = "240s"
 }
-variable "compute_image_prefix" {
-  description = "Override the default var.prefix before the var.compute_image_name"
-  default     = null
-}
-variable "compute_image_name" {
-  type    = string
-  default = "centos-image"
+variable "image" {
+  description = "Fully qualified image name"
+  type = string
 }
 variable "skip_packer_build" {
   type    = bool
@@ -173,6 +169,5 @@ variable "admins" {
     "user:michael.tabolsky@bitrock.it",
     "user:francesco.bartolini@bitrock.it",
     "user:matteo.gazzetta@bitrock.it",
-    "user:simone.ripamonti@bitrock.it"
   ]
 }

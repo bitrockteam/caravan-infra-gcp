@@ -7,7 +7,6 @@ resource "tls_private_key" "ssh-key" {
   rsa_bits  = "4096"
 }
 locals {
-  full_compute_image_name = "${var.compute_image_prefix != null ? var.compute_image_prefix : var.prefix}-${var.compute_image_name}"
   envoy_proxy_image       = var.envoy_proxy_image
 }
 resource "google_compute_instance" "hashicorp_cluster_nodes" {
@@ -30,7 +29,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
   boot_disk {
     initialize_params {
-      image = "${var.project_image_path}family/${local.full_compute_image_name}"
+      image = var.image
       type  = "pd-standard"
       size  = "100"
     }
@@ -141,7 +140,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   disk {
-    source_image = "${var.project_image_path}family/${local.full_compute_image_name}"
+    source_image = var.image
     auto_delete  = true
     boot         = true
   }
@@ -220,7 +219,7 @@ resource "google_compute_instance" "monitoring_instance" {
 
   boot_disk {
     initialize_params {
-      image = "${var.project_image_path}family/${local.full_compute_image_name}"
+      image = var.image
       type  = "pd-standard"
       size  = "100"
     }
@@ -380,34 +379,34 @@ resource "google_compute_instance" "monitoring_instance" {
 #   bucket  = google_storage_bucket.configs.name
 #   content = file("${path.module}/files/prometheus-service.json")
 # }
-
-resource "google_storage_bucket_object" "java_springboot_artifact" {
-  name   = "spring-echo-example-1.0.0.jar"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/spring-echo-example-1.0.0.jar"
-}
-
-resource "google_storage_bucket_object" "echo_server_artifact" {
-  name   = "echo-server"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/echo-server"
-}
-
-resource "google_storage_bucket_object" "java_opntrc_artifact" {
-  name   = "OpenTracing-AppA-0.0.1-SNAPSHOT.jar"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/OpenTracing-AppA-0.0.1-SNAPSHOT.jar"
-}
-
-resource "google_storage_bucket_object" "java_opntrc_artifact_b" {
-  name   = "OpenTracing-AppB-0.0.1-SNAPSHOT.jar"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/OpenTracing-AppB-0.0.1-SNAPSHOT.jar"
-}
-
-resource "google_storage_bucket_object" "jaeger-spark" {
-  name   = "jaeger-spark-dependencies-0.0.1-SNAPSHOT.jar"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/jaeger-spark-dependencies-0.0.1-SNAPSHOT.jar"
-}
-
+//
+//resource "google_storage_bucket_object" "java_springboot_artifact" {
+//  name   = "spring-echo-example-1.0.0.jar"
+//  bucket = google_storage_bucket.configs.name
+//  source = "${path.module}/files/spring-echo-example-1.0.0.jar"
+//}
+//
+//resource "google_storage_bucket_object" "echo_server_artifact" {
+//  name   = "echo-server"
+//  bucket = google_storage_bucket.configs.name
+//  source = "${path.module}/files/echo-server"
+//}
+//
+//resource "google_storage_bucket_object" "java_opntrc_artifact" {
+//  name   = "OpenTracing-AppA-0.0.1-SNAPSHOT.jar"
+//  bucket = google_storage_bucket.configs.name
+//  source = "${path.module}/files/OpenTracing-AppA-0.0.1-SNAPSHOT.jar"
+//}
+//
+//resource "google_storage_bucket_object" "java_opntrc_artifact_b" {
+//  name   = "OpenTracing-AppB-0.0.1-SNAPSHOT.jar"
+//  bucket = google_storage_bucket.configs.name
+//  source = "${path.module}/files/OpenTracing-AppB-0.0.1-SNAPSHOT.jar"
+//}
+//
+//resource "google_storage_bucket_object" "jaeger-spark" {
+//  name   = "jaeger-spark-dependencies-0.0.1-SNAPSHOT.jar"
+//  bucket = google_storage_bucket.configs.name
+//  source = "${path.module}/files/jaeger-spark-dependencies-0.0.1-SNAPSHOT.jar"
+//}
+//
