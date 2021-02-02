@@ -45,15 +45,3 @@ resource "google_project_service" "dns" {
   project            = var.project_id
   disable_on_destroy = false
 }
-
-resource "google_project_service" "containerregistry" {
-  service            = "containerregistry.googleapis.com"
-  project            = var.project_id
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "artifactregistry" {
-  service            = "artifactregistry.googleapis.com"
-  project            = var.project_id
-  disable_on_destroy = false
-}
