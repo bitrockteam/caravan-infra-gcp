@@ -72,6 +72,9 @@ variable "le_endpoint" {
   type    = string
   default = "https://acme-staging-v02.api.letsencrypt.org/directory"
 }
+variable "use_le_staging" {
+  type = bool
+}
 variable "ca_certs" {
   type = map(object({
     filename = string
@@ -98,13 +101,9 @@ variable "ssh_timeout" {
   type    = string
   default = "240s"
 }
-variable "compute_image_prefix" {
-  description = "Override the default var.prefix before the var.compute_image_name"
-  default     = null
-}
-variable "compute_image_name" {
-  type    = string
-  default = "centos-image"
+variable "image" {
+  description = "Fully qualified image name"
+  type = string
 }
 variable "skip_packer_build" {
   type    = bool
@@ -163,4 +162,22 @@ variable "project_image_path" {
 variable "envoy_proxy_image" {
   type    = string
   default = "envoyproxy/envoy:v1.14.2"
+}
+
+variable "admins" {
+  default = [
+    "user:michael.tabolsky@bitrock.it",
+    "user:francesco.bartolini@bitrock.it",
+    "user:matteo.gazzetta@bitrock.it",
+  ]
+}
+
+variable "parent_dns_zone_name" {
+  type    = string
+  default = ""
+}
+
+variable "parent_dns_project_id" {
+  type    = string
+  default = ""
 }

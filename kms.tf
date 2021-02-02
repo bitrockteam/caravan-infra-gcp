@@ -13,7 +13,7 @@ resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
   role        = "roles/cloudkms.cryptoKeyEncrypterDecrypter"
 
   members = [
-    "serviceAccount:${data.google_service_account.control_plane_service_account.email}",
+    "serviceAccount:${google_service_account.control_plane_service_account.email}",
   ]
 }
 

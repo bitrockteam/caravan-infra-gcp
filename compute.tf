@@ -7,7 +7,6 @@ resource "tls_private_key" "ssh-key" {
   rsa_bits  = "4096"
 }
 locals {
-  full_compute_image_name = "${var.compute_image_prefix != null ? var.compute_image_prefix : var.prefix}-${var.compute_image_name}"
   envoy_proxy_image       = var.envoy_proxy_image
 }
 resource "google_compute_instance" "hashicorp_cluster_nodes" {
@@ -30,7 +29,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
   boot_disk {
     initialize_params {
-      image = "${var.project_image_path}family/${local.full_compute_image_name}"
+      image = var.image
       type  = "pd-standard"
       size  = "100"
     }
@@ -54,7 +53,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
 
   service_account {
-    email  = data.google_service_account.control_plane_service_account.email
+    email  = google_service_account.control_plane_service_account.email
     scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
   }
 
@@ -141,7 +140,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   disk {
-    source_image = "${var.project_image_path}family/${local.full_compute_image_name}"
+    source_image = var.image
     auto_delete  = true
     boot         = true
   }
@@ -152,25 +151,14 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   service_account {
-    email  = data.google_service_account.worker_plane_service_account.email
+    email  = google_service_account.worker_plane_service_account.email
     scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
   }
 
   metadata = {
-    # vault-agent-config        = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/vault-agent-${each.key}.hcl?alt=media"
-    # consul-agent-config       = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/consul-agent-${each.key}.hcl?alt=media"
-    # consul-agent-ca-file      = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/ca.tmpl?alt=media"
-    # consul-agent-cert-file    = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/cert.tmpl?alt=media"
-    # consul-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/keyfile.tmpl?alt=media"
-    # nomad-agent-ca-file       = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_ca.tmpl?alt=media"
-    # nomad-agent-cert-file     = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_cert.tmpl?alt=media"
-    # nomad-agent-keyfile-file  = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_keyfile.tmpl?alt=media"
-    # nomad-client-config       = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad.hcl.tmpl?alt=media"
     ssh-keys  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
     user-data = module.cloud_init_worker_plane.worker_plane_user_data
   }
-
-  # metadata_startup_script = templatefile("${path.module}/scripts/startup-script.sh", { project = var.project_id })
 
   tags = [local.worker_plane_role_name, "ssh-allowed-node"]
 }
@@ -220,7 +208,7 @@ resource "google_compute_instance" "monitoring_instance" {
 
   boot_disk {
     initialize_params {
-      image = "${var.project_image_path}family/${local.full_compute_image_name}"
+      image = var.image
       type  = "pd-standard"
       size  = "100"
     }
@@ -231,183 +219,17 @@ resource "google_compute_instance" "monitoring_instance" {
   }
 
   metadata = {
-    # vault-agent-config        = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/vault-agent-def-wrkr.hcl?alt=media"
-    # consul-agent-config       = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/consul-agent-def-wrkr.hcl?alt=media"
-    # consul-agent-ca-file      = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/ca.tmpl?alt=media"
-    # consul-agent-cert-file    = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/cert.tmpl?alt=media"
-    # consul-agent-keyfile-file = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/keyfile.tmpl?alt=media"
-    # nomad-agent-ca-file       = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_ca.tmpl?alt=media"
-    # nomad-agent-cert-file     = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_cert.tmpl?alt=media"
-    # nomad-agent-keyfile-file  = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad_keyfile.tmpl?alt=media"
-    # nomad-client-config       = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/nomad.hcl.tmpl?alt=media"
-    # elastic-service           = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/elastic-service.json?alt=media"
-    # grafana-service           = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/grafana-service.json?alt=media"
-    # prometheus-service        = "https://storage.googleapis.com/download/storage/v1/b/${google_storage_bucket.configs.name}/o/prometheus-service.json?alt=media"
     ssh-keys  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
     user-data = module.cloud_init_worker_plane.worker_plane_user_data
   }
 
-  # metadata_startup_script = templatefile("${path.module}/scripts/startup-script.sh", { project = var.project_id })
-
   tags = ["ssh-allowed-node", local.worker_plane_role_name]
 
   service_account {
-    email  = data.google_service_account.control_plane_service_account.email
+    email  = google_service_account.control_plane_service_account.email
     scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
   }
 
   allow_stopping_for_update = true
 
 }
-
-# resource "google_storage_bucket_object" "vault-agent-configs" {
-#   for_each = google_compute_instance_template.worker-instance-template
-#   name     = "vault-agent-${each.key}.hcl"
-#   bucket   = google_storage_bucket.configs.name
-#   content = <<-EOT
-#       ${templatefile("${path.module}/files/agent.hcl.tpl",
-#   {
-#     vault_endpoint      = "http://${google_compute_instance.hashicorp_cluster_nodes[0].name}.c.${var.project_id}.internal:8200"
-#     tcp_listener        = "127.0.0.1:8200"
-#     tcp_listener_tls    = false
-#     gcp_node_role       = "worker-node"
-#     gcp_service_account = each.value.service_account[0].email
-#     gcp_project_id      = var.project_id
-#   }
-# )}
-#     EOT
-# }
-
-# resource "google_storage_bucket_object" "consul-agent-configs" {
-#   for_each = google_compute_instance_template.worker-instance-template
-#   name     = "consul-agent-${each.key}.hcl"
-#   bucket   = google_storage_bucket.configs.name
-#   content = <<-EOT
-#       ${templatefile("${path.module}/files/consul-agent.hcl.tmpl",
-#   {
-#     cluster_nodes = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip },
-#     dc_name       = var.dc_name
-#   }
-# )}
-#     EOT
-# }
-
-# resource "google_storage_bucket_object" "consul-agent-ca-file" {
-#   for_each = google_compute_instance_template.worker-instance-template
-#   name     = "ca.tmpl"
-#   bucket   = google_storage_bucket.configs.name
-#   content  = file("${path.module}/files/ca.tmpl")
-# }
-
-# resource "google_storage_bucket_object" "consul-agent-cert-file" {
-#   for_each = google_compute_instance_template.worker-instance-template
-#   name     = "cert.tmpl"
-#   bucket   = google_storage_bucket.configs.name
-#   content = <<-EOT
-#       ${templatefile("${path.module}/files/cert.tmpl",
-#   {
-#     dc_name = var.dc_name
-#   }
-# )}
-#     EOT
-# }
-
-# resource "google_storage_bucket_object" "consul-agent-keyfile-file" {
-#   for_each = google_compute_instance_template.worker-instance-template
-#   name     = "keyfile.tmpl"
-#   bucket   = google_storage_bucket.configs.name
-#   content = <<-EOT
-#       ${templatefile("${path.module}/files/keyfile.tmpl",
-#   {
-#     dc_name = var.dc_name
-#   }
-# )}
-#     EOT
-# }
-
-# resource "google_storage_bucket_object" "nomad-client-config" {
-#   for_each = google_compute_instance_template.worker-instance-template
-#   name     = "nomad.hcl.tmpl"
-#   bucket   = google_storage_bucket.configs.name
-#   content = <<-EOT
-#       ${templatefile("${path.module}/files/nomad-client.hcl.tmpl",
-#   {
-#     cluster_nodes = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip },
-#     dc_name       = var.dc_name
-#     envoy_proxy_image = local.envoy_proxy_image
-#   }
-# )}
-#     EOT
-# }
-
-# resource "google_storage_bucket_object" "nomad-agent-ca-file" {
-#   for_each = google_compute_instance_template.worker-instance-template
-#   name     = "nomad_ca.tmpl"
-#   bucket   = google_storage_bucket.configs.name
-#   content  = file("${path.module}/files/nomad_ca.tmpl")
-# }
-
-# resource "google_storage_bucket_object" "nomad-agent-cert-file" {
-#   for_each = google_compute_instance_template.worker-instance-template
-#   name     = "nomad_cert.tmpl"
-#   bucket   = google_storage_bucket.configs.name
-#   content  = file("${path.module}/files/nomad_cert.tmpl")
-# }
-
-# resource "google_storage_bucket_object" "nomad-agent-keyfile-file" {
-#   for_each = google_compute_instance_template.worker-instance-template
-#   name     = "nomad_keyfile.tmpl"
-#   bucket   = google_storage_bucket.configs.name
-#   content  = file("${path.module}/files/nomad_keyfile.tmpl")
-# }
-
-# ### monitoring
-
-# resource "google_storage_bucket_object" "elastic-service-file" {
-#   name    = "elastic-service.json"
-#   bucket  = google_storage_bucket.configs.name
-#   content = file("${path.module}/files/elastic-service.json")
-# }
-
-# resource "google_storage_bucket_object" "grafana-service-file" {
-#   name    = "grafana-service.json"
-#   bucket  = google_storage_bucket.configs.name
-#   content = file("${path.module}/files/grafana-service.json")
-# }
-
-# resource "google_storage_bucket_object" "prometheus-service-file" {
-#   name    = "prometheus-service.json"
-#   bucket  = google_storage_bucket.configs.name
-#   content = file("${path.module}/files/prometheus-service.json")
-# }
-
-resource "google_storage_bucket_object" "java_springboot_artifact" {
-  name   = "spring-echo-example-1.0.0.jar"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/spring-echo-example-1.0.0.jar"
-}
-
-resource "google_storage_bucket_object" "echo_server_artifact" {
-  name   = "echo-server"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/echo-server"
-}
-
-resource "google_storage_bucket_object" "java_opntrc_artifact" {
-  name   = "OpenTracing-AppA-0.0.1-SNAPSHOT.jar"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/OpenTracing-AppA-0.0.1-SNAPSHOT.jar"
-}
-
-resource "google_storage_bucket_object" "java_opntrc_artifact_b" {
-  name   = "OpenTracing-AppB-0.0.1-SNAPSHOT.jar"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/OpenTracing-AppB-0.0.1-SNAPSHOT.jar"
-}
-
-resource "google_storage_bucket_object" "jaeger-spark" {
-  name   = "jaeger-spark-dependencies-0.0.1-SNAPSHOT.jar"
-  bucket = google_storage_bucket.configs.name
-  source = "${path.module}/files/jaeger-spark-dependencies-0.0.1-SNAPSHOT.jar"
-}
-
