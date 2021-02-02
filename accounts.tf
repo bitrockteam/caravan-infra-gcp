@@ -1,15 +1,6 @@
 data "google_client_openid_userinfo" "myself" {
 }
 
-# data "google_service_account" "control_plane_service_account" {
-#   account_id = var.control_plane_sa_name
-# }
-
-# data "google_service_account" "worker_plane_service_account" {
-#   # for_each   = var.workers_instance_templates
-#   account_id = var.worker_plane_sa_name
-# }
-
 resource "google_service_account" "control_plane_service_account" {
   project      = var.project_id
   account_id   = var.control_plane_sa_name
@@ -20,6 +11,14 @@ resource "google_service_account" "worker_plane_service_account" {
   project      = var.project_id
   account_id   = var.worker_plane_sa_name
   display_name = "Worker plane service account"
+}
+
+resource "google_project_iam_member" "project" {
+  count   = length(var.admins)
+  project = var.project_id
+  role    = "roles/owner"
+
+  member = var.admins[count.index]
 }
 
 resource "google_service_account_iam_binding" "key_account_iam" {
