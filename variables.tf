@@ -46,7 +46,7 @@ variable "control_plane_instance_count" {
 }
 variable "control_plane_machine_type" {
   type    = string
-  default = "n2-standard-2"
+  default = "e2-standard-2"
 }
 variable "worker_plane_machine_type" {
   type    = string
