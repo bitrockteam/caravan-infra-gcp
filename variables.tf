@@ -108,10 +108,6 @@ variable "external_domain" {
   type    = string
   default = ""
 }
-variable "le_endpoint" {
-  type    = string
-  default = "https://acme-staging-v02.api.letsencrypt.org/directory"
-}
 variable "use_le_staging" {
   type = bool
 }
