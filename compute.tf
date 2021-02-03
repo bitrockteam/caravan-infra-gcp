@@ -45,8 +45,6 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
     serial-port-logging-enable = "TRUE"
   }
 
-  metadata_startup_script = templatefile("${path.module}/scripts/startup-script.sh", { project = var.project_id })
-
   tags = [local.control_plane_role_name, "ssh-allowed-node"]
 
 
