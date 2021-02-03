@@ -6,11 +6,9 @@ resource "tls_private_key" "ssh-key" {
   algorithm = "RSA"
   rsa_bits  = "4096"
 }
-locals {
-  envoy_proxy_image       = var.envoy_proxy_image
-}
+
 resource "google_compute_instance" "hashicorp_cluster_nodes" {
-  count = var.cluster_instance_count
+  count = var.control_plane_instance_count
 
   depends_on = [
     google_compute_network.hashicorp,
@@ -19,12 +17,12 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
   project      = var.project_id
   zone         = data.google_compute_zones.available.names[count.index]
   name         = format("clustnode%.2d", count.index + 1)
-  machine_type = can(length(var.cluster_machine_type)) ? var.cluster_machine_type : var.default_machine_type
+  machine_type = var.control_plane_machine_type
 
   scheduling {
-    automatic_restart   = ! var.preemptible_cluster_node
-    on_host_maintenance = var.preemptible_cluster_node ? "TERMINATE" : "MIGRATE"
-    preemptible         = var.preemptible_cluster_node
+    automatic_restart   = ! var.preemptible_instance_type
+    on_host_maintenance = var.preemptible_instance_type ? "TERMINATE" : "MIGRATE"
+    preemptible         = var.preemptible_instance_type
   }
 
   boot_disk {
@@ -82,7 +80,7 @@ resource "google_compute_instance_group" "hashicorp_cluster_nodes" {
     google_compute_instance.hashicorp_cluster_nodes
   ]
 
-  count = var.cluster_instance_count
+  count = var.control_plane_instance_count
 
   name = format("unmanaged-hashicorp-clustnode%.2d", count.index + 1)
 
@@ -123,7 +121,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   ]
 
   name_prefix  = each.value.name_prefix
-  machine_type = can(length(each.value.machine_type)) ? each.value.machine_type : var.default_machine_type
+  machine_type = var.worker_plane_machine_type
   project      = var.project_id
 
   lifecycle {
@@ -186,50 +184,4 @@ resource "google_compute_region_instance_group_manager" "default-workers" {
     name = "http-ingress"
     port = "8080"
   }
-}
-
-
-resource "google_compute_instance" "monitoring_instance" {
-
-  depends_on = [
-    google_compute_region_instance_group_manager.default-workers
-  ]
-
-  project      = var.project_id
-  zone         = var.zone
-  name         = "monitoring"
-  machine_type = can(length(var.monitoring_machine_type)) ? var.monitoring_machine_type : var.default_machine_type
-
-  scheduling {
-    automatic_restart   = ! var.preemptible_monitoring_node
-    on_host_maintenance = var.preemptible_monitoring_node ? "TERMINATE" : "MIGRATE"
-    preemptible         = var.preemptible_monitoring_node
-  }
-
-  boot_disk {
-    initialize_params {
-      image = var.image
-      type  = "pd-standard"
-      size  = "100"
-    }
-  }
-
-  network_interface {
-    subnetwork = google_compute_subnetwork.hashicorp.self_link
-  }
-
-  metadata = {
-    ssh-keys  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
-    user-data = module.cloud_init_worker_plane.worker_plane_user_data
-  }
-
-  tags = ["ssh-allowed-node", local.worker_plane_role_name]
-
-  service_account {
-    email  = google_service_account.control_plane_service_account.email
-    scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
-  }
-
-  allow_stopping_for_update = true
-
 }
