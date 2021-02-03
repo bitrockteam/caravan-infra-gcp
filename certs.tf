@@ -6,6 +6,8 @@ module "terraform-acme-le" {
   dns_provider             = "gcp"
   use_le_staging           = var.use_le_staging
   private_key              = tls_private_key.cert_private_key.private_key_pem
+  dns_propagation_timeout  = "600"
+  dns_polling_interval     = "20"
 }
 
 resource "null_resource" "ca_certs" {
