@@ -184,7 +184,7 @@ resource "google_compute_backend_service" "backend_service_workload" {
   ]
 
   backend {
-    group                 = google_compute_region_instance_group_manager.default-workers["def-wrkr-grp"].instance_group
+    group                 = google_compute_region_instance_group_manager.default-workers["workers-group"].instance_group
     balancing_mode        = "RATE"
     max_rate_per_instance = 100
   }
