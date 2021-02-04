@@ -12,6 +12,7 @@ REGION=$6
 echo "Creating ${PROJECT_ID}, named ${PROJECT_NAME} in ${REGION}..."
 gcloud projects create ${PROJECT_ID} --name=${PROJECT_NAME} --organization=${ORG_ID}
 gcloud config set project ${PROJECT_ID}
+gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=user:$(gcloud config list --format=json | jq -r ".core.account") --role=roles/owner
 gcloud beta billing projects link ${PROJECT_ID} --billing-account ${BILLING_ACCOUNT_ID}
 
 echo "Enable some GCP services..."
@@ -30,7 +31,6 @@ gsutil mb -b off -c standard -l ${REGION} -p ${PROJECT_ID} gs://states-bucket-${
 echo "Create terraform service account and its json key..."
 gcloud iam service-accounts create terraform
 
-gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=user:$(gcloud config list --format=json | jq -r ".core.account") --role=roles/owner
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/owner
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/storage.admin
 gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAccount:terraform@${PROJECT_ID}.iam.gserviceaccount.com --role=roles/compute.imageUser
