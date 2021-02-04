@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -x
+set -e
 
 BILLING_ACCOUNT_ID=$1
 ORG_ID=$2

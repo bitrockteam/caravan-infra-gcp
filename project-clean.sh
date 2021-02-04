@@ -1,6 +1,6 @@
 #! /bin/bash
 
-set -ex
+set -e
 
 PROJECT_ID=$1
 PARENT_PROJECT_ID=$2
