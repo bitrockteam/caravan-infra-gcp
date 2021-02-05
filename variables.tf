@@ -108,9 +108,6 @@ variable "external_domain" {
   type    = string
   default = ""
 }
-variable "use_le_staging" {
-  type = bool
-}
 variable "ca_certs" {
   type = map(object({
     filename = string
@@ -152,4 +149,18 @@ variable "ssh_timeout" {
 variable "admins" {
   type = list(string)
   default = []
+}
+variable "use_le_staging" {
+  type = bool
+  default = false
+}
+variable "le_staging_endpoint" {
+  type        = string
+  default     = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  description = "LE's endpoint when use_le_staging==true"
+}
+variable "le_production_endpoint" {
+  type        = string
+  default     = "https://acme-v02.api.letsencrypt.org/directory"
+  description = "LE's endpoint when use_le_staging==false"
 }
