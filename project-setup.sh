@@ -9,7 +9,7 @@ PROJECT_ID=$4
 PROJECT_NAME=$5
 REGION=$6
 
-echo -e "Creating ${PROJECT_ID}, named ${PROJECT_NAME} in ${REGION}...\033[0m"
+echo -e "\033[32mCreating ${PROJECT_ID}, named ${PROJECT_NAME} in ${REGION}...\033[0m"
 gcloud projects create ${PROJECT_ID} --name=${PROJECT_NAME} --organization=${ORG_ID}
 gcloud config set project ${PROJECT_ID}
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=user:$(gcloud config list --format=json | jq -r ".core.account") --role=roles/owner
