@@ -151,4 +151,5 @@ variable "ssh_timeout" {
 }
 variable "admins" {
   type = list(string)
+  default = []
 }
