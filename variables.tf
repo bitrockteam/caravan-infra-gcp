@@ -78,6 +78,10 @@ variable "workers_groups" {
     }
   }
 }
+variable "enable_monitoring" {
+  type = bool
+  default = true
+}
 variable "base64" {
   type    = bool
   default = false

@@ -42,7 +42,6 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
   metadata = {
     ssh-keys                   = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
     user-data                  = module.cloud_init_control_plane.control_plane_user_data
-    serial-port-logging-enable = "TRUE"
   }
 
   tags = [local.control_plane_role_name, "ssh-allowed-node"]
@@ -159,7 +158,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   tags = [local.worker_plane_role_name, "ssh-allowed-node"]
 }
 
-resource "google_compute_region_instance_group_manager" "default-workers" {
+resource "google_compute_region_instance_group_manager" "default_workers" {
   depends_on = [
     module.hashicorp-bootstrap
   ]
@@ -182,4 +181,51 @@ resource "google_compute_region_instance_group_manager" "default-workers" {
     name = "http-ingress"
     port = "8080"
   }
+}
+
+resource "google_compute_instance" "monitoring_instance" {
+  count = var.enable_monitoring ? 1 : 0
+
+  depends_on = [
+    google_compute_region_instance_group_manager.default_workers
+  ]
+
+  project      = var.project_id
+  zone         = var.zone
+  name         = "monitoring"
+  machine_type = var.worker_plane_machine_type
+
+  scheduling {
+    automatic_restart   = ! var.preemptible_instance_type
+    on_host_maintenance = var.preemptible_instance_type ? "TERMINATE" : "MIGRATE"
+    preemptible         = var.preemptible_instance_type
+  }
+
+  boot_disk {
+    initialize_params {
+      image = var.image
+      type  = "pd-standard"
+      size  = "100"
+    }
+  }
+
+  network_interface {
+    subnetwork = google_compute_subnetwork.hashicorp.self_link
+  }
+
+  metadata = {
+    ssh-keys  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
+    user-data = module.cloud_init_worker_plane.monitoring_user_data
+    startup-script = module.cloud_init_worker_plane.worker_plane_startup_script
+  }
+
+  tags = [local.worker_plane_role_name, "ssh-allowed-node"]
+
+  service_account {
+    email  = google_service_account.worker_plane_service_account.email
+    scopes = ["cloud-platform", "monitoring", "monitoring-write", "logging-write"]
+  }
+
+  allow_stopping_for_update = true
+
 }
