@@ -46,7 +46,7 @@ jobs:
         run: terraform validate
 
       - name: Bump version and push tag
-        if: github.ref == 'refs/heads/master' && github.event_name == 'push'
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         id: tag_version
         uses: mathieudutour/github-tag-action@v5.1
         with:
