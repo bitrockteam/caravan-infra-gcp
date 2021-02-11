@@ -1,6 +1,6 @@
 module "terraform-acme-le" {
   depends_on               = [module.hashicorp-bootstrap]
-  source                   = "git::ssh://git@github.com/bitrockteam/hashicorp-terraform-acme-le?ref=master"
+  source                   = "git::ssh://git@github.com/bitrockteam/caravan-acme-le?ref=main"
   gcp_project_id           = var.project_id
   gcp_service_account_file = var.google_account_file
   common_name              = concat([trimsuffix(google_dns_managed_zone.project-zone.dns_name, ".")], [google_dns_managed_zone.project-zone.id])[0]
