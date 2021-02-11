@@ -79,7 +79,7 @@ variable "workers_groups" {
   }
 }
 variable "enable_monitoring" {
-  type = bool
+  type    = bool
   default = true
 }
 variable "base64" {
@@ -151,11 +151,11 @@ variable "ssh_timeout" {
   default = "240s"
 }
 variable "admins" {
-  type = list(string)
+  type    = list(string)
   default = []
 }
 variable "use_le_staging" {
-  type = bool
+  type    = bool
   default = false
 }
 variable "le_staging_endpoint" {
