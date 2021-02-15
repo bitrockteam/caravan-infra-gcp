@@ -15,7 +15,7 @@ gcloud config set project ${PROJECT_ID}
 gcloud projects add-iam-policy-binding ${PROJECT_ID} --member=user:$(gcloud config list --format=json | jq -r ".core.account") --role=roles/owner
 gcloud beta billing projects link ${PROJECT_ID} --billing-account ${BILLING_ACCOUNT_ID}
 
-echo -e "\033[32mEnable some GCP services...\033[32m"
+echo -e "\033[32mEnable some GCP services...\033[0m"
 gcloud services enable compute.googleapis.com \
     monitoring.googleapis.com \
     logging.googleapis.com \

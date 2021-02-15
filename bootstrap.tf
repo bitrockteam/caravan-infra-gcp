@@ -1,5 +1,5 @@
-module "hashicorp-bootstrap" {
-  source                         = "git::ssh://git@github.com/bitrockteam/hashicorp-terraform-bootstrap?ref=main"
+module "caravan-bootstrap" {
+  source                         = "git::ssh://git@github.com/bitrockteam/caravan-bootstrap?ref=main"
   ssh_private_key                = chomp(tls_private_key.ssh-key.private_key_pem)
   ssh_user                       = var.ssh_user
   ssh_timeout                    = var.ssh_timeout
