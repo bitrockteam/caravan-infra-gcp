@@ -1,60 +1,73 @@
 # GCP params
 variable "google_account_file" {
-  type = string
+  type        = string
+  description = "Path to Google account file"
 }
 variable "project_id" {
-  type = string
+  type        = string
+  description = "GCP Project ID"
 }
 variable "region" {
-  type    = string
-  default = "us-central1"
+  type        = string
+  default     = "us-central1"
+  description = "GCP region where to deploy the cluster"
 }
 variable "zone" {
-  type = string
+  type        = string
+  description = "GCP zone"
 }
 variable "allowed_ip_list" {
-  type    = list(string)
-  default = ["0.0.0.0/0"]
+  type        = list(string)
+  default     = ["0.0.0.0/0"]
+  description = "IP address list for SSH connection to the VMs"
 }
 
 # GCP Network
 variable "subnet_prefix" {
-  description = "The address prefix to use for the subnet."
   default     = "10.128.0.0/28"
+  description = "The address prefix to use for the subnet"
 }
 variable "parent_dns_zone_name" {
-  type    = string
-  default = ""
+  type        = string
+  default     = "GCP"
+  description = "GCP parent project DNS zone name"
 }
 variable "parent_dns_project_id" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
+  description = "GCP parent project ID"
 }
 variable "google_kms_key_ring" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
+  description = "GCP KMS key ring"
 }
 variable "google_kms_crypto_key" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
+  description = "GCP KMS crypto key"
 }
 
 # GCP Compute
 variable "control_plane_instance_count" {
-  type    = string
-  default = "3"
+  type        = string
+  default     = "3"
+  description = "Control plane instances number"
 }
 variable "control_plane_machine_type" {
-  type    = string
-  default = "e2-standard-2"
+  type        = string
+  default     = "e2-standard-2"
+  description = "Control plane instance machine type"
 }
 variable "worker_plane_machine_type" {
-  type    = string
-  default = "n2-standard-2"
+  type        = string
+  default     = "n2-standard-2"
+  description = "Worker plane instance machine type"
 }
 variable "preemptible_instance_type" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
+  description = "Sets preemptible instance type"
 }
 variable "workers_instance_templates" {
   type = map(any)
@@ -66,6 +79,7 @@ variable "workers_instance_templates" {
       preemptible       = false
     }
   }
+  description = "Worker instance template map"
 }
 variable "workers_groups" {
   type = map(any)
@@ -77,22 +91,26 @@ variable "workers_groups" {
       instance_template  = "worker-template"
     }
   }
+  description = "Worker instance group map"
 }
 variable "enable_monitoring" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
+  description = "Enables and setup monitoring node"
 }
 variable "base64" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
+  description = "Cloud init decoding"
 }
 variable "gzip" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
+  description = "Cloud init compressing"
 }
 variable "image" {
-  description = "Fully qualified image name"
   type        = string
+  description = "Fully qualified image name"
 }
 
 # Hashicorp params
@@ -103,14 +121,16 @@ variable "dc_name" {
     condition     = can(regex("^([a-z0-9]+(-[a-z0-9]+)*)+$", var.dc_name))
     error_message = "Invalid dc_name. Must contain letters, numbers and hyphen."
   }
+  description = "Hashicorp cluster name"
 }
 variable "prefix" {
-  description = "The prefix of the objects' names"
   default     = ""
+  description = "The prefix of the objects' names"
 }
 variable "external_domain" {
-  type    = string
-  default = ""
+  type        = string
+  default     = ""
+  description = "Domain used for endpoints and certs"
 }
 variable "ca_certs" {
   type = map(object({
@@ -127,36 +147,44 @@ variable "ca_certs" {
       pemurl   = "https://letsencrypt.org/certs/fakelerootx1.pem"
     }
   }
+  description = "Fake certificates from staging Let's Encrypt"
 }
 variable "control_plane_sa_name" {
-  type    = string
-  default = "control-plane"
+  type        = string
+  default     = "control-plane"
+  description = "Control plane service account name, it will be used by Vault Auth method"
 }
 variable "worker_plane_sa_name" {
-  type    = string
-  default = "worker-plane"
+  type        = string
+  default     = "worker-plane"
+  description = "Worker plane service account name, it will be used by Vault Auth method"
 }
 variable "gcp_csi" {
-  type    = bool
-  default = true
+  type        = bool
+  default     = true
+  description = "Enable disk for Nomad CSI"
 }
 
 # Common
 variable "ssh_user" {
-  type    = string
-  default = "centos"
+  type        = string
+  default     = "centos"
+  description = "SSH user"
 }
 variable "ssh_timeout" {
-  type    = string
-  default = "240s"
+  type        = string
+  default     = "240s"
+  description = "SSH timeout"
 }
 variable "admins" {
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
+  description = "List of admins to add to the project"
 }
 variable "use_le_staging" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
+  description = "Use staging Let's Encrypt endpoint"
 }
 variable "le_staging_endpoint" {
   type        = string
