@@ -1,5 +1,5 @@
 module "terraform-acme-le" {
-  depends_on               = [module.hashicorp-bootstrap]
+  depends_on               = [module.caravan-bootstrap]
   source                   = "git::ssh://git@github.com/bitrockteam/caravan-acme-le?ref=main"
   gcp_project_id           = var.project_id
   gcp_service_account_file = var.google_account_file

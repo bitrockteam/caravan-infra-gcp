@@ -160,7 +160,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
 
 resource "google_compute_region_instance_group_manager" "default_workers" {
   depends_on = [
-    module.hashicorp-bootstrap
+    module.caravan-bootstrap
   ]
 
   for_each = var.workers_groups
