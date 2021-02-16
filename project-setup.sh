@@ -40,7 +40,7 @@ gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAcco
 
 gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAccount:$(gcloud projects describe ${PROJECT_ID} --format=json | jq -r '.projectNumber')@cloudservices.gserviceaccount.com --role=roles/compute.imageUser
 
-gcloud iam service-accounts keys create .${PROJECT_ID}-key.json  --iam-account terraform@${PROJECT_ID}.iam.gserviceaccount.com
+gcloud iam service-accounts keys create .${PROJECT_NAME}-key.json  --iam-account terraform@${PROJECT_ID}.iam.gserviceaccount.com
 
 echo -e "\033[32mWrite tfvars and backend files.\033[0m"
 cat <<EOT > gcp.tfvars
@@ -65,7 +65,7 @@ terraform {
   backend "gcs" {
     bucket = "states-bucket-${PROJECT_ID}"
     prefix = "infraboot/terraform/state"
-    credentials = ".${PROJECT_ID}-key.json"
+    credentials = ".${PROJECT_NAME}-key.json"
   }
 }
 EOT
