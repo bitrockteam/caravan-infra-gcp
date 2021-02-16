@@ -1,0 +1,31 @@
+
+vault_endpoint = "https://vault.${prefix}.${external_domain}"
+consul_endpoint = "https://consul.${prefix}.${external_domain}"
+nomad_endpoint = "https://nomad.${prefix}.${external_domain}"
+
+%{ if use_le_staging ~}
+vault_skip_tls_verify = true
+consul_insecure_https = true
+ca_cert_file          = "../caravan-infra-gcp/ca_certs.pem"
+%{ else ~}
+vault_skip_tls_verify = false
+consul_insecure_https = false
+%{ endif ~}
+
+bootstrap_state_backend_provider = "gcp"
+auth_providers                   = ["gcp", "gsuite"]
+gcp_project_id                   = "${project_id}"
+gcp_csi                          = true
+gcp_region                       = "${region}"
+google_account_file              = "../caravan-infra-gcp/.${prefix}-key.json"
+
+gsuite_domain                = "bitrock.it"
+gsuite_client_id             = "130427124755-5vo5d0t3mr254uah10bun1ftrutqs76t.apps.googleusercontent.com"
+gsuite_client_secret         = "zDLN6uzLOKYhkDIxBAqdAJ1R"
+gsuite_default_role          = "bitrock"
+gsuite_default_role_policies = [ "default", "bitrock", "vault-admin-role" ]
+gsuite_allowed_redirect_uris = [ "https://vault.${prefix}.${external_domain}/ui/vault/auth/gsuite/oidc/callback", "https://vault.${prefix}.${external_domain}/ui/vault/auth/oidc/oidc/callback"]
+
+bootstrap_state_bucket_name_prefix = "states-bucket"
+bootstrap_state_object_name_prefix = "platform/terraform/state"
+control_plane_role_name            = "control-plane"
