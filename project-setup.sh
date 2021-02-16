@@ -42,34 +42,6 @@ gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAcco
 
 gcloud iam service-accounts keys create .${PROJECT_ID}-key.json  --iam-account terraform@${PROJECT_ID}.iam.gserviceaccount.com
 
-echo -e "\033[32mWrite tfvars and backend files.\033[0m"
-cat <<EOT > gcp.tfvars
-region                = "${REGION}"
-zone                  = "${REGION}-a"
-project_id            = "${PROJECT_ID}"
-prefix                = "${PROJECT_NAME}"
-google_account_file   = ".${PROJECT_NAME}-key.json"
-gcp_csi               = true
-external_domain       = "cloud.bitrock.it"
-use_le_staging        = true
-dc_name               = "gcp-dc"
-control_plane_sa_name = "control-plane"
-worker_plane_sa_name  = "worker-plane"
-image                 = "projects/${PARENT_PROJECT_ID}/global/images/family/hashicorp-centos-image"
-parent_dns_project_id = "${PARENT_PROJECT_ID}"
-parent_dns_zone_name  = "dns-example-zone"
-EOT
-
-cat <<EOT > backend.tf
-terraform {
-  backend "gcs" {
-    bucket = "states-bucket-${PROJECT_ID}"
-    prefix = "infraboot/terraform/state"
-    credentials = ".${PROJECT_ID}-key.json"
-  }
-}
-EOT
-
 echo -e "\033[32m
 Done!
 Don't forget to add the service account \"terraform@${PROJECT_ID}.iam.gserviceaccount.com\" at https://www.google.com/webmasters/verification for your parent DNS zone.
