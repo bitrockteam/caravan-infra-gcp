@@ -13,12 +13,13 @@ locals {
   })
 
   tfvars_appsupport = templatefile("${path.module}/templates/appsupport.tfvars.hcl", {
-    project_id      = var.project_id,
-    prefix          = var.prefix,
-    external_domain = var.external_domain,
-    region          = var.region
-    dc_name         = var.dc_name
-    use_le_staging  = var.use_le_staging
+    project_id        = var.project_id,
+    prefix            = var.prefix,
+    external_domain   = var.external_domain,
+    region            = var.region
+    dc_name           = var.dc_name
+    use_le_staging    = var.use_le_staging
+    jenkins_volume_id = var.gcp_csi ? google_compute_region_disk.jenkins_master[0].id : ""
   })
   backend_tf_appsupport = templatefile("${path.module}/templates/backend.hcl", {
     key        = "appsupport"

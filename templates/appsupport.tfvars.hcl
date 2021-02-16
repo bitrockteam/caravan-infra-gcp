@@ -10,6 +10,8 @@ cloud                   = "gcp"
 gcp_project_id          = "${project_id}"
 gcp_region              = "${region}"
 
+jenkins_volume_external_id = "${jenkins_volume_id}"
+
 %{ if use_le_staging ~}
 vault_skip_tls_verify = true
 consul_insecure_https = true
