@@ -141,3 +141,11 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | worker\_plane\_service\_account | Worker plane service account |
 | worker\_plane\_service\_accounts | Worker plane service accounts email list |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
+
+## Cleaning up
+
+After `terraform destroy -var-file=gcp.tfvars`, for removing left resources and project, run the `project-cleanup.sh` script:
+
+```bash
+./project-cleanup.sh <PROJECT_ID> <PARENT_PROJECT_ID>
+```
