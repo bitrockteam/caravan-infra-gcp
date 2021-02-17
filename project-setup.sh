@@ -82,7 +82,7 @@ export VAULT_ADDR="https://vault.${PREFIX}.\${EXTERNAL_DOMAIN}"
 export CONSUL_ADDR="https://consul.${PREFIX}.\${EXTERNAL_DOMAIN}"
 export NOMAD_ADDR="https://nomad.${PREFIX}.\${EXTERNAL_DOMAIN}"
 
-DIR="\$( cd "\$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+DIR="\$( cd "\$( dirname "\${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 echo "Deploying infrastructure..."
 
