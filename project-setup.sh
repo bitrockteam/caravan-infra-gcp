@@ -9,6 +9,9 @@ PROJECT_ID=$4
 PROJECT_NAME=$5
 REGION=$6
 
+CLOUD_NAME=gcp
+PREFIX=$PROJECT_NAME
+
 echo -e "\033[32mCreating ${PROJECT_ID}, named ${PROJECT_NAME} in ${REGION}...\033[0m"
 gcloud projects create ${PROJECT_ID} --name=${PROJECT_NAME} --organization=${ORG_ID}
 gcloud config set project ${PROJECT_ID}
@@ -69,7 +72,132 @@ terraform {
 }
 EOT
 
+
+cat <<EOT > run.sh
+#!/usr/bin/env bash
+set -e
+
+EXTERNAL_DOMAIN="example.com" # replace
+export VAULT_ADDR="https://vault.${PREFIX}.\${EXTERNAL_DOMAIN}"
+export CONSUL_ADDR="https://consul.${PREFIX}.\${EXTERNAL_DOMAIN}"
+export NOMAD_ADDR="https://nomad.${PREFIX}.\${EXTERNAL_DOMAIN}"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+echo "Deploying infrastructure..."
+
+terraform init -reconfigure -upgrade
+terraform apply -var-file ${CLOUD_NAME}.tfvars -auto-approve
+
+export VAULT_TOKEN=$(cat ".${PREFIX}-root_token")
+export NOMAD_TOKEN=$(vault read -tls-skip-verify -format=json nomad/creds/token-manager | jq -r .data.secret_id)
+
+echo "Waiting for Vault \${VAULT_ADDR} to be up..."
+while [ $(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${VAULT_ADDR}/v1/sys/leader") != "200" ]; do
+  echo "Waiting for Vault to be up..."
+  sleep 5
+done
+
+echo "Waiting for Consul \${CONSUL_ADDR} to be up..."
+while [ $(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${CONSUL_ADDR}/v1/status/leader") != "200" ]; do
+  echo "Waiting for Consul to be up..."
+  sleep 5
+done
+
+echo "Waiting for Nomad \${NOMAD_ADDR} to be up..."
+while [ $(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${NOMAD_ADDR}/v1/status/leader") != "200" ]; do
+  echo "Waiting for Nomad to be up..."
+  sleep 5
+done
+
+echo "Configuring platform..."
+
+cd "$DIR/../caravan-platform"
+cp "${PREFIX}-${CLOUD_NAME}-backend.tf.bak" "backend.tf"
+
+terraform init -reconfigure -upgrade
+terraform apply -var-file "${PREFIX}-${CLOUD_NAME}.tfvars" -auto-approve
+
+echo "Waiting for Consul Connect to be ready..."
+while [ $(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${CONSUL_ADDR}/v1/connect/ca/roots") != "200" ]; do
+  echo "Waiting for Consul Connect to be ready..."
+  sleep 5
+done
+
+echo "Configuring application support..."
+
+cd "$DIR/../caravan-application-support"
+cp "${PREFIX}-${CLOUD_NAME}-backend.tf.bak" "backend.tf"
+
+terraform init -reconfigure -upgrade
+terraform apply -var-file "${PREFIX}-${CLOUD_NAME}.tfvars" -auto-approve
+
+echo "Configuring sample workload..."
+
+cd "$DIR/../caravan-workload"
+cp "${PREFIX}-${CLOUD_NAME}-backend.tf.bak" "backend.tf"
+
+terraform init -reconfigure -upgrade
+terraform apply -var-file "${PREFIX}-${CLOUD_NAME}.tfvars" -auto-approve
+
+cd "$DIR"
+
+echo "Done."
+EOT
+
+cat <<EOT > destroy.sh
+#!/usr/bin/env bash
+set -e
+
+EXTERNAL_DOMAIN="example.com" # replace
+export VAULT_ADDR="https://vault.${PREFIX}.\${EXTERNAL_DOMAIN}"
+export CONSUL_ADDR="https://consul.${PREFIX}.\${EXTERNAL_DOMAIN}"
+export NOMAD_ADDR="https://nomad.${PREFIX}.\${EXTERNAL_DOMAIN}"
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+export VAULT_TOKEN=$(cat ".${PREFIX}-root_token")
+export NOMAD_TOKEN=$(vault read -tls-skip-verify -format=json nomad/creds/token-manager | jq -r .data.secret_id)
+
+echo "Destroying sample workload..."
+
+cd "$DIR/../caravan-workload"
+cp "${PREFIX}-${CLOUD_NAME}-backend.tf.bak" "backend.tf"
+
+terraform init -reconfigure -upgrade
+terraform destroy -var-file "${PREFIX}-${CLOUD_NAME}.tfvars" -auto-approve
+
+echo "Destroying application support..."
+
+cd "$DIR/../caravan-application-support"
+cp "${PREFIX}-${CLOUD_NAME}-backend.tf.bak" "backend.tf"
+
+terraform init -reconfigure -upgrade
+terraform destroy -var-file "${PREFIX}-${CLOUD_NAME}.tfvars" -auto-approve
+
+echo "Destroying platform..."
+
+cd "$DIR/../caravan-platform"
+cp "${PREFIX}-${CLOUD_NAME}-backend.tf.bak" "backend.tf"
+
+terraform init -reconfigure -upgrade
+terraform destroy -var-file "${PREFIX}-${CLOUD_NAME}.tfvars" -auto-approve
+
+echo "Destroying infrastructure..."
+
+cd "$DIR"
+
+terraform init -reconfigure -upgrade
+terraform apply -var-file ${CLOUD_NAME}.tfvars -auto-approve
+
+echo "Done."
+EOT
+
+chmod +x run.sh
+chmod +x destroy.sh
+
 echo -e "\033[32m
 Done!
+All set, review configs and execute 'run.sh' and 'destroy.sh'.
 Don't forget to add the service account \"terraform@${PROJECT_ID}.iam.gserviceaccount.com\" at https://www.google.com/webmasters/verification for your parent DNS zone.
 \033[0m"
