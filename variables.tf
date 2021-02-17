@@ -159,10 +159,20 @@ variable "worker_plane_sa_name" {
   default     = "worker-plane"
   description = "Worker plane service account name, it will be used by Vault Auth method"
 }
-variable "gcp_csi" {
-  type        = bool
-  default     = true
-  description = "Enable disk for Nomad CSI"
+variable "csi_volumes" {
+  type        = map(map(string))
+  default     = {}
+  description = <<EOF
+Example:
+{
+  "jenkins" : {
+    "type" : "pd-ssd"
+    "size" : "30"
+    "replica_zones" : ["us-central1-a", "us-central1-b"]
+    "tags" : { "application": "jenkins_master" }
+  }
+}
+EOF
 }
 
 # Common

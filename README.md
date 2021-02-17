@@ -95,10 +95,10 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | control\_plane\_instance\_count | Control plane instances number | `string` | `"3"` | no |
 | control\_plane\_machine\_type | Control plane instance machine type | `string` | `"e2-standard-2"` | no |
 | control\_plane\_sa\_name | Control plane service account name, it will be used by Vault Auth method | `string` | `"control-plane"` | no |
+| csi\_volumes | Example:<br>{<br>  "jenkins" : {<br>    "type" : "pd-ssd"<br>    "size" : "30"<br>    "replica\_zones" : ["us-central1-a", "us-central1-b"]<br>    "tags" : { "application": "jenkins\_master" }<br>  }<br>} | `map(map(string))` | `{}` | no |
 | dc\_name | Hashicorp cluster name | `string` | `"gcp-dc"` | no |
 | enable\_monitoring | Enables and setup monitoring node | `bool` | `true` | no |
 | external\_domain | Domain used for endpoints and certs | `string` | `""` | no |
-| gcp\_csi | Enable disk for Nomad CSI | `bool` | `true` | no |
 | google\_account\_file | Path to Google account file | `string` | n/a | yes |
 | google\_kms\_crypto\_key | GCP KMS crypto key | `string` | `""` | no |
 | google\_kms\_key\_ring | GCP KMS key ring | `string` | `""` | no |
@@ -133,9 +133,9 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | cluster-public-ips | Control plane public IP addresses |
 | control\_plane\_role\_name | Control plane role name |
 | control\_plane\_service\_accounts | Control plane service accounts email list |
+| csi\_volumes | n/a |
 | hashicorp\_endpoints | Hashicorp clusters endpoints |
 | load-balancer-ip-address | Load Balancer IP address |
-| pd\_ssd\_jenkins\_master\_id | Persistent Disk ID for Jenkins Master |
 | project\_id | GCP project ID |
 | worker\_plane\_role\_name | Worker plane role name |
 | worker\_plane\_service\_account | Worker plane service account |

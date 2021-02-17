@@ -19,7 +19,7 @@ locals {
     region            = var.region
     dc_name           = var.dc_name
     use_le_staging    = var.use_le_staging
-    jenkins_volume_id = var.gcp_csi ? google_compute_region_disk.jenkins_master[0].id : ""
+    jenkins_volume_id = lookup(local.volumes_name_to_id, "jenkins", "")
   })
   backend_tf_appsupport = templatefile("${path.module}/templates/backend.hcl", {
     key        = "appsupport"
