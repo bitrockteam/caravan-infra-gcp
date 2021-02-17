@@ -8,10 +8,6 @@ output "load-balancer-ip-address" {
   value       = google_compute_global_forwarding_rule.global_forwarding_rule.ip_address
   description = "Load Balancer IP address"
 }
-output "pd_ssd_jenkins_master_id" {
-  value       = var.gcp_csi ? google_compute_region_disk.jenkins_master[0].id : null
-  description = "Persistent Disk ID for Jenkins Master"
-}
 output "hashicorp_endpoints" {
   value = {
     vault  = "https://vault.${var.prefix}.${var.external_domain}"
@@ -61,4 +57,7 @@ output "worker_plane_service_accounts" {
 output "project_id" {
   value       = var.project_id
   description = "GCP project ID"
+}
+output "csi_volumes" {
+  value = local.volumes_name_to_id
 }
