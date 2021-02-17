@@ -88,3 +88,5 @@ files/echo-server
 *.pem
 .idea
 *-key.json
+destroy.sh
+run.sh
