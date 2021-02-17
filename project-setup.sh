@@ -49,7 +49,6 @@ zone                  = "${REGION}-a"
 project_id            = "${PROJECT_ID}"
 prefix                = "${PROJECT_NAME}"
 google_account_file   = ".${PROJECT_NAME}-key.json"
-gcp_csi               = true
 external_domain       = "cloud.bitrock.it"
 use_le_staging        = true
 dc_name               = "gcp-dc"
