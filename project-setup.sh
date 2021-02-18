@@ -188,7 +188,7 @@ echo "Destroying infrastructure..."
 cd "\$DIR"
 
 terraform init -reconfigure -upgrade
-terraform apply -var-file ${CLOUD_NAME}.tfvars -auto-approve
+terraform destroy -var-file ${CLOUD_NAME}.tfvars -auto-approve
 
 echo "Done."
 EOT
