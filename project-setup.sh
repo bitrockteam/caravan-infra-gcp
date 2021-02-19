@@ -89,9 +89,6 @@ echo "Deploying infrastructure..."
 terraform init -reconfigure -upgrade
 terraform apply -var-file ${CLOUD_NAME}.tfvars -auto-approve
 
-export VAULT_TOKEN=\$(cat ".${PREFIX}-root_token")
-export NOMAD_TOKEN=\$(vault read -tls-skip-verify -format=json nomad/creds/token-manager | jq -r .data.secret_id)
-
 echo "Waiting for Vault \${VAULT_ADDR} to be up..."
 while [ \$(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${VAULT_ADDR}/v1/sys/leader") != "200" ]; do
   echo "Waiting for Vault to be up..."
@@ -109,6 +106,9 @@ while [ \$(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${NO
   echo "Waiting for Nomad to be up..."
   sleep 5
 done
+
+export VAULT_TOKEN=\$(cat ".${PREFIX}-root_token")
+export NOMAD_TOKEN=\$(vault read -tls-skip-verify -format=json nomad/creds/token-manager | jq -r .data.secret_id)
 
 echo "Configuring platform..."
 
