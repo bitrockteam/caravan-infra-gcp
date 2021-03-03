@@ -1,5 +1,7 @@
 # Caravan Infra gcp
 
+![Caravan 2021 GCP](https://user-images.githubusercontent.com/5972762/109790418-af2a3800-7c11-11eb-8d44-02f630e12619.png)
+
 ## Module description
 
 The purpose of this module is deploying the Caravan infrastructure upon which the Caravan cluster will reside.
