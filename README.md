@@ -1,6 +1,6 @@
 # Caravan Infra gcp
 
-![Caravan 2021 GCP](https://user-images.githubusercontent.com/5972762/109790418-af2a3800-7c11-11eb-8d44-02f630e12619.png)
+![Caravan 2021 GCP](https://lucid.app/publicSegments/view/6c88c233-6065-4c65-abcd-ec9a4d8de080/image.png)
 
 ## Module description
 
