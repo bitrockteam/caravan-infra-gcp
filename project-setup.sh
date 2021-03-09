@@ -57,7 +57,7 @@ use_le_staging        = true
 dc_name               = "gcp-dc"
 control_plane_sa_name = "control-plane"
 worker_plane_sa_name  = "worker-plane"
-image                 = "projects/${PARENT_PROJECT_ID}/global/images/family/caravan-centos-image"
+image                 = "projects/${PARENT_PROJECT_ID}/global/images/family/caravan-centos-image-os"
 parent_dns_project_id = "${PARENT_PROJECT_ID}"
 parent_dns_zone_name  = "dns-example-zone"
 EOT
@@ -96,13 +96,13 @@ while [ \$(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${VA
 done
 
 echo "Waiting for Consul \${CONSUL_ADDR} to be up..."
-while [ \$(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${CONSUL_ADDR}/v1/status/leader"\) != "200" ]; do
+while [ \$(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${CONSUL_ADDR}/v1/status/leader") != "200" ]; do
   echo "Waiting for Consul to be up..."
   sleep 5
 done
 
 echo "Waiting for Nomad \${NOMAD_ADDR} to be up..."
-while [ \$(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${NOMAD_ADDR}/v1/status/leader"\) != "200" ]; do
+while [ \$(curl -k --silent --output /dev/null --write-out "%{http_code}" "\${NOMAD_ADDR}/v1/status/leader") != "200" ]; do
   echo "Waiting for Nomad to be up..."
   sleep 5
 done
