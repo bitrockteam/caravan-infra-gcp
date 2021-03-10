@@ -19,5 +19,5 @@ terraform {
       source = "hashicorp/tls"
     }
   }
-  required_version = "~> 0.13.6"
+  required_version = "~> 0.14.7"
 }

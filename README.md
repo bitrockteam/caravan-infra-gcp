@@ -23,7 +23,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Version |
 |------|---------|
-| terraform | ~> 0.13.6 |
+| terraform | ~> 0.14.7 |
 
 ## Providers
 

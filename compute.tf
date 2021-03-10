@@ -20,7 +20,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
   machine_type = var.control_plane_machine_type
 
   scheduling {
-    automatic_restart   = ! var.preemptible_instance_type
+    automatic_restart   = !var.preemptible_instance_type
     on_host_maintenance = var.preemptible_instance_type ? "TERMINATE" : "MIGRATE"
     preemptible         = var.preemptible_instance_type
   }
@@ -129,7 +129,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
     # Error: Error creating instance template: googleapi: Error 400: Invalid value for field 'resource.properties.scheduling.preemptible': 'true'. 
     # Scheduling must have preemptible be false when AutomaticRestart is true.
     # Scheduling must have preemptible be false when OnHostMaintenance isn't TERMINATE.
-    automatic_restart   = ! each.value.preemptible
+    automatic_restart   = !each.value.preemptible
     on_host_maintenance = each.value.preemptible ? "TERMINATE" : "MIGRATE"
     preemptible         = each.value.preemptible
   }
@@ -196,7 +196,7 @@ resource "google_compute_instance" "monitoring_instance" {
   machine_type = var.worker_plane_machine_type
 
   scheduling {
-    automatic_restart   = ! var.preemptible_instance_type
+    automatic_restart   = !var.preemptible_instance_type
     on_host_maintenance = var.preemptible_instance_type ? "TERMINATE" : "MIGRATE"
     preemptible         = var.preemptible_instance_type
   }
