@@ -8,6 +8,7 @@ PARENT_PROJECT_ID=$3
 PROJECT_ID=$4
 PROJECT_NAME=$5
 REGION=$6
+DOMAIN=$7
 
 CLOUD_NAME=gcp
 PREFIX=$PROJECT_NAME
@@ -43,7 +44,7 @@ gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAcco
 
 gcloud projects add-iam-policy-binding ${PARENT_PROJECT_ID} --member=serviceAccount:$(gcloud projects describe ${PROJECT_ID} --format=json | jq -r '.projectNumber')@cloudservices.gserviceaccount.com --role=roles/compute.imageUser
 
-gcloud iam service-accounts keys create .${PROJECT_NAME}-key.json  --iam-account terraform@${PROJECT_ID}.iam.gserviceaccount.com
+gcloud iam service-accounts keys create .${PROJECT_ID}-key.json  --iam-account terraform@${PROJECT_ID}.iam.gserviceaccount.com
 
 echo -e "\033[32mWrite tfvars and backend files.\033[0m"
 cat <<EOT > gcp.tfvars
@@ -51,7 +52,7 @@ region                = "${REGION}"
 zone                  = "${REGION}-a"
 project_id            = "${PROJECT_ID}"
 prefix                = "${PROJECT_NAME}"
-google_account_file   = ".${PROJECT_NAME}-key.json"
+google_account_file   = ".${PROJECT_ID}-key.json"
 external_domain       = "cloud.bitrock.it"
 use_le_staging        = true
 dc_name               = "gcp-dc"
@@ -67,7 +68,7 @@ terraform {
   backend "gcs" {
     bucket = "states-bucket-${PROJECT_ID}"
     prefix = "infraboot/terraform/state"
-    credentials = ".${PROJECT_NAME}-key.json"
+    credentials = ".${PROJECT_ID}-key.json"
   }
 }
 EOT
@@ -77,7 +78,7 @@ cat <<EOT > run.sh
 #!/usr/bin/env bash
 set -e
 
-EXTERNAL_DOMAIN="example.com" # replace
+EXTERNAL_DOMAIN="\${DOMAIN}" # replace
 export VAULT_ADDR="https://vault.${PREFIX}.\${EXTERNAL_DOMAIN}"
 export CONSUL_ADDR="https://consul.${PREFIX}.\${EXTERNAL_DOMAIN}"
 export NOMAD_ADDR="https://nomad.${PREFIX}.\${EXTERNAL_DOMAIN}"

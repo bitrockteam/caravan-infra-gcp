@@ -17,7 +17,7 @@ auth_providers                   = ["gcp", "gsuite"]
 gcp_project_id                   = "${project_id}"
 gcp_csi                          = true
 gcp_region                       = "${region}"
-google_account_file              = "../caravan-infra-gcp/.${prefix}-key.json"
+google_account_file              = "../caravan-infra-gcp/.${project_id}-key.json"
 
 gsuite_domain                = ""
 gsuite_client_id             = ""
