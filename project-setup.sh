@@ -133,14 +133,6 @@ cp "${PREFIX}-${CLOUD_NAME}-backend.tf.bak" "backend.tf"
 terraform init -reconfigure -upgrade
 terraform apply -var-file "${PREFIX}-${CLOUD_NAME}.tfvars" -auto-approve
 
-echo "Configuring sample workload..."
-
-cd "\$DIR/../caravan-workload"
-cp "${PREFIX}-${CLOUD_NAME}-backend.tf.bak" "backend.tf"
-
-terraform init -reconfigure -upgrade
-terraform apply -var-file "${PREFIX}-${CLOUD_NAME}.tfvars" -auto-approve
-
 cd "\$DIR"
 
 echo "Done."
