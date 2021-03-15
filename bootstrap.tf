@@ -20,4 +20,8 @@ module "caravan-bootstrap" {
   vault_endpoint                 = "http://127.0.0.1:8200"
   control_plane_role_name        = local.control_plane_role_name
   external_domain                = var.external_domain
+
+  consul_license = var.consul_license_file != null ? file(var.consul_license_file) : ""
+  vault_license  = var.vault_license_file != null ? file(var.vault_license_file) : ""
+  nomad_license  = var.nomad_license_file != null ? file(var.nomad_license_file) : ""
 }

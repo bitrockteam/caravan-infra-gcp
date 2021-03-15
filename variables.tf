@@ -206,3 +206,19 @@ variable "le_production_endpoint" {
   default     = "https://acme-v02.api.letsencrypt.org/directory"
   description = "LE's endpoint when use_le_staging==false"
 }
+
+variable "vault_license_file" {
+  type        = string
+  default     = null
+  description = "Path to Vault Enterprise license"
+}
+variable "consul_license_file" {
+  type        = string
+  default     = null
+  description = "Path to Consul Enterprise license"
+}
+variable "nomad_license_file" {
+  type        = string
+  default     = null
+  description = "Path to Nomad Enterprise license"
+}
