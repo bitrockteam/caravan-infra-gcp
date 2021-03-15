@@ -90,6 +90,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | allowed\_ip\_list | IP address list for SSH connection to the VMs | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | base64 | Cloud init decoding | `bool` | `false` | no |
 | ca\_certs | Fake certificates from staging Let's Encrypt | <pre>map(object({<br>    filename = string<br>    pemurl   = string<br>  }))</pre> | <pre>{<br>  "fakeleintermediatex1": {<br>    "filename": "fakeleintermediatex1.pem",<br>    "pemurl": "https://letsencrypt.org/certs/fakeleintermediatex1.pem"<br>  },<br>  "fakelerootx1": {<br>    "filename": "fakelerootx1.pem",<br>    "pemurl": "https://letsencrypt.org/certs/fakelerootx1.pem"<br>  }<br>}</pre> | no |
+| consul\_license\_file | Path to Consul Enterprise license | `string` | `null` | no |
 | control\_plane\_instance\_count | Control plane instances number | `string` | `"3"` | no |
 | control\_plane\_machine\_type | Control plane instance machine type | `string` | `"e2-standard-2"` | no |
 | control\_plane\_sa\_name | Control plane service account name, it will be used by Vault Auth method | `string` | `"control-plane"` | no |
@@ -104,6 +105,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | image | Fully qualified image name | `string` | n/a | yes |
 | le\_production\_endpoint | LE's endpoint when use\_le\_staging==false | `string` | `"https://acme-v02.api.letsencrypt.org/directory"` | no |
 | le\_staging\_endpoint | LE's endpoint when use\_le\_staging==true | `string` | `"https://acme-staging-v02.api.letsencrypt.org/directory"` | no |
+| nomad\_license\_file | Path to Nomad Enterprise license | `string` | `null` | no |
 | parent\_dns\_project\_id | GCP parent project ID | `string` | `""` | no |
 | parent\_dns\_zone\_name | GCP parent project DNS zone name | `string` | `"GCP"` | no |
 | preemptible\_instance\_type | Sets preemptible instance type | `bool` | `false` | no |
@@ -114,6 +116,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | ssh\_user | SSH user | `string` | `"centos"` | no |
 | subnet\_prefix | The address prefix to use for the subnet | `string` | `"10.128.0.0/28"` | no |
 | use\_le\_staging | Use staging Let's Encrypt endpoint | `bool` | `false` | no |
+| vault\_license\_file | Path to Vault Enterprise license | `string` | `null` | no |
 | worker\_plane\_machine\_type | Worker plane instance machine type | `string` | `"n2-standard-2"` | no |
 | worker\_plane\_sa\_name | Worker plane service account name, it will be used by Vault Auth method | `string` | `"worker-plane"` | no |
 | workers\_groups | Worker instance group map | `map(any)` | <pre>{<br>  "workers-group": {<br>    "base_instance_name": "worker",<br>    "instance_template": "worker-template",<br>    "target_size": 3,<br>    "zone": "us-central1-a"<br>  }<br>}</pre> | no |
