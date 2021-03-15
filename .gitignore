@@ -90,4 +90,3 @@ files/echo-server
 *-key.json
 destroy.sh
 run.sh
-.terraform.lock.hcl
