@@ -152,14 +152,6 @@ DIR="\$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 export VAULT_TOKEN=\$(cat ".${PREFIX}-root_token")
 export NOMAD_TOKEN=\$(vault read -tls-skip-verify -format=json nomad/creds/token-manager | jq -r .data.secret_id)
 
-echo "Destroying sample workload..."
-
-cd "\$DIR/../caravan-workload"
-cp "${PREFIX}-${CLOUD_NAME}-backend.tf.bak" "backend.tf"
-
-terraform init -reconfigure -upgrade
-terraform destroy -var-file "${PREFIX}-${CLOUD_NAME}.tfvars" -auto-approve
-
 echo "Destroying application support..."
 
 cd "\$DIR/../caravan-application-support"
