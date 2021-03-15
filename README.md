@@ -35,10 +35,10 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Source | Version |
 |------|--------|---------|
-| caravan-bootstrap | git::ssh://git@github.com/bitrockteam/caravan-bootstrap?ref=main |  |
-| cloud_init_control_plane | git::ssh://git@github.com/bitrockteam/caravan-cloudinit |  |
-| cloud_init_worker_plane | git::ssh://git@github.com/bitrockteam/caravan-cloudinit |  |
-| terraform-acme-le | git::ssh://git@github.com/bitrockteam/caravan-acme-le?ref=main |  |
+| caravan-bootstrap | git::ssh://git@github.com/bitrockteam/caravan-bootstrap?ref=refs/tags/v0.2.1 |  |
+| cloud_init_control_plane | git::ssh://git@github.com/bitrockteam/caravan-cloudinit?ref=refs/tags/v0.1.4 |  |
+| cloud_init_worker_plane | git::ssh://git@github.com/bitrockteam/caravan-cloudinit?ref=refs/tags/v0.1.4 |  |
+| terraform-acme-le | git::ssh://git@github.com/bitrockteam/caravan-acme-le?ref=refs/tags/v0.0.1 |  |
 
 ## Resources
 
@@ -49,14 +49,14 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | [google_compute_firewall](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) |
 | [google_compute_global_forwarding_rule](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_global_forwarding_rule) |
 | [google_compute_health_check](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_health_check) |
+| [google_compute_instance](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) |
 | [google_compute_instance_group](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance_group) |
 | [google_compute_instance_template](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance_template) |
-| [google_compute_instance](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_instance) |
 | [google_compute_network](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_network) |
 | [google_compute_region_disk](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_disk) |
 | [google_compute_region_instance_group_manager](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_region_instance_group_manager) |
-| [google_compute_router_nat](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router_nat) |
 | [google_compute_router](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router) |
+| [google_compute_router_nat](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_router_nat) |
 | [google_compute_ssl_certificate](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_ssl_certificate) |
 | [google_compute_ssl_policy](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_ssl_policy) |
 | [google_compute_subnetwork](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_subnetwork) |
@@ -67,16 +67,16 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | [google_dns_managed_zone](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_managed_zone) |
 | [google_dns_record_set](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/dns_record_set) |
 | [google_kms_crypto_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/kms_crypto_key) |
-| [google_kms_key_ring_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/kms_key_ring_iam_binding) |
 | [google_kms_key_ring](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/kms_key_ring) |
+| [google_kms_key_ring_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/kms_key_ring_iam_binding) |
 | [google_project_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_binding) |
 | [google_project_iam_custom_role](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_custom_role) |
 | [google_project_iam_member](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_iam_member) |
 | [google_project_service](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/project_service) |
-| [google_service_account_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_iam_binding) |
 | [google_service_account](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account) |
-| [google_storage_bucket_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_binding) |
+| [google_service_account_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_iam_binding) |
 | [google_storage_bucket](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) |
+| [google_storage_bucket_iam_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_binding) |
 | [local_file](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) |
 | [null_resource](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) |
 | [random_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) |
