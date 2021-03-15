@@ -19,4 +19,5 @@ module "caravan-bootstrap" {
   gcp_key                        = google_kms_crypto_key.vault_key.name
   vault_endpoint                 = "http://127.0.0.1:8200"
   control_plane_role_name        = local.control_plane_role_name
+  external_domain                = var.external_domain
 }
