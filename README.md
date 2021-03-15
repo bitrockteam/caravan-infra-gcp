@@ -8,10 +8,6 @@ The purpose of this module is deploying the Caravan infrastructure upon which th
 
 The code will deploy components formed by the following graph.
 
-## Terraform Resources Graph
-
-![Terraform resources graph](images/graph.png)
-
 ## Prepare
 
 The `project-setup.sh` script help you to create all the necessary requirements to deploy the infrastructure.
