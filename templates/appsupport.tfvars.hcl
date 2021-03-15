@@ -16,9 +16,7 @@ jenkins_volume_external_id = "${jenkins_volume_id}"
 vault_skip_tls_verify = true
 consul_insecure_https = true
 ca_cert_file          = "../caravan-infra-gcp/ca_certs.pem"
-configure_grafana     = false
 %{ else ~}
 vault_skip_tls_verify = false
 consul_insecure_https = false
-configure_grafana     = true
 %{ endif ~}
