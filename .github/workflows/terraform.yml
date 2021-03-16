@@ -42,6 +42,8 @@ jobs:
         run: terraform init -backend=false
 
       - name: Terraform Validate
+        env:
+          ACME_SERVER_URL: http://localhost
         id: validate
         run: terraform validate
 
