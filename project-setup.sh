@@ -78,7 +78,7 @@ cat <<EOT > run.sh
 #!/usr/bin/env bash
 set -e
 
-EXTERNAL_DOMAIN="\${DOMAIN}" # replace
+EXTERNAL_DOMAIN="${DOMAIN}"
 export VAULT_ADDR="https://vault.${PREFIX}.\${EXTERNAL_DOMAIN}"
 export CONSUL_ADDR="https://consul.${PREFIX}.\${EXTERNAL_DOMAIN}"
 export NOMAD_ADDR="https://nomad.${PREFIX}.\${EXTERNAL_DOMAIN}"
@@ -142,7 +142,7 @@ cat <<EOT > destroy.sh
 #!/usr/bin/env bash
 set -e
 
-EXTERNAL_DOMAIN="example.com" # replace
+EXTERNAL_DOMAIN="${DOMAIN}"
 export VAULT_ADDR="https://vault.${PREFIX}.\${EXTERNAL_DOMAIN}"
 export CONSUL_ADDR="https://consul.${PREFIX}.\${EXTERNAL_DOMAIN}"
 export NOMAD_ADDR="https://nomad.${PREFIX}.\${EXTERNAL_DOMAIN}"
