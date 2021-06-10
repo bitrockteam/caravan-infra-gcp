@@ -25,7 +25,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 3.59.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 3.71.0 |
 | <a name="provider_local"></a> [local](#provider\_local) | 2.1.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.1.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.1.0 |
@@ -35,10 +35,10 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_caravan-bootstrap"></a> [caravan-bootstrap](#module\_caravan-bootstrap) | git::ssh://git@github.com/bitrockteam/caravan-bootstrap | refs/tags/v0.2.1 |
-| <a name="module_cloud_init_control_plane"></a> [cloud\_init\_control\_plane](#module\_cloud\_init\_control\_plane) | git::ssh://git@github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.4 |
-| <a name="module_cloud_init_worker_plane"></a> [cloud\_init\_worker\_plane](#module\_cloud\_init\_worker\_plane) | git::ssh://git@github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.4 |
-| <a name="module_terraform-acme-le"></a> [terraform-acme-le](#module\_terraform-acme-le) | git::ssh://git@github.com/bitrockteam/caravan-acme-le | refs/tags/v0.0.1 |
+| <a name="module_caravan-bootstrap"></a> [caravan-bootstrap](#module\_caravan-bootstrap) | git::https://github.com/bitrockteam/caravan-bootstrap | refs/tags/v0.2.6 |
+| <a name="module_cloud_init_control_plane"></a> [cloud\_init\_control\_plane](#module\_cloud\_init\_control\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.4 |
+| <a name="module_cloud_init_worker_plane"></a> [cloud\_init\_worker\_plane](#module\_cloud\_init\_worker\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.4 |
+| <a name="module_terraform-acme-le"></a> [terraform-acme-le](#module\_terraform-acme-le) | git::https://github.com/bitrockteam/caravan-acme-le | refs/tags/v0.0.1 |
 
 ## Resources
 
@@ -123,6 +123,10 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_google_account_file"></a> [google\_account\_file](#input\_google\_account\_file) | Path to Google account file | `string` | n/a | yes |
+| <a name="input_image"></a> [image](#input\_image) | Fully qualified image name | `string` | n/a | yes |
+| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP Project ID | `string` | n/a | yes |
+| <a name="input_zone"></a> [zone](#input\_zone) | GCP zone | `string` | n/a | yes |
 | <a name="input_admins"></a> [admins](#input\_admins) | List of admins to add to the project | `list(string)` | `[]` | no |
 | <a name="input_allowed_ip_list"></a> [allowed\_ip\_list](#input\_allowed\_ip\_list) | IP address list for SSH connection to the VMs | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | <a name="input_base64"></a> [base64](#input\_base64) | Cloud init decoding | `bool` | `false` | no |
@@ -135,11 +139,9 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | <a name="input_dc_name"></a> [dc\_name](#input\_dc\_name) | Hashicorp cluster name | `string` | `"gcp-dc"` | no |
 | <a name="input_enable_monitoring"></a> [enable\_monitoring](#input\_enable\_monitoring) | Enables and setup monitoring node | `bool` | `true` | no |
 | <a name="input_external_domain"></a> [external\_domain](#input\_external\_domain) | Domain used for endpoints and certs | `string` | `""` | no |
-| <a name="input_google_account_file"></a> [google\_account\_file](#input\_google\_account\_file) | Path to Google account file | `string` | n/a | yes |
 | <a name="input_google_kms_crypto_key"></a> [google\_kms\_crypto\_key](#input\_google\_kms\_crypto\_key) | GCP KMS crypto key | `string` | `""` | no |
 | <a name="input_google_kms_key_ring"></a> [google\_kms\_key\_ring](#input\_google\_kms\_key\_ring) | GCP KMS key ring | `string` | `""` | no |
 | <a name="input_gzip"></a> [gzip](#input\_gzip) | Cloud init compressing | `bool` | `false` | no |
-| <a name="input_image"></a> [image](#input\_image) | Fully qualified image name | `string` | n/a | yes |
 | <a name="input_le_production_endpoint"></a> [le\_production\_endpoint](#input\_le\_production\_endpoint) | LE's endpoint when use\_le\_staging==false | `string` | `"https://acme-v02.api.letsencrypt.org/directory"` | no |
 | <a name="input_le_staging_endpoint"></a> [le\_staging\_endpoint](#input\_le\_staging\_endpoint) | LE's endpoint when use\_le\_staging==true | `string` | `"https://acme-staging-v02.api.letsencrypt.org/directory"` | no |
 | <a name="input_nomad_license_file"></a> [nomad\_license\_file](#input\_nomad\_license\_file) | Path to Nomad Enterprise license | `string` | `null` | no |
@@ -147,7 +149,6 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | <a name="input_parent_dns_zone_name"></a> [parent\_dns\_zone\_name](#input\_parent\_dns\_zone\_name) | GCP parent project DNS zone name | `string` | `"GCP"` | no |
 | <a name="input_preemptible_instance_type"></a> [preemptible\_instance\_type](#input\_preemptible\_instance\_type) | Sets preemptible instance type | `bool` | `false` | no |
 | <a name="input_prefix"></a> [prefix](#input\_prefix) | The prefix of the objects' names | `string` | `""` | no |
-| <a name="input_project_id"></a> [project\_id](#input\_project\_id) | GCP Project ID | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | GCP region where to deploy the cluster | `string` | `"us-central1"` | no |
 | <a name="input_ssh_timeout"></a> [ssh\_timeout](#input\_ssh\_timeout) | SSH timeout | `string` | `"240s"` | no |
 | <a name="input_ssh_user"></a> [ssh\_user](#input\_ssh\_user) | SSH user | `string` | `"centos"` | no |
@@ -158,7 +159,6 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | <a name="input_worker_plane_sa_name"></a> [worker\_plane\_sa\_name](#input\_worker\_plane\_sa\_name) | Worker plane service account name, it will be used by Vault Auth method | `string` | `"worker-plane"` | no |
 | <a name="input_workers_groups"></a> [workers\_groups](#input\_workers\_groups) | Worker instance group map | `map(any)` | <pre>{<br>  "workers-group": {<br>    "base_instance_name": "worker",<br>    "instance_template": "worker-template",<br>    "target_size": 3,<br>    "zone": "us-central1-a"<br>  }<br>}</pre> | no |
 | <a name="input_workers_instance_templates"></a> [workers\_instance\_templates](#input\_workers\_instance\_templates) | Worker instance template map | `map(any)` | <pre>{<br>  "worker-template": {<br>    "image_family_name": "centos-image",<br>    "machine_type": "n1-standard-2",<br>    "name_prefix": "worker-template-default-",<br>    "preemptible": false<br>  }<br>}</pre> | no |
-| <a name="input_zone"></a> [zone](#input\_zone) | GCP zone | `string` | n/a | yes |
 
 ## Outputs
 
