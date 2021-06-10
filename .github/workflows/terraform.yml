@@ -15,6 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup SSH Keys and known_hosts
+        if: env.PRIVATE_KEY != null
         env:
           PRIVATE_KEY: ${{ secrets.SSH_KEY }}
         run: |
