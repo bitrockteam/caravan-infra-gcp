@@ -90,3 +90,4 @@ files/echo-server
 *-key.json
 destroy.sh
 run.sh
+*-encryption_key
