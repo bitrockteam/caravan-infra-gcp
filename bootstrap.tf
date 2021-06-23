@@ -1,5 +1,5 @@
 module "caravan-bootstrap" {
-  source                         = "git::https://github.com/bitrockteam/caravan-bootstrap?ref=refs/tags/v0.2.6"
+  source                         = "git::https://github.com/bitrockteam/caravan-bootstrap?ref=refs/tags/v0.2.7"
   ssh_private_key                = chomp(tls_private_key.ssh-key.private_key_pem)
   ssh_user                       = var.ssh_user
   ssh_timeout                    = var.ssh_timeout

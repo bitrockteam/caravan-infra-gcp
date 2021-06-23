@@ -4,7 +4,7 @@ locals {
 }
 
 module "cloud_init_control_plane" {
-  source              = "git::https://github.com/bitrockteam/caravan-cloudinit?ref=refs/tags/v0.1.4"
+  source              = "git::https://github.com/bitrockteam/caravan-cloudinit?ref=refs/tags/v0.1.9"
   cluster_nodes       = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip }
   vault_endpoint      = "http://127.0.0.1:8200"
   dc_name             = var.dc_name
@@ -17,7 +17,7 @@ module "cloud_init_control_plane" {
 }
 
 module "cloud_init_worker_plane" {
-  source              = "git::https://github.com/bitrockteam/caravan-cloudinit?ref=refs/tags/v0.1.4"
+  source              = "git::https://github.com/bitrockteam/caravan-cloudinit?ref=refs/tags/v0.1.9"
   cluster_nodes       = { for n in google_compute_instance.hashicorp_cluster_nodes : n.name => n.network_interface.0.network_ip }
   vault_endpoint      = "http://${google_compute_instance.hashicorp_cluster_nodes[0].network_interface.0.network_ip}:8200"
   dc_name             = var.dc_name
