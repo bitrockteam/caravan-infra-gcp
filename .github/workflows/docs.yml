@@ -33,7 +33,7 @@ jobs:
           mkdir docs/docs/$REPO_NAME || true
           for f in $(cd this && find * -type f -name 'README*' -exec grep -l "BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK" /dev/null {} \;); do
             echo $f
-            cp this/$f docs/docs/$REPO_NAME/${f/\//-}
+            cp this/$f docs/docs/$REPO_NAME/${f//\//-}
           done
           cd docs
           git remote -v
