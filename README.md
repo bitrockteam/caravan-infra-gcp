@@ -187,3 +187,4 @@ After `terraform destroy -var-file=gcp.tfvars`, for removing left resources and 
 ```bash
 ./project-cleanup.sh <PROJECT_ID> <PARENT_PROJECT_ID>
 ```
+
