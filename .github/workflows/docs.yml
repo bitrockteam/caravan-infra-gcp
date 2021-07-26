@@ -1,0 +1,56 @@
+
+name: docs
+
+on:
+  push:
+    branches: [ main, release/caravan-* ]
+    paths: [ "**/README.*" ]
+  workflow_dispatch:
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: prepare variables
+        id: prepare_variables
+        run: |
+          echo "::set-output name=trigger_branch::${GITHUB_REF/refs\/heads\//}"
+          echo "::set-output name=docs_branch::${GITHUB_REPOSITORY/bitrockteam\//}/${GITHUB_REF/refs\/heads\//}"
+          echo "::set-output name=repo_name::${GITHUB_REPOSITORY/bitrockteam\//}"
+      - uses: actions/checkout@v2
+        with:
+          path: this
+      - uses: actions/checkout@v2
+        with:
+          path: docs
+          repository: bitrockteam/caravanproject
+          ref: ${{ steps.prepare_variables.outputs.trigger_branch }}
+      - name: prepare pr
+        run: |
+          set -x
+          cd docs
+          git checkout -b $DOCS_BRANCH
+          cd ..
+          mkdir docs/docs/$REPO_NAME || true
+          for f in $(cd this && find * -type f -name 'README*' -exec grep -l "BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK" /dev/null {} \;); do
+            echo $f
+            cp this/$f docs/docs/$REPO_NAME/${f//\//-}
+          done
+          cd docs
+          git remote -v
+          git status
+          git config --global user.email 'ci@bitrock.it'
+          git config --global user.name 'BitrockCI'
+          git add -A
+          git commit -m "Update docs for $GITHUB_REPOSITORY"
+          git config -l | grep 'http\..*\.extraheader' | cut -d= -f1 | xargs -L1 git config --unset-all
+          git push --force --quiet https://$USERNAME:$REPO_KEY@github.com/bitrockteam/caravanproject.git $DOCS_BRANCH
+          if [[ $(GITHUB_TOKEN=${{secrets.BITROCKCIPAT}} gh pr list --search "head:$DOCS_BRANCH" --json "id" --jq "length") -eq 0 ]]; then
+            GITHUB_TOKEN=${{secrets.BITROCKCIPAT}} gh pr create --title "Update $TRIGGER_BRANCH docs for $GITHUB_REPOSITORY " --base $TRIGGER_BRANCH --head $DOCS_BRANCH --body ""
+          fi
+        env:
+          USERNAME: bitrockci
+          REPO_KEY: ${{ secrets.BITROCKCIPAT }}
+          REPO_NAME: ${{ steps.prepare_variables.outputs.repo_name }}
+          DOCS_BRANCH: ${{ steps.prepare_variables.outputs.docs_branch }}
+          TRIGGER_BRANCH: ${{ steps.prepare_variables.outputs.trigger_branch }}
