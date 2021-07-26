@@ -93,3 +93,7 @@ resource "google_project_iam_binding" "pd_csi_service_account_iam_binding" {
 
   members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
 }
+
+resource "google_service_account_key" "pd_csi_sa_key" {
+  service_account_id = google_service_account.pd_csi_service_account.account_id
+}

@@ -61,3 +61,8 @@ output "project_id" {
 output "csi_volumes" {
   value = local.volumes_name_to_id
 }
+
+output "csi_sa_key" {
+  value     = google_service_account_key.pd_csi_sa_key.private_key
+  sensitive = true
+}

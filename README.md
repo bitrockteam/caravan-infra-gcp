@@ -102,6 +102,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | [google_service_account_iam_binding.key_account_iam](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_iam_binding) | resource |
 | [google_service_account_iam_binding.key_account_iam_control_plane](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_iam_binding) | resource |
 | [google_service_account_iam_binding.key_account_iam_workers](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_iam_binding) | resource |
+| [google_service_account_key.pd_csi_sa_key](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/service_account_key) | resource |
 | [google_storage_bucket.configs](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket) | resource |
 | [google_storage_bucket_iam_binding.configs_binding](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket_iam_binding) | resource |
 | [local_file.backend_tf_appsupport](https://registry.terraform.io/providers/hashicorp/local/latest/docs/resources/file) | resource |
@@ -171,6 +172,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | <a name="output_cluster-public-ips"></a> [cluster-public-ips](#output\_cluster-public-ips) | Control plane public IP addresses |
 | <a name="output_control_plane_role_name"></a> [control\_plane\_role\_name](#output\_control\_plane\_role\_name) | Control plane role name |
 | <a name="output_control_plane_service_accounts"></a> [control\_plane\_service\_accounts](#output\_control\_plane\_service\_accounts) | Control plane service accounts email list |
+| <a name="output_csi_sa_key"></a> [csi\_sa\_key](#output\_csi\_sa\_key) | n/a |
 | <a name="output_csi_volumes"></a> [csi\_volumes](#output\_csi\_volumes) | n/a |
 | <a name="output_hashicorp_endpoints"></a> [hashicorp\_endpoints](#output\_hashicorp\_endpoints) | Hashicorp clusters endpoints |
 | <a name="output_load-balancer-ip-address"></a> [load-balancer-ip-address](#output\_load-balancer-ip-address) | Load Balancer IP address |
