@@ -1,4 +1,4 @@
-# Caravan Infra gcp
+# Caravan Infra GCP
 
 ![Caravan 2021 GCP](https://lucid.app/publicSegments/view/6c88c233-6065-4c65-abcd-ec9a4d8de080/image.png)
 
@@ -187,4 +187,3 @@ After `terraform destroy -var-file=gcp.tfvars`, for removing left resources and 
 ```bash
 ./project-cleanup.sh <PROJECT_ID> <PARENT_PROJECT_ID>
 ```
-
