@@ -54,17 +54,6 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
   allow_stopping_for_update = true
 
-  provisioner "remote-exec" {
-    inline = ["echo 'Here come the sun'"]
-    connection {
-      type        = "ssh"
-      user        = var.ssh_user
-      timeout     = var.ssh_timeout
-      private_key = chomp(tls_private_key.ssh-key.private_key_pem)
-      host        = self.network_interface.0.access_config.0.nat_ip
-    }
-  }
-
   lifecycle {
     ignore_changes = [attached_disk]
   }
@@ -90,13 +79,17 @@ resource "google_compute_disk" "vault_data" {
   disk_encryption_key {
     kms_key_self_link = google_kms_crypto_key.vault_key.self_link
   }
+
+  depends_on = [
+    google_kms_key_ring_iam_binding.vault_iam_kms_binding
+  ]
 }
 
 
 resource "google_compute_attached_disk" "consul_data" {
   count = var.control_plane_instance_count
 
-  disk        = google_compute_disk.vault_data[count.index].id
+  disk        = google_compute_disk.consul_data[count.index].id
   instance    = google_compute_instance.hashicorp_cluster_nodes[count.index].id
   device_name = "consul"
 }
@@ -112,13 +105,17 @@ resource "google_compute_disk" "consul_data" {
   disk_encryption_key {
     kms_key_self_link = google_kms_crypto_key.vault_key.self_link
   }
+
+  depends_on = [
+    google_kms_key_ring_iam_binding.vault_iam_kms_binding
+  ]
 }
 
 
 resource "google_compute_attached_disk" "nomad_data" {
   count = var.control_plane_instance_count
 
-  disk        = google_compute_disk.vault_data[count.index].id
+  disk        = google_compute_disk.nomad_data[count.index].id
   instance    = google_compute_instance.hashicorp_cluster_nodes[count.index].id
   device_name = "nomad"
 }
@@ -134,6 +131,10 @@ resource "google_compute_disk" "nomad_data" {
   disk_encryption_key {
     kms_key_self_link = google_kms_crypto_key.vault_key.self_link
   }
+
+  depends_on = [
+    google_kms_key_ring_iam_binding.vault_iam_kms_binding
+  ]
 }
 
 resource "local_file" "ssh_key" {

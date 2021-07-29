@@ -14,6 +14,7 @@ resource "google_kms_key_ring_iam_binding" "vault_iam_kms_binding" {
 
   members = [
     "serviceAccount:${google_service_account.control_plane_service_account.email}",
+    "serviceAccount:service-${data.google_project.project.number}@compute-system.iam.gserviceaccount.com",
   ]
 }
 

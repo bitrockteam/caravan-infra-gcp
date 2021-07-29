@@ -1,6 +1,10 @@
 data "google_client_openid_userinfo" "myself" {
 }
 
+data "google_project" "project" {
+}
+
+
 resource "google_service_account" "control_plane_service_account" {
   project      = var.project_id
   account_id   = var.control_plane_sa_name
