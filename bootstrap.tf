@@ -1,5 +1,5 @@
 module "caravan-bootstrap" {
-  source                         = "git::https://github.com/bitrockteam/caravan-bootstrap?ref=refs/tags/v0.2.8"
+  source                         = "git::https://github.com/bitrockteam/caravan-bootstrap?ref=refs/tags/v0.2.13"
   ssh_private_key                = chomp(tls_private_key.ssh-key.private_key_pem)
   ssh_user                       = var.ssh_user
   ssh_timeout                    = var.ssh_timeout
@@ -24,4 +24,10 @@ module "caravan-bootstrap" {
   consul_license = var.consul_license_file != null ? file(var.consul_license_file) : ""
   vault_license  = var.vault_license_file != null ? file(var.vault_license_file) : ""
   nomad_license  = var.nomad_license_file != null ? file(var.nomad_license_file) : ""
+
+  depends_on = [
+    google_compute_attached_disk.vault_data,
+    google_compute_attached_disk.consul_data,
+    google_compute_attached_disk.nomad_data
+  ]
 }

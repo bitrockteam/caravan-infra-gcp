@@ -37,7 +37,7 @@ resource "google_compute_firewall" "hashicorp_allow_ssh" {
     ports    = ["22"]
   }
 
-  source_ranges = var.allowed_ip_list
+  source_ranges = var.allowed_ip_list # tfsec:ignore:GCP003
   target_tags   = ["ssh-allowed-node"]
 }
 

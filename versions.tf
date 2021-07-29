@@ -4,7 +4,8 @@ terraform {
       source = "vancluever/acme"
     }
     google = {
-      source = "hashicorp/google"
+      source  = "hashicorp/google"
+      version = "~> 3.0"
     }
     local = {
       source = "hashicorp/local"
