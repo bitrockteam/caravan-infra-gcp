@@ -35,19 +35,25 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_caravan-bootstrap"></a> [caravan-bootstrap](#module\_caravan-bootstrap) | git::https://github.com/bitrockteam/caravan-bootstrap | refs/tags/v0.2.8 |
-| <a name="module_cloud_init_control_plane"></a> [cloud\_init\_control\_plane](#module\_cloud\_init\_control\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.9 |
+| <a name="module_caravan-bootstrap"></a> [caravan-bootstrap](#module\_caravan-bootstrap) | git::https://github.com/bitrockteam/caravan-bootstrap | refs/tags/v0.2.12 |
+| <a name="module_cloud_init_control_plane"></a> [cloud\_init\_control\_plane](#module\_cloud\_init\_control\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | feature/mount-data-disk |
 | <a name="module_cloud_init_worker_plane"></a> [cloud\_init\_worker\_plane](#module\_cloud\_init\_worker\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.9 |
-| <a name="module_terraform-acme-le"></a> [terraform-acme-le](#module\_terraform-acme-le) | git::https://github.com/bitrockteam/caravan-acme-le | refs/tags/v0.0.1 |
+| <a name="module_terraform-acme-le"></a> [terraform-acme-le](#module\_terraform-acme-le) | git::https://github.com/bitrockteam/caravan-acme-le | refs/tags/v0.0.11 |
 
 ## Resources
 
 | Name | Type |
 |------|------|
+| [google_compute_attached_disk.consul_data](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk) | resource |
+| [google_compute_attached_disk.nomad_data](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk) | resource |
+| [google_compute_attached_disk.vault_data](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_attached_disk) | resource |
 | [google_compute_backend_service.backend_service_consul](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_backend_service) | resource |
 | [google_compute_backend_service.backend_service_nomad](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_backend_service) | resource |
 | [google_compute_backend_service.backend_service_vault](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_backend_service) | resource |
 | [google_compute_backend_service.backend_service_workload](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_backend_service) | resource |
+| [google_compute_disk.consul_data](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_disk) | resource |
+| [google_compute_disk.nomad_data](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_disk) | resource |
+| [google_compute_disk.vault_data](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_disk) | resource |
 | [google_compute_firewall.hashicorp_allow_ssh](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_compute_firewall.hashicorp_cluster](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
 | [google_compute_firewall.hashicorp_ingress](https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/compute_firewall) | resource |
@@ -156,6 +162,10 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | <a name="input_subnet_prefix"></a> [subnet\_prefix](#input\_subnet\_prefix) | The address prefix to use for the subnet | `string` | `"10.128.0.0/28"` | no |
 | <a name="input_use_le_staging"></a> [use\_le\_staging](#input\_use\_le\_staging) | Use staging Let's Encrypt endpoint | `bool` | `false` | no |
 | <a name="input_vault_license_file"></a> [vault\_license\_file](#input\_vault\_license\_file) | Path to Vault Enterprise license | `string` | `null` | no |
+| <a name="input_volume_data_size"></a> [volume\_data\_size](#input\_volume\_data\_size) | Volume size of control plan data disk | `number` | `20` | no |
+| <a name="input_volume_data_type"></a> [volume\_data\_type](#input\_volume\_data\_type) | Volume type of data disks | `string` | `"pd-balanced"` | no |
+| <a name="input_volume_root_size"></a> [volume\_root\_size](#input\_volume\_root\_size) | Volume size of control plan root disk | `number` | `20` | no |
+| <a name="input_volume_root_type"></a> [volume\_root\_type](#input\_volume\_root\_type) | Volume type of root disks | `string` | `"pd-standard"` | no |
 | <a name="input_worker_plane_machine_type"></a> [worker\_plane\_machine\_type](#input\_worker\_plane\_machine\_type) | Worker plane instance machine type | `string` | `"n2-standard-2"` | no |
 | <a name="input_worker_plane_sa_name"></a> [worker\_plane\_sa\_name](#input\_worker\_plane\_sa\_name) | Worker plane service account name, it will be used by Vault Auth method | `string` | `"worker-plane"` | no |
 | <a name="input_workers_groups"></a> [workers\_groups](#input\_workers\_groups) | Worker instance group map | `map(any)` | <pre>{<br>  "workers-group": {<br>    "base_instance_name": "worker",<br>    "instance_template": "worker-template",<br>    "target_size": 3,<br>    "zone": "us-central1-a"<br>  }<br>}</pre> | no |

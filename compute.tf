@@ -16,7 +16,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
 
   project      = var.project_id
   zone         = data.google_compute_zones.available.names[count.index]
-  name         = format("clustnode%.2d", count.index + 1)
+  name         = format("clustnode-%.2d", count.index + 1)
   machine_type = var.control_plane_machine_type
 
   scheduling {
@@ -28,8 +28,8 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
   boot_disk {
     initialize_params {
       image = var.image
-      type  = "pd-standard"
-      size  = "100"
+      type  = var.volume_root_type
+      size  = var.volume_root_size
     }
   }
 
@@ -64,6 +64,76 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
       host        = self.network_interface.0.access_config.0.nat_ip
     }
   }
+
+  lifecycle {
+    ignore_changes = [attached_disk]
+  }
+}
+
+
+resource "google_compute_attached_disk" "vault_data" {
+  count = var.control_plane_instance_count
+
+  disk        = google_compute_disk.vault_data[count.index].id
+  instance    = google_compute_instance.hashicorp_cluster_nodes[count.index].id
+  device_name = "vault"
+}
+
+resource "google_compute_disk" "vault_data" {
+  count = var.control_plane_instance_count
+
+  name = format("vault-data-%.2d", count.index + 1)
+  zone = google_compute_instance.hashicorp_cluster_nodes[count.index].zone
+  type = var.volume_data_type
+  size = var.volume_data_size
+
+  disk_encryption_key {
+    kms_key_self_link = google_kms_crypto_key.vault_key.self_link
+  }
+}
+
+
+resource "google_compute_attached_disk" "consul_data" {
+  count = var.control_plane_instance_count
+
+  disk        = google_compute_disk.vault_data[count.index].id
+  instance    = google_compute_instance.hashicorp_cluster_nodes[count.index].id
+  device_name = "consul"
+}
+
+resource "google_compute_disk" "consul_data" {
+  count = var.control_plane_instance_count
+
+  name = format("consul-data-%.2d", count.index + 1)
+  zone = google_compute_instance.hashicorp_cluster_nodes[count.index].zone
+  type = var.volume_data_type
+  size = var.volume_data_size
+
+  disk_encryption_key {
+    kms_key_self_link = google_kms_crypto_key.vault_key.self_link
+  }
+}
+
+
+resource "google_compute_attached_disk" "nomad_data" {
+  count = var.control_plane_instance_count
+
+  disk        = google_compute_disk.vault_data[count.index].id
+  instance    = google_compute_instance.hashicorp_cluster_nodes[count.index].id
+  device_name = "nomad"
+}
+
+resource "google_compute_disk" "nomad_data" {
+  count = var.control_plane_instance_count
+
+  name = format("nomad-data-%.2d", count.index + 1)
+  zone = google_compute_instance.hashicorp_cluster_nodes[count.index].zone
+  type = var.volume_data_type
+  size = var.volume_data_size
+
+  disk_encryption_key {
+    kms_key_self_link = google_kms_crypto_key.vault_key.self_link
+  }
 }
 
 resource "local_file" "ssh_key" {
@@ -79,7 +149,7 @@ resource "google_compute_instance_group" "hashicorp_cluster_nodes" {
 
   count = var.control_plane_instance_count
 
-  name = format("unmanaged-hashicorp-clustnode%.2d", count.index + 1)
+  name = format("unmanaged-hashicorp-clustnode-%.2d", count.index + 1)
 
   instances = [google_compute_instance.hashicorp_cluster_nodes[count.index].id]
 
@@ -204,8 +274,8 @@ resource "google_compute_instance" "monitoring_instance" {
   boot_disk {
     initialize_params {
       image = var.image
-      type  = "pd-standard"
-      size  = "100"
+      type  = var.volume_root_type
+      size  = var.volume_root_size
     }
   }
 

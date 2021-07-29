@@ -175,6 +175,30 @@ Example:
 EOF
 }
 
+variable "volume_root_size" {
+  type        = number
+  default     = 20
+  description = "Volume size of control plan root disk"
+}
+
+variable "volume_root_type" {
+  type        = string
+  default     = "pd-standard"
+  description = "Volume type of root disks"
+}
+
+variable "volume_data_size" {
+  type        = number
+  default     = 20
+  description = "Volume size of control plan data disk"
+}
+
+variable "volume_data_type" {
+  type        = string
+  default     = "pd-balanced"
+  description = "Volume type of data disks"
+}
+
 # Common
 variable "ssh_user" {
   type        = string
