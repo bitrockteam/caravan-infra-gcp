@@ -152,7 +152,7 @@ resource "google_compute_instance_group" "hashicorp_cluster_nodes" {
 
   name = format("unmanaged-hashicorp-clustnode-%.2d", count.index + 1)
 
-  instances = [google_compute_instance.hashicorp_cluster_nodes[count.index].id]
+  instances = [google_compute_instance.hashicorp_cluster_nodes[count.index].self_link]
 
   named_port {
     name = "http-ingress"

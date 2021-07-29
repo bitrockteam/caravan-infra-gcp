@@ -20,12 +20,13 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | ~> 0.15.4 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | ~> 3.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 3.71.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 3.77.0 |
 | <a name="provider_local"></a> [local](#provider\_local) | 2.1.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.1.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.1.0 |
