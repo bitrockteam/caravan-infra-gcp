@@ -9,10 +9,13 @@ output "load-balancer-ip-address" {
   description = "Load Balancer IP address"
 }
 output "hashicorp_endpoints" {
-  value = {
+  value = var.enable_nomad ? {
     vault  = "https://vault.${var.prefix}.${var.external_domain}"
     consul = "https://consul.${var.prefix}.${var.external_domain}"
     nomad  = "https://nomad.${var.prefix}.${var.external_domain}"
+    } : {
+    vault  = "https://vault.${var.prefix}.${var.external_domain}"
+    consul = "https://consul.${var.prefix}.${var.external_domain}"
   }
   description = "Hashicorp clusters endpoints"
 }
@@ -59,10 +62,10 @@ output "project_id" {
   description = "GCP project ID"
 }
 output "csi_volumes" {
-  value = local.volumes_name_to_id
+  value = var.enable_nomad ? local.volumes_name_to_id : {}
 }
 
 output "csi_sa_key" {
-  value     = google_service_account_key.pd_csi_sa_key.private_key
+  value     = var.enable_nomad ? tostring(google_service_account_key.pd_csi_sa_key.*.private_key) : ""
   sensitive = true
 }
