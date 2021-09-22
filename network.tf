@@ -13,6 +13,10 @@ resource "google_compute_subnetwork" "hashicorp" {
   private_ip_google_access = true
 }
 
+locals {
+  hc_ports = var.enable_nomad ? ["8200", "8300", "8500", "4646"] : ["8200", "8300", "8500"]
+}
+
 resource "google_compute_firewall" "hashicorp_cluster" {
   project = var.project_id
   name    = "default-allow-cluster"
@@ -20,7 +24,7 @@ resource "google_compute_firewall" "hashicorp_cluster" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8200", "8300", "8500", "4646"]
+    ports    = local.hc_ports
   }
 
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16", var.subnet_prefix]
@@ -75,6 +79,7 @@ resource "google_compute_firewall" "hashicorp_internal_consul_ha" {
 }
 
 resource "google_compute_firewall" "hashicorp_internal_nomad_ha" {
+  count   = var.enable_nomad ? 1 : 0
   project = var.project_id
   name    = "allow-nomad-ha-cluster"
   network = google_compute_network.hashicorp.self_link

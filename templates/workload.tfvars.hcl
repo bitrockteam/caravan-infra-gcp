@@ -1,7 +1,9 @@
 
-nomad_endpoint          = "https://nomad.${prefix}.${external_domain}"
 vault_endpoint          = "https://vault.${prefix}.${external_domain}"
 consul_endpoint         = "https://consul.${prefix}.${external_domain}"
+%{ if enable_nomad ~}
+nomad_endpoint          = "https://nomad.${prefix}.${external_domain}"
+%{ endif ~}
 domain                  = "${prefix}.${external_domain}"
 artifacts_source_prefix = "gcs::https://www.googleapis.com/storage/v1/cfgs-${project_id}"
 

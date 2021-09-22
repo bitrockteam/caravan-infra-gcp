@@ -63,41 +63,47 @@ resource "random_id" "random" {
 }
 
 resource "google_service_account" "pd_csi_service_account" {
+  count        = var.enable_nomad ? 1 : 0
   account_id   = "pd-csi-sa-${replace(var.project_id, "/(-[0-9]+)/", "")}"
   display_name = "Persistent Disk CSI Service Account for ${var.project_id}"
   project      = var.project_id
 }
 
 resource "google_project_iam_custom_role" "gcp_compute_persistent_disk_csi_driver" {
-  role_id     = "pd_csi_custom_role_${google_service_account.pd_csi_service_account.unique_id}"
+  count       = var.enable_nomad ? 1 : 0
+  role_id     = "pd_csi_custom_role_${google_service_account.pd_csi_service_account[count.index].unique_id}"
   title       = "Google Compute Engine Persistent Disk CSI Driver Custom Roles for ${var.project_id}"
   description = "Custom roles required for functions of the gcp-compute-persistent-disk-csi-driver"
   permissions = ["compute.instances.get", "compute.instances.attachDisk", "compute.instances.detachDisk", "compute.disks.get"]
 }
 
 resource "google_project_iam_binding" "pd_csi_service_account_storage_admin_iam_binding" {
+  count   = var.enable_nomad ? 1 : 0
   project = var.project_id
   role    = "roles/compute.storageAdmin"
 
-  members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
+  members = ["serviceAccount:${google_service_account.pd_csi_service_account[count.index].email}"]
 }
 
 resource "google_project_iam_binding" "pd_csi_service_account_user_iam_binding" {
+  count   = var.enable_nomad ? 1 : 0
   project = var.project_id
   role    = "roles/iam.serviceAccountUser"
 
-  members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
+  members = ["serviceAccount:${google_service_account.pd_csi_service_account[count.index].email}"]
 }
 
 resource "google_project_iam_binding" "pd_csi_service_account_iam_binding" {
+  count      = var.enable_nomad ? 1 : 0
   depends_on = [google_project_iam_custom_role.gcp_compute_persistent_disk_csi_driver]
 
   project = var.project_id
-  role    = "projects/${var.project_id}/roles/pd_csi_custom_role_${google_service_account.pd_csi_service_account.unique_id}"
+  role    = "projects/${var.project_id}/roles/pd_csi_custom_role_${google_service_account.pd_csi_service_account[count.index].unique_id}"
 
-  members = ["serviceAccount:${google_service_account.pd_csi_service_account.email}"]
+  members = ["serviceAccount:${google_service_account.pd_csi_service_account[count.index].email}"]
 }
 
 resource "google_service_account_key" "pd_csi_sa_key" {
-  service_account_id = google_service_account.pd_csi_service_account.account_id
+  count              = var.enable_nomad ? 1 : 0
+  service_account_id = google_service_account.pd_csi_service_account[count.index].account_id
 }

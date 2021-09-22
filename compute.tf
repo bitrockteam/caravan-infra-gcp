@@ -113,7 +113,7 @@ resource "google_compute_disk" "consul_data" {
 
 
 resource "google_compute_attached_disk" "nomad_data" {
-  count = var.control_plane_instance_count
+  count = var.enable_nomad ? var.control_plane_instance_count : 0
 
   disk        = google_compute_disk.nomad_data[count.index].id
   instance    = google_compute_instance.hashicorp_cluster_nodes[count.index].id
@@ -121,7 +121,7 @@ resource "google_compute_attached_disk" "nomad_data" {
 }
 
 resource "google_compute_disk" "nomad_data" {
-  count = var.control_plane_instance_count
+  count = var.enable_nomad ? var.control_plane_instance_count : 0
 
   name = format("nomad-data-%.2d", count.index + 1)
   zone = google_compute_instance.hashicorp_cluster_nodes[count.index].zone
@@ -143,6 +143,39 @@ resource "local_file" "ssh_key" {
   file_permission   = "0600"
 }
 
+locals {
+  named_ports = var.enable_nomad ? [{
+    name = "http-ingress"
+    port = "8080"
+    }, {
+    name = "https-ingress"
+    port = "8443"
+    }, {
+    name = "vault"
+    port = "8200"
+    }, {
+    name = "consul"
+    port = "8500"
+    }, {
+    name = "nomad"
+    port = "4646"
+    }
+    ] : [{
+      name = "http-ingress"
+      port = "8080"
+      }, {
+      name = "https-ingress"
+      port = "8443"
+      }, {
+      name = "vault"
+      port = "8200"
+      }, {
+      name = "consul"
+      port = "8500"
+    }
+  ]
+}
+
 resource "google_compute_instance_group" "hashicorp_cluster_nodes" {
   depends_on = [
     google_compute_instance.hashicorp_cluster_nodes
@@ -154,29 +187,13 @@ resource "google_compute_instance_group" "hashicorp_cluster_nodes" {
 
   instances = [google_compute_instance.hashicorp_cluster_nodes[count.index].self_link]
 
-  named_port {
-    name = "http-ingress"
-    port = "8080"
+  dynamic "named_port" {
+    for_each = local.named_ports
+    content {
+      name = named_port.value.name
+      port = named_port.value.port
+    }
   }
-
-  named_port {
-    name = "https-ingress"
-    port = "8443"
-  }
-
-  named_port {
-    name = "vault"
-    port = "8200"
-  }
-  named_port {
-    name = "consul"
-    port = "8500"
-  }
-  named_port {
-    name = "nomad"
-    port = "4646"
-  }
-
 
   zone = google_compute_instance.hashicorp_cluster_nodes[count.index].zone
 }

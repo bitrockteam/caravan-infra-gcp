@@ -56,6 +56,7 @@ resource "google_dns_record_set" "cname-consul" {
   rrdatas      = [google_dns_record_set.a-hc.name]
 }
 resource "google_dns_record_set" "cname-nomad" {
+  count = var.enable_nomad ? 1 : 0
   depends_on = [
     google_dns_record_set.a-hc
   ]

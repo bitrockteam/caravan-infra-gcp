@@ -93,6 +93,11 @@ variable "workers_groups" {
   }
   description = "Worker instance group map"
 }
+variable "enable_nomad" {
+  type        = bool
+  default     = true
+  description = "Enables and setup Nomad cluster"
+}
 variable "enable_monitoring" {
   type        = bool
   default     = true
