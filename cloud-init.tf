@@ -17,7 +17,7 @@ module "cloud_init_control_plane" {
 
   vault_persistent_device  = "/dev/disk/by-id/google-vault"
   consul_persistent_device = "/dev/disk/by-id/google-consul"
-  nomad_persistent_device  = "/dev/disk/by-id/google-nomad"
+  nomad_persistent_device  = var.enable_nomad ? "/dev/disk/by-id/google-nomad" : ""
 }
 
 module "cloud_init_worker_plane" {
