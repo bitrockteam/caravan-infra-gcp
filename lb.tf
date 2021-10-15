@@ -66,7 +66,7 @@ locals {
   path_matchers = var.enable_nomad ? {
     vault        = google_compute_backend_service.backend_service_vault.self_link
     consul       = google_compute_backend_service.backend_service_consul.self_link
-    nomad        = tostring(google_compute_backend_service.backend_service_nomad[*].self_link)
+    nomad        = tostring(google_compute_backend_service.backend_service_nomad[0].self_link)
     http-ingress = google_compute_backend_service.backend_service_workload.self_link
     } : {
     vault        = google_compute_backend_service.backend_service_vault.self_link

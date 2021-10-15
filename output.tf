@@ -66,6 +66,6 @@ output "csi_volumes" {
 }
 
 output "csi_sa_key" {
-  value     = var.enable_nomad ? tostring(google_service_account_key.pd_csi_sa_key.*.private_key) : ""
+  value     = var.enable_nomad ? tostring(google_service_account_key.pd_csi_sa_key[0].private_key) : ""
   sensitive = true
 }
