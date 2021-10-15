@@ -3,6 +3,9 @@ vault_endpoint = "https://vault.${prefix}.${external_domain}"
 consul_endpoint = "https://consul.${prefix}.${external_domain}"
 %{ if enable_nomad ~}
 nomad_endpoint = "https://nomad.${prefix}.${external_domain}"
+%{ else }
+nomad_endpoint = ""
+enable_nomad = false
 %{ endif ~}
 
 %{ if use_le_staging ~}
