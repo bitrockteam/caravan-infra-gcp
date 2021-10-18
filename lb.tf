@@ -49,18 +49,28 @@ resource "google_compute_target_https_proxy" "target_https_proxy" {
 }
 
 locals {
-  host_rules = {
+  host_rules = var.enable_nomad ? {
     vault  = ["vault.${var.prefix}.${var.external_domain}"]
     consul = ["consul.${var.prefix}.${var.external_domain}"]
     nomad  = ["nomad.${var.prefix}.${var.external_domain}"]
     http-ingress = [
       "*.${var.prefix}.${var.external_domain}"
     ]
+    } : {
+    vault  = ["vault.${var.prefix}.${var.external_domain}"]
+    consul = ["consul.${var.prefix}.${var.external_domain}"]
+    http-ingress = [
+      "*.${var.prefix}.${var.external_domain}"
+    ]
   }
-  path_matchers = {
+  path_matchers = var.enable_nomad ? {
     vault        = google_compute_backend_service.backend_service_vault.self_link
     consul       = google_compute_backend_service.backend_service_consul.self_link
-    nomad        = google_compute_backend_service.backend_service_nomad.self_link
+    nomad        = tostring(google_compute_backend_service.backend_service_nomad[0].self_link)
+    http-ingress = google_compute_backend_service.backend_service_workload.self_link
+    } : {
+    vault        = google_compute_backend_service.backend_service_vault.self_link
+    consul       = google_compute_backend_service.backend_service_consul.self_link
     http-ingress = google_compute_backend_service.backend_service_workload.self_link
   }
 }
@@ -143,6 +153,7 @@ resource "google_compute_backend_service" "backend_service_consul" {
 }
 
 resource "google_compute_backend_service" "backend_service_nomad" {
+  count = var.enable_nomad ? 1 : 0
   depends_on = [
     google_compute_instance_group.hashicorp_cluster_nodes
   ]
@@ -153,7 +164,7 @@ resource "google_compute_backend_service" "backend_service_nomad" {
   protocol  = "HTTP"
 
   health_checks = [
-    google_compute_health_check.healthcheck_nomad.self_link
+    google_compute_health_check.healthcheck_nomad[count.index].self_link
   ]
 
   dynamic "backend" {
@@ -218,6 +229,7 @@ resource "google_compute_health_check" "healthcheck_consul" {
 }
 
 resource "google_compute_health_check" "healthcheck_nomad" {
+  count = var.enable_nomad ? 1 : 0
 
   name               = "${var.prefix}-healthcheck-nomad"
   timeout_sec        = 2

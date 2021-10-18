@@ -26,7 +26,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 3.77.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 3.88.0 |
 | <a name="provider_local"></a> [local](#provider\_local) | 2.1.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.1.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.1.0 |
@@ -36,9 +36,9 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_caravan-bootstrap"></a> [caravan-bootstrap](#module\_caravan-bootstrap) | git::https://github.com/bitrockteam/caravan-bootstrap | refs/tags/v0.2.13 |
-| <a name="module_cloud_init_control_plane"></a> [cloud\_init\_control\_plane](#module\_cloud\_init\_control\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.13 |
-| <a name="module_cloud_init_worker_plane"></a> [cloud\_init\_worker\_plane](#module\_cloud\_init\_worker\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.9 |
+| <a name="module_caravan-bootstrap"></a> [caravan-bootstrap](#module\_caravan-bootstrap) | git::https://github.com/bitrockteam/caravan-bootstrap | refs/tags/v0.2.14 |
+| <a name="module_cloud_init_control_plane"></a> [cloud\_init\_control\_plane](#module\_cloud\_init\_control\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.14 |
+| <a name="module_cloud_init_worker_plane"></a> [cloud\_init\_worker\_plane](#module\_cloud\_init\_worker\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.14 |
 | <a name="module_terraform-acme-le"></a> [terraform-acme-le](#module\_terraform-acme-le) | git::https://github.com/bitrockteam/caravan-acme-le | refs/tags/v0.0.11 |
 
 ## Resources
@@ -147,6 +147,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 | <a name="input_csi_volumes"></a> [csi\_volumes](#input\_csi\_volumes) | Example:<br>{<br>  "jenkins" : {<br>    "type" : "pd-ssd"<br>    "size" : "30"<br>    "replica\_zones" : ["us-central1-a", "us-central1-b"]<br>    "tags" : { "application": "jenkins\_master" }<br>  }<br>} | `map(map(string))` | `{}` | no |
 | <a name="input_dc_name"></a> [dc\_name](#input\_dc\_name) | Hashicorp cluster name | `string` | `"gcp-dc"` | no |
 | <a name="input_enable_monitoring"></a> [enable\_monitoring](#input\_enable\_monitoring) | Enables and setup monitoring node | `bool` | `true` | no |
+| <a name="input_enable_nomad"></a> [enable\_nomad](#input\_enable\_nomad) | Enables and setup Nomad cluster | `bool` | `true` | no |
 | <a name="input_external_domain"></a> [external\_domain](#input\_external\_domain) | Domain used for endpoints and certs | `string` | `""` | no |
 | <a name="input_google_kms_crypto_key"></a> [google\_kms\_crypto\_key](#input\_google\_kms\_crypto\_key) | GCP KMS crypto key | `string` | `""` | no |
 | <a name="input_google_kms_key_ring"></a> [google\_kms\_key\_ring](#input\_google\_kms\_key\_ring) | GCP KMS key ring | `string` | `""` | no |

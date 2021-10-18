@@ -6,6 +6,7 @@ locals {
     region          = var.region,
     dc_name         = var.dc_name
     use_le_staging  = var.use_le_staging
+    enable_nomad    = var.enable_nomad
   })
   backend_tf_platform = templatefile("${path.module}/templates/backend.hcl", {
     key        = "platform"
@@ -20,6 +21,7 @@ locals {
     dc_name           = var.dc_name
     use_le_staging    = var.use_le_staging
     jenkins_volume_id = lookup(local.volumes_name_to_id, "jenkins", "")
+    enable_nomad      = var.enable_nomad
   })
   backend_tf_appsupport = templatefile("${path.module}/templates/backend.hcl", {
     key        = "appsupport"
@@ -33,6 +35,7 @@ locals {
     region          = var.region
     dc_name         = var.dc_name
     use_le_staging  = var.use_le_staging
+    enable_nomad    = var.enable_nomad
   })
   backend_tf_workload = templatefile("${path.module}/templates/backend.hcl", {
     key        = "workload"
