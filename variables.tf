@@ -143,13 +143,13 @@ variable "ca_certs" {
     pemurl   = string
   }))
   default = {
-    fakeleintermediatex1 = {
-      filename = "fakeleintermediatex1.pem"
-      pemurl   = "https://letsencrypt.org/certs/fakeleintermediatex1.pem"
+    stg-int-r3 = {
+      filename = "letsencrypt-stg-int-r3.pem"
+      pemurl   = "https://letsencrypt.org/certs/staging/letsencrypt-stg-int-r3.pem"
     },
-    fakelerootx1 = {
-      filename = "fakelerootx1.pem"
-      pemurl   = "https://letsencrypt.org/certs/fakelerootx1.pem"
+    stg-root-x1 = {
+      filename = "letsencrypt-stg-root-x1.pem"
+      pemurl   = "https://letsencrypt.org/certs/staging/letsencrypt-stg-root-x1.pem"
     }
   }
   description = "Fake certificates from staging Let's Encrypt"
