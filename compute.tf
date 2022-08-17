@@ -7,6 +7,7 @@ resource "tls_private_key" "ssh-key" {
   rsa_bits  = "4096"
 }
 
+# tfsec:ignore:google-compute-no-project-wide-ssh-keys
 resource "google_compute_instance" "hashicorp_cluster_nodes" {
   count = var.control_plane_instance_count
 
@@ -25,6 +26,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
     preemptible         = var.preemptible_instance_type
   }
 
+  # tfsec:ignore:google-compute-vm-disk-encryption-customer-key
   boot_disk {
     initialize_params {
       image = var.image
@@ -33,6 +35,12 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
     }
   }
 
+  shielded_instance_config {
+    enable_integrity_monitoring = true
+    enable_vtpm                 = true
+  }
+
+  # tfsec:ignore:google-compute-no-public-ip
   network_interface {
     subnetwork = google_compute_subnetwork.hashicorp.self_link
     access_config {
@@ -77,7 +85,7 @@ resource "google_compute_disk" "vault_data" {
   size = var.volume_data_size
 
   disk_encryption_key {
-    kms_key_self_link = google_kms_crypto_key.vault_key.self_link
+    kms_key_self_link = google_kms_crypto_key.vault_key.id
   }
 
   depends_on = [
@@ -103,7 +111,7 @@ resource "google_compute_disk" "consul_data" {
   size = var.volume_data_size
 
   disk_encryption_key {
-    kms_key_self_link = google_kms_crypto_key.vault_key.self_link
+    kms_key_self_link = google_kms_crypto_key.vault_key.id
   }
 
   depends_on = [
@@ -129,7 +137,7 @@ resource "google_compute_disk" "nomad_data" {
   size = var.volume_data_size
 
   disk_encryption_key {
-    kms_key_self_link = google_kms_crypto_key.vault_key.self_link
+    kms_key_self_link = google_kms_crypto_key.vault_key.id
   }
 
   depends_on = [
@@ -137,10 +145,10 @@ resource "google_compute_disk" "nomad_data" {
   ]
 }
 
-resource "local_file" "ssh_key" {
-  sensitive_content = chomp(tls_private_key.ssh-key.private_key_pem)
-  filename          = "${path.module}/ssh-key"
-  file_permission   = "0600"
+resource "local_sensitive_file" "ssh_key" {
+  content         = chomp(tls_private_key.ssh-key.private_key_pem)
+  filename        = "${path.module}/ssh-key"
+  file_permission = "0600"
 }
 
 locals {
@@ -271,6 +279,7 @@ resource "google_compute_region_instance_group_manager" "default_workers" {
   }
 }
 
+# tfsec:ignore:google-compute-no-project-wide-ssh-keys
 resource "google_compute_instance" "monitoring_instance" {
   count = var.enable_monitoring ? 1 : 0
 
@@ -289,12 +298,18 @@ resource "google_compute_instance" "monitoring_instance" {
     preemptible         = var.preemptible_instance_type
   }
 
+  # tfsec:ignore:google-compute-vm-disk-encryption-customer-key
   boot_disk {
     initialize_params {
       image = var.image
       type  = var.volume_root_type
       size  = var.volume_root_size
     }
+  }
+
+  shielded_instance_config {
+    enable_integrity_monitoring = true
+    enable_vtpm                 = true
   }
 
   network_interface {

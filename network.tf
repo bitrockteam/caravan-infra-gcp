@@ -4,6 +4,7 @@ resource "google_compute_network" "hashicorp" {
   auto_create_subnetworks = false
 }
 
+# tfsec:ignore:google-compute-enable-vpc-flow-logs
 resource "google_compute_subnetwork" "hashicorp" {
   project                  = var.project_id
   name                     = "${var.prefix}-subnet"

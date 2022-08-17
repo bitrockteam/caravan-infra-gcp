@@ -3,6 +3,11 @@ resource "google_dns_managed_zone" "project-zone" {
   name        = "${var.prefix}-zone"
   dns_name    = "${var.prefix}.${var.external_domain}."
   description = "DNS zone for cloud projects"
+
+  # tfsec:ignore:google-dns-enable-dnssec
+  dnssec_config {
+    state = "off"
+  }
 }
 
 data "google_dns_managed_zone" "parent-zone" {

@@ -85,6 +85,7 @@ resource "google_project_iam_binding" "pd_csi_service_account_storage_admin_iam_
   members = ["serviceAccount:${google_service_account.pd_csi_service_account[count.index].email}"]
 }
 
+# tfsec:ignore:google-iam-no-project-level-service-account-impersonation
 resource "google_project_iam_binding" "pd_csi_service_account_user_iam_binding" {
   count   = var.enable_nomad ? 1 : 0
   project = var.project_id

@@ -58,7 +58,7 @@ use_le_staging        = true
 dc_name               = "gcp-dc"
 control_plane_sa_name = "control-plane"
 worker_plane_sa_name  = "worker-plane"
-image                 = "projects/${PARENT_PROJECT_ID}/global/images/family/caravan-centos-image-os"
+image                 = "projects/${PARENT_PROJECT_ID}/global/images/family/caravan-os-centos-7"
 parent_dns_project_id = "${PARENT_PROJECT_ID}"
 parent_dns_zone_name  = "dns-example-zone"
 EOT
