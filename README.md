@@ -26,7 +26,7 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Version |
 |------|---------|
-| <a name="provider_google"></a> [google](#provider\_google) | 4.32.0 |
+| <a name="provider_google"></a> [google](#provider\_google) | 4.33.0 |
 | <a name="provider_local"></a> [local](#provider\_local) | 2.2.3 |
 | <a name="provider_null"></a> [null](#provider\_null) | 3.1.1 |
 | <a name="provider_random"></a> [random](#provider\_random) | 3.3.2 |
@@ -36,9 +36,9 @@ The `project-setup.sh` script help you to create all the necessary requirements 
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_caravan-bootstrap"></a> [caravan-bootstrap](#module\_caravan-bootstrap) | git::https://github.com/bitrockteam/caravan-bootstrap | refs/tags/v0.2.14 |
-| <a name="module_cloud_init_control_plane"></a> [cloud\_init\_control\_plane](#module\_cloud\_init\_control\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.14 |
-| <a name="module_cloud_init_worker_plane"></a> [cloud\_init\_worker\_plane](#module\_cloud\_init\_worker\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.14 |
+| <a name="module_caravan-bootstrap"></a> [caravan-bootstrap](#module\_caravan-bootstrap) | git::https://github.com/bitrockteam/caravan-bootstrap | refs/tags/v0.2.19 |
+| <a name="module_cloud_init_control_plane"></a> [cloud\_init\_control\_plane](#module\_cloud\_init\_control\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.18 |
+| <a name="module_cloud_init_worker_plane"></a> [cloud\_init\_worker\_plane](#module\_cloud\_init\_worker\_plane) | git::https://github.com/bitrockteam/caravan-cloudinit | refs/tags/v0.1.18 |
 | <a name="module_terraform-acme-le"></a> [terraform-acme-le](#module\_terraform-acme-le) | git::https://github.com/bitrockteam/caravan-acme-le | refs/tags/v0.0.16 |
 
 ## Resources
