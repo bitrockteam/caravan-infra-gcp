@@ -205,7 +205,7 @@ variable "volume_data_type" {
 }
 
 # Common
-variable "ssh_user" {
+variable "ssh_username" {
   type        = string
   default     = "centos"
   description = "SSH user"
