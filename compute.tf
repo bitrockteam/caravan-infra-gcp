@@ -48,7 +48,7 @@ resource "google_compute_instance" "hashicorp_cluster_nodes" {
   }
 
   metadata = {
-    ssh-keys  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
+    ssh-keys  = "${var.ssh_username}:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
     user-data = module.cloud_init_control_plane.control_plane_user_data
   }
 
@@ -247,7 +247,7 @@ resource "google_compute_instance_template" "worker-instance-template" {
   }
 
   metadata = {
-    ssh-keys  = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
+    ssh-keys  = "${var.ssh_username}:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
     user-data = module.cloud_init_worker_plane.worker_plane_user_data
   }
 
@@ -317,7 +317,7 @@ resource "google_compute_instance" "monitoring_instance" {
   }
 
   metadata = {
-    ssh-keys       = "centos:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
+    ssh-keys       = "${var.ssh_username}:${chomp(tls_private_key.ssh-key.public_key_openssh)} terraform"
     user-data      = module.cloud_init_worker_plane.monitoring_user_data
     startup-script = module.cloud_init_worker_plane.worker_plane_startup_script
   }
