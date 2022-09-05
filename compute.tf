@@ -3,8 +3,7 @@ data "google_compute_zones" "available" {
 }
 
 resource "tls_private_key" "ssh-key" {
-  algorithm = "RSA"
-  rsa_bits  = "4096"
+  algorithm = "ED25519"
 }
 
 # tfsec:ignore:google-compute-no-project-wide-ssh-keys
@@ -146,7 +145,7 @@ resource "google_compute_disk" "nomad_data" {
 }
 
 resource "local_sensitive_file" "ssh_key" {
-  content         = chomp(tls_private_key.ssh-key.private_key_pem)
+  content         = tls_private_key.ssh-key.private_key_openssh
   filename        = "${path.module}/ssh-key"
   file_permission = "0600"
 }
